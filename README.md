@@ -10,6 +10,6 @@ FastAPI + Celery + Redis + Postgres + pgvector
 
 docker compose up --build
 
-Open
+## Open
 
 http://localhost:8000
