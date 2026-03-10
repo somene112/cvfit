@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CVFit - CV vs JD Scoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <div class="container py-4">
+        <h2 class="mb-3">CVFit — CV Scoring vs JD</h2>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <form id="scoreForm">
+                    <div class="mb-3">
+                        <label class="form-label">Upload CV (PDF/DOC/DOCX)</label>
+                        <input class="form-control" type="file" id="cvFile" accept=".pdf,.doc,.docx" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Job Description (paste text)</label>
+                        <textarea class="form-control" id="jdText" rows="8" placeholder="Paste JD here..."
+                            required></textarea>
+                    </div>
+
+                    <button class="btn btn-primary" type="submit" id="btnScore">Score</button>
+                    <span class="ms-3" id="statusText"></span>
+                </form>
+            </div>
+        </div>
+
+        <div class="card d-none" id="resultCard">
+            <div class="card-body">
+                <h4 class="mb-3">Result</h4>
+
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-white">
+                            <div class="text-muted">Fit score</div>
+                            <div class="display-6" id="fitScore">-</div>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="p-3 border rounded bg-white">
+                            <div class="text-muted mb-2">Scores breakdown</div>
+                            <pre class="mb-0" id="scoreBreakdown">{}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <h5>Missing must-have skills</h5>
+                        <ul id="missingMust" class="mb-3"></ul>
+
+                        <h5>Missing nice-to-have skills</h5>
+                        <ul id="missingNice" class="mb-3"></ul>
+                    </div>
+
+                    <div class="col-md-6">
+                        <h5>Learn suggestions</h5>
+                        <ul id="learnSuggestions" class="mb-3"></ul>
+
+                        <h5>CV improvements</h5>
+                        <ul id="cvImprovements" class="mb-3"></ul>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-secondary d-none" id="btnDownloadDocx" target="_blank">Download DOCX
+                        report</a>
+                    <button class="btn btn-outline-dark" id="btnShowRaw">Toggle Raw JSON</button>
+                </div>
+
+                <pre class="mt-3 d-none" id="rawJson"></pre>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
