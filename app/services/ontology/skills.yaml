@@ -1,0 +1,103 @@
+python:
+  aliases: ["py"]
+  related: ["fastapi", "flask", "django", "pandas", "numpy"]
+
+java:
+  aliases: []
+  related: ["spring", "spring boot"]
+
+javascript:
+  aliases: ["js"]
+  related: ["nodejs", "react", "typescript"]
+
+typescript:
+  aliases: ["ts"]
+  related: ["nestjs", "react", "nextjs"]
+
+sql:
+  aliases: []
+  related: ["postgresql", "mysql", "sqlite"]
+
+postgresql:
+  aliases: ["postgres", "psql"]
+  related: ["sql"]
+
+mysql:
+  aliases: []
+  related: ["sql"]
+
+docker:
+  aliases: []
+  related: ["kubernetes", "container"]
+
+kubernetes:
+  aliases: ["k8s"]
+  related: ["docker"]
+
+redis:
+  aliases: []
+  related: ["cache", "queue"]
+
+fastapi:
+  aliases: ["fast api"]
+  related: ["python", "api"]
+
+django:
+  aliases: []
+  related: ["python", "backend"]
+
+flask:
+  aliases: []
+  related: ["python", "backend"]
+
+nodejs:
+  aliases: ["node", "node.js"]
+  related: ["javascript", "typescript", "nestjs"]
+
+nestjs:
+  aliases: ["nest", "nest.js"]
+  related: ["nodejs", "typescript"]
+
+aws:
+  aliases: []
+  related: ["cloud"]
+
+gcp:
+  aliases: ["google cloud"]
+  related: ["cloud"]
+
+azure:
+  aliases: []
+  related: ["cloud"]
+
+linux:
+  aliases: []
+  related: ["bash", "devops"]
+
+git:
+  aliases: []
+  related: ["github", "version control"]
+
+tensorflow:
+  aliases: ["tf", "tensorflow 2", "keras"]
+  related: ["deep learning", "cnn", "neural network"]
+
+pytorch:
+  aliases: ["torch"]
+  related: ["deep learning", "cnn", "neural network"]
+
+opencv:
+  aliases: ["cv2"]
+  related: ["computer vision", "image processing"]
+
+machine learning:
+  aliases: ["ml"]
+  related: ["deep learning", "model training"]
+
+deep learning:
+  aliases: ["dl"]
+  related: ["tensorflow", "pytorch", "cnn"]
+
+computer vision:
+  aliases: ["cv"]
+  related: ["opencv", "image processing", "object detection"]

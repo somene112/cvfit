@@ -79,13 +79,20 @@ function renderResult(result) {
     const gap = result.skill_gap || {};
     setList(missingMustEl, gap.missing_must_have || []);
     setList(missingNiceEl, gap.missing_nice_to_have || []);
-    setList(learnSuggestionsEl, gap.learn_suggestions || [], (x) => `${x.skill}: ${x.reason} (${x.resources_level})`);
+    setList(
+        learnSuggestionsEl,
+        gap.learn_suggestions || [],
+        (x) => `${x.skill}: ${x.reason} (${x.resources_level}, ~${x.time_estimate_weeks || "?"} weeks)`
+    );
 
-    setList(cvImprovementsEl, result.cv_improvements || [], (x) => `${x.issue} → ${x.fix}`);
+    setList(
+        cvImprovementsEl,
+        result.cv_improvements || [],
+        (x) => `${x.issue} → ${x.fix}`
+    );
 
     rawJsonEl.textContent = JSON.stringify(result, null, 2);
 
-    // DOCX download
     btnDownloadDocx.classList.remove("d-none");
     btnDownloadDocx.href = `/v1/jobs/${result.job_id}/report/download`;
 }

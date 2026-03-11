@@ -1,11 +1,15 @@
 import uuid
 from datetime import datetime
+
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import String, Text, DateTime, Integer, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.session import Base
 
 JOB_STATUS = ("queued", "running", "succeeded", "failed")
+
 
 class CVFile(Base):
     __tablename__ = "cv_files"
@@ -18,6 +22,7 @@ class CVFile(Base):
 
     jobs = relationship("AnalysisJob", back_populates="cv_file")
 
+
 class JDDoc(Base):
     __tablename__ = "jd_docs"
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -26,6 +31,7 @@ class JDDoc(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     jobs = relationship("AnalysisJob", back_populates="jd_doc")
+
 
 class AnalysisJob(Base):
     __tablename__ = "analysis_jobs"
@@ -46,3 +52,16 @@ class AnalysisJob(Base):
 
     cv_file = relationship("CVFile", back_populates="jobs")
     jd_doc = relationship("JDDoc", back_populates="jobs")
+
+
+class TextEmbedding(Base):
+    __tablename__ = "text_embeddings"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    owner_type: Mapped[str] = mapped_column(String(50))
+    owner_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True))
+    text: Mapped[str] = mapped_column(Text)
+    embedding: Mapped[list] = mapped_column(Vector(384))
+    meta_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

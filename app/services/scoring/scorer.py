@@ -1,75 +1,272 @@
+from __future__ import annotations
+
 import re
+from typing import Dict, List, Tuple
 
-def score(cv_text: str, jd_struct: dict) -> dict:
-    cv_lower = cv_text.lower()
-    must = jd_struct.get("must_have_skills", [])
-    nice = jd_struct.get("nice_to_have_skills", [])
+from app.services.embedding.engine import embed_texts, cosine_similarity
+from app.services.ontology.skill_ontology import get_skill_ontology
 
-    must_hit = [s for s in must if _has_skill(cv_lower, s)]
-    must_miss = [s for s in must if s not in must_hit]
 
-    nice_hit = [s for s in nice if _has_skill(cv_lower, s)]
-    nice_miss = [s for s in nice if s not in nice_hit]
+def score(cv_parsed: dict, jd_struct: dict) -> dict:
+    """
+    Hybrid scorer v2:
+    - skill matching by OR-groups + aliases + related concepts
+    - semantic responsibility matching using embeddings
+    - cv quality checks
+    - evidence extraction
+    """
+    cv_text = cv_parsed["text"]
+    cv_bullets = cv_parsed.get("bullets", [])
+    cv_skills = set(cv_parsed.get("skills_detected", []))
 
-    must_cov = (len(must_hit) / max(1, len(must))) * 100
-    nice_cov = (len(nice_hit) / max(1, len(nice))) * 100 if nice else 0
+    must_groups = jd_struct.get("must_have_skill_groups", [])
+    nice_groups = jd_struct.get("nice_to_have_skill_groups", [])
+    responsibilities = jd_struct.get("responsibilities", [])
 
-    # Simple CV quality checks
-    quality_issues = []
-    if len(cv_text) < 400:
-        quality_issues.append({"issue":"CV text too short / parse may be poor", "fix":"Check file quality or use text-based PDF/DOCX"})
-    if "@" not in cv_text and "email" not in cv_lower:
-        quality_issues.append({"issue":"Missing email/contact visible", "fix":"Ensure contact section is included"})
-    if _count_numbers(cv_text) < 3:
-        quality_issues.append({"issue":"Few measurable metrics", "fix":"Add numbers (latency, users, accuracy, revenue, time saved)"})
+    skill_result = evaluate_skill_groups(cv_text, cv_skills, must_groups, nice_groups)
+    resp_result = evaluate_responsibilities(cv_bullets, responsibilities)
+    cv_quality = evaluate_cv_quality(cv_text, cv_bullets)
 
-    # Weighted fit score
-    skill_score = 0.85 * must_cov + 0.15 * nice_cov
-    cv_quality = 100 - min(40, 15 * len(quality_issues))
-    fit_score = round(0.45 * skill_score + 0.10 * cv_quality + 0.45 * _resp_proxy(cv_lower, jd_struct), 1)
+    skill_match_score = skill_result["score"]
+    responsibility_score = resp_result["score"]
+    cv_quality_score = cv_quality["score"]
+    project_relevance = min(100.0, 40.0 + len(cv_bullets) * 1.2)
+    experience_level_score = infer_experience_alignment(cv_text, jd_struct)
 
-    learn_suggestions = [{"skill": s, "reason":"Mentioned/required in JD but not found in CV", "resources_level":"beginner"} for s in must_miss[:8]]
+    fit_score = round(
+        0.35 * skill_match_score
+        + 0.30 * responsibility_score
+        + 0.15 * experience_level_score
+        + 0.10 * project_relevance
+        + 0.10 * cv_quality_score,
+        1
+    )
+
+    learn_suggestions = build_learning_plan(skill_result["missing_must_have"] + skill_result["missing_nice_to_have"])
 
     return {
         "scores": {
             "fit_score": fit_score,
-            "skill_match": round(skill_score, 1),
-            "cv_quality": round(cv_quality, 1),
-            "responsibility_match": round(_resp_proxy(cv_lower, jd_struct), 1),
+            "skill_match": round(skill_match_score, 1),
+            "responsibility_match": round(responsibility_score, 1),
+            "experience_level": round(experience_level_score, 1),
+            "project_relevance": round(project_relevance, 1),
+            "cv_quality": round(cv_quality_score, 1),
+        },
+        "skills": {
+            "matched_must_groups": skill_result["matched_must_groups"],
+            "matched_nice_groups": skill_result["matched_nice_groups"],
         },
         "skill_gap": {
-            "missing_must_have": must_miss,
-            "missing_nice_to_have": nice_miss,
-            "learn_suggestions": learn_suggestions
+            "missing_must_have": skill_result["missing_must_have"],
+            "missing_nice_to_have": skill_result["missing_nice_to_have"],
+            "learn_suggestions": learn_suggestions,
         },
-        "cv_improvements": quality_issues,
-        "evidence": _evidence_snippets(cv_text, must_hit)
+        "responsibility_match": {
+            "details": resp_result["details"]
+        },
+        "cv_improvements": cv_quality["issues"],
+        "evidence": skill_result["evidence"] + resp_result["evidence"]
     }
 
-def _has_skill(cv_lower: str, skill: str) -> bool:
-    return re.search(rf"\b{re.escape(skill)}\b", cv_lower) is not None
 
-def _count_numbers(text: str) -> int:
-    return len(re.findall(r"\b\d+(\.\d+)?%?\b", text))
+def evaluate_skill_groups(
+    cv_text: str,
+    cv_skills: set[str],
+    must_groups: List[List[str]],
+    nice_groups: List[List[str]],
+) -> dict:
+    ontology = get_skill_ontology()
+    cv_lower = cv_text.lower()
 
-def _resp_proxy(cv_lower: str, jd_struct: dict) -> float:
-    # MVP proxy: % responsibility lines that share >=1 keyword hit in CV
-    resp = jd_struct.get("responsibilities", [])[:20]
-    if not resp:
-        return 50.0
-    hits = 0
-    for line in resp:
-        kws = [w for w in re.findall(r"[a-zA-Z]{4,}", line.lower()) if w not in {"with","and","from","that","have","will"}]
-        if any((kw in cv_lower) for kw in kws[:8]):
-            hits += 1
-    return (hits / len(resp)) * 100
+    matched_must_groups = []
+    matched_nice_groups = []
+    missing_must_have = []
+    missing_nice_to_have = []
+    evidence = []
 
-def _evidence_snippets(cv_text: str, skills_hit: list[str]) -> list[dict]:
-    lines = [l.strip() for l in cv_text.splitlines() if len(l.strip()) > 0]
-    out = []
-    for s in skills_hit[:8]:
-        for l in lines:
-            if s.lower() in l.lower():
-                out.append({"type":"cv_line", "skill": s, "text": l[:240]})
-                break
-    return out[:20]
+    must_hits = 0
+    for group in must_groups:
+        matched_skill, ev = _match_group(group, cv_lower, cv_skills, ontology)
+        if matched_skill:
+            must_hits += 1
+            matched_must_groups.append({
+                "group": group,
+                "matched_by": matched_skill
+            })
+            if ev:
+                evidence.append(ev)
+        else:
+            missing_must_have.append(" / ".join(group))
+
+    nice_hits = 0
+    for group in nice_groups:
+        matched_skill, ev = _match_group(group, cv_lower, cv_skills, ontology)
+        if matched_skill:
+            nice_hits += 1
+            matched_nice_groups.append({
+                "group": group,
+                "matched_by": matched_skill
+            })
+            if ev:
+                evidence.append(ev)
+        else:
+            missing_nice_to_have.append(" / ".join(group))
+
+    must_cov = (must_hits / max(1, len(must_groups))) * 100 if must_groups else 100.0
+    nice_cov = (nice_hits / max(1, len(nice_groups))) * 100 if nice_groups else 100.0
+
+    score = 0.85 * must_cov + 0.15 * nice_cov
+
+    return {
+        "score": score,
+        "matched_must_groups": matched_must_groups,
+        "matched_nice_groups": matched_nice_groups,
+        "missing_must_have": missing_must_have,
+        "missing_nice_to_have": missing_nice_to_have,
+        "evidence": evidence[:20],
+    }
+
+
+def _match_group(group: List[str], cv_lower: str, cv_skills: set[str], ontology) -> Tuple[str | None, dict | None]:
+    for skill in group:
+        candidates = ontology.expand_candidates(skill)
+        for c in candidates:
+            if c in cv_skills or _has_phrase(cv_lower, c):
+                snippet = _find_evidence_line(cv_lower, c)
+                return skill, {
+                    "type": "skill_match",
+                    "skill_group": group,
+                    "matched_skill": skill,
+                    "text": snippet or f"Matched by skill/alias: {c}"
+                }
+    return None, None
+
+
+def evaluate_responsibilities(cv_bullets: List[str], responsibilities: List[str]) -> dict:
+    if not cv_bullets:
+        return {"score": 20.0, "details": [], "evidence": []}
+    if not responsibilities:
+        return {"score": 60.0, "details": [], "evidence": []}
+
+    cv_bullets = cv_bullets[:40]
+    responsibilities = responsibilities[:25]
+
+    cv_vecs = embed_texts(cv_bullets)
+    jd_vecs = embed_texts(responsibilities)
+
+    details = []
+    evidence = []
+    sims = []
+
+    for req, req_vec in zip(responsibilities, jd_vecs):
+        best_idx = -1
+        best_sim = -1.0
+        for idx, cv_vec in enumerate(cv_vecs):
+            sim = cosine_similarity(req_vec, cv_vec)
+            if sim > best_sim:
+                best_sim = sim
+                best_idx = idx
+
+        sims.append(best_sim)
+        matched_bullet = cv_bullets[best_idx] if best_idx >= 0 else None
+
+        details.append({
+            "jd_requirement": req,
+            "best_cv_bullet": matched_bullet,
+            "similarity": round(best_sim, 4),
+        })
+
+        if matched_bullet:
+            evidence.append({
+                "type": "responsibility_match",
+                "jd_requirement": req,
+                "text": matched_bullet,
+                "similarity": round(best_sim, 4),
+            })
+
+    avg_sim = sum(sims) / max(1, len(sims))
+    # map cosine similarity to 0..100
+    score = max(0.0, min(100.0, avg_sim * 100.0))
+
+    return {
+        "score": score,
+        "details": details[:15],
+        "evidence": evidence[:10],
+    }
+
+
+def evaluate_cv_quality(cv_text: str, cv_bullets: List[str]) -> dict:
+    issues = []
+
+    if len(cv_text) < 400:
+        issues.append({
+            "issue": "CV text too short or parser quality may be low",
+            "fix": "Use text-based PDF/DOCX and check whether full CV content is extracted"
+        })
+
+    if "@" not in cv_text and "email" not in cv_text.lower():
+        issues.append({
+            "issue": "Contact/email not clearly visible",
+            "fix": "Add a clear contact section with professional email"
+        })
+
+    number_count = len(re.findall(r"\b\d+(\.\d+)?%?\b", cv_text))
+    if number_count < 3:
+        issues.append({
+            "issue": "Low number of measurable achievements",
+            "fix": "Add metrics such as accuracy, latency, users, cost saved, time reduced"
+        })
+
+    action_verbs = ["built", "developed", "designed", "implemented", "optimized", "deployed", "trained"]
+    action_hits = sum(1 for b in cv_bullets[:20] if any(v in b.lower() for v in action_verbs))
+    if action_hits < 3:
+        issues.append({
+            "issue": "Bullets are not strongly action-oriented",
+            "fix": "Rewrite bullets with strong action verbs and outcomes"
+        })
+
+    score = max(40.0, 100.0 - 12.5 * len(issues))
+    return {"score": score, "issues": issues}
+
+
+def infer_experience_alignment(cv_text: str, jd_struct: dict) -> float:
+    # lightweight heuristic for v2
+    years = _estimate_years_from_text(cv_text)
+    if years >= 3:
+        return 85.0
+    if years >= 1:
+        return 70.0
+    return 55.0
+
+
+def build_learning_plan(missing_skills: List[str]) -> List[dict]:
+    plans = []
+    for s in missing_skills[:8]:
+        plans.append({
+            "skill": s,
+            "reason": "Required or useful in JD but not sufficiently evidenced in CV",
+            "resources_level": "beginner",
+            "time_estimate_weeks": 2 if "/" not in s else 3
+        })
+    return plans
+
+
+def _has_phrase(text: str, phrase: str) -> bool:
+    pattern = rf"(?<!\w){re.escape(phrase.lower())}(?!\w)"
+    return re.search(pattern, text.lower()) is not None
+
+
+def _find_evidence_line(text: str, phrase: str) -> str | None:
+    for line in text.splitlines():
+        if phrase.lower() in line.lower():
+            return line.strip()[:240]
+    return None
+
+
+def _estimate_years_from_text(text: str) -> int:
+    years = re.findall(r"\b(20\d{2})\b", text)
+    years = sorted({int(y) for y in years})
+    if len(years) >= 2:
+        return max(0, years[-1] - years[0])
+    return 0
