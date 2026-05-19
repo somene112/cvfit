@@ -72,8 +72,9 @@ Before creating Render services:
 3. Run the local Docker smoke test below.
 4. Choose the S3-compatible provider and confirm whether it needs `S3_ENDPOINT_URL`.
 5. Create a private object-storage bucket and prefix for the MVP.
-6. Set the required environment variables on both Render services.
-7. Confirm uploaded CVs and reports are not committed to git.
+6. Run the S3-backed smoke test in [s3_smoke_test.md](s3_smoke_test.md).
+7. Set the required environment variables on both Render services.
+8. Confirm uploaded CVs and reports are not committed to git.
 
 ## Local Docker Smoke Test
 
@@ -134,6 +135,19 @@ smoke test passed
 ```
 
 This is the required pre-Render verification step for the current MVP architecture.
+
+## S3-Backed Smoke Test
+
+Before deploying to Render, run the S3-backed smoke test with a private bucket or S3-compatible provider:
+
+```bash
+docker compose down -v
+docker compose -f docker-compose.yml -f docker-compose.s3.yml up --build -d
+python scripts/smoke_test_s3.py
+docker compose -f docker-compose.yml -f docker-compose.s3.yml down
+```
+
+See [s3_smoke_test.md](s3_smoke_test.md) for required environment variables, provider notes, and expected output.
 
 ## Health Check
 
