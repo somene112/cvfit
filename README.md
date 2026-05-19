@@ -6,19 +6,23 @@ FastAPI-based CV-to-job-description fit scoring MVP. The app uploads a CV, accep
 
 ```text
 backend/
-  app/              FastAPI app, API routes, DB, services, workers
-  tests/            pytest tests
-  requirements.txt  backend Python dependencies
+  app/                  FastAPI app, API routes, DB, services, workers
+  tests/                pytest tests
+  requirements.txt      backend Python dependencies
   requirements-ml.txt   ML runtime dependencies with CPU-only Torch
   requirements-dev.txt  local test/development dependencies
 frontend/
-  templates/        Jinja templates
-  static/           vanilla JS/static assets
-scripts/            smoke tests and operational scripts
-docs/               deployment and baseline docs
-docker/             API and worker Dockerfiles
-docker-compose.yml  local API/worker/Postgres/Redis stack
+  templates/            Jinja templates
+  static/               vanilla JS/static assets
+scripts/                smoke tests and operational scripts
+docs/                   deployment and baseline docs
+docker/                 API and worker Dockerfiles
+docker-compose.yml      local API/worker/Postgres/Redis stack
 ```
+
+## Architecture
+
+FastAPI + Celery + Redis + PostgreSQL.
 
 ## Local Docker Run
 
@@ -33,7 +37,6 @@ http://localhost:8000
 ```
 
 Stop:
-
 ```bash
 docker compose down
 ```
@@ -63,7 +66,7 @@ pip install -r requirements-dev.txt
 python -m pytest
 ```
 
-There is intentionally no root `requirements.txt`; install from `backend/requirements.txt` for runtime or `backend/requirements-dev.txt` for local development and tests.
+There is intentionally no root requirements.txt; install from backend/requirements.txt for runtime or backend/requirements-dev.txt for local development and tests.
 
 ## Smoke Test
 
@@ -77,4 +80,10 @@ The smoke test uploads a temporary DOCX CV, creates a score job, waits for worke
 
 ## Phase 0 Status
 
-Phase 0 passed a real local Docker E2E smoke test. See `docs/phase0_baseline.md` and `docs/render_deployment.md` for details.
+Phase 0 passed a real local Docker E2E smoke test. See docs/phase0_baseline.md and docs/render_deployment.md for details.
+
+
+
+
+
+
