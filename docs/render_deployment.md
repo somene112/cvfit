@@ -2,6 +2,8 @@
 
 This guide prepares the app for an MVP/demo deployment on Render. It does not deploy anything and does not include secrets.
 
+For the step-by-step service setup handoff, use the [Render manual setup checklist](render_manual_setup_checklist.md).
+
 ## MVP Architecture
 
 - Render Web Service: FastAPI API and current Jinja/vanilla JS frontend.
@@ -38,8 +40,10 @@ Notes:
 - `S3_ENDPOINT_URL` is optional for AWS S3 and required by some S3-compatible providers such as MinIO, Cloudflare R2, or Wasabi. Set it only when the provider requires a custom endpoint.
 - On Render, set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` as secret environment variables unless using an object-storage provider with another supported credential mechanism.
 - Set the same storage, database, Redis, and upload-limit environment variables on both the Render API service and the Render worker service.
+- API and worker must share the same `DATABASE_URL`, `REDIS_URL`, `STORAGE_BACKEND`, and S3 environment variables.
 - For future AWS deployments, prefer IAM roles and set `AWS_USE_IAM_ROLE=true`.
 - Keep `STORAGE_ROOT` defined even when using S3; it remains useful for temporary/local development paths.
+- Do not commit secrets to git, docs, tickets, or smoke-test logs.
 
 ## Suggested Render Commands
 
@@ -149,6 +153,12 @@ docker compose -f docker-compose.yml -f docker-compose.s3.yml down
 
 See [s3_smoke_test.md](s3_smoke_test.md) for required environment variables, provider notes, and expected output.
 
+After the app is manually deployed on Render, run the same production-like smoke flow from your local machine:
+
+```bash
+API_BASE_URL=https://<render-api-url> python scripts/smoke_test_s3.py
+```
+
 ## Health Check
 
 Use:
@@ -165,10 +175,11 @@ Expected response:
 
 ## Known Limitations
 
-- No authentication yet.
+- Current app still has no full auth.
 - CV, result, and report access is UUID-based only.
 - Render environment variables must be set for both the API and worker services.
 - S3 integration must be smoke-tested with a real private bucket before demo use.
+- S3 lifecycle cleanup is still needed for uploaded CVs and generated reports.
 - Render free tier is suitable only for demo/testing, not production.
 - The first scoring run may be slower if the embedding model has to download at runtime.
 - Database migrations are not yet implemented; the app currently creates tables at startup.

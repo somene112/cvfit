@@ -32,6 +32,8 @@ AWS_USE_IAM_ROLE=false
 
 Never commit real credentials. Keep bucket policies private and use a disposable prefix such as `cvfit/smoke/<date>` for test runs.
 
+API and worker must share the same `DATABASE_URL`, `REDIS_URL`, `STORAGE_BACKEND`, and S3 environment variables.
+
 ## AWS S3
 
 For AWS S3:
@@ -79,6 +81,16 @@ docker compose -f docker-compose.yml -f docker-compose.s3.yml down
 
 The override keeps Postgres and Redis local, but forces both API and worker to use S3-compatible storage.
 
+## Render S3 Smoke Test
+
+After manually deploying the API and worker on Render with the same S3 settings, run:
+
+```bash
+API_BASE_URL=https://<render-api-url> python scripts/smoke_test_s3.py
+```
+
+This validates the deployed API, deployed worker, Render Redis/Postgres, and private S3-compatible bucket together.
+
 ## Expected Output
 
 Successful output includes:
@@ -113,3 +125,4 @@ Common causes:
 - Incorrect `S3_ENDPOINT_URL` for the provider.
 - Bucket policy denies object reads or writes.
 - API and worker have different storage environment variables.
+- S3 lifecycle cleanup has not been configured yet; old smoke-test objects may accumulate until cleanup is added.
