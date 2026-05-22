@@ -207,6 +207,34 @@ Remaining risks at Phase 1A closeout:
 - Docker image still large.
 - First model load can be slow.
 
+## Phase 1B Render Token Smoke Test Passed
+
+Date: May 22, 2026
+
+API URL domain: `cvfit.onrender.com`
+
+Smoke command:
+
+```bash
+API_BASE_URL=https://cvfit.onrender.com python scripts/smoke_test_s3.py
+```
+
+Success summary:
+
+- `/health` returned ok.
+- CV upload succeeded.
+- Score job was created.
+- The smoke script captured `access_token` internally and did not print the raw token.
+- Missing/wrong token checks returned 403.
+- Job reached `succeeded`.
+- Result JSON worked with the correct token and returned `fit_score`.
+- Report metadata worked with the correct token, returned `download_url`, and did not expose `local_path`.
+- Token-bearing report URL output was redacted.
+- DOCX report download worked with the correct token.
+- Smoke script ended with `smoke test passed` and `s3 smoke test passed`.
+
+Phase 1B adds MVP access-token protection for result, report metadata, and report download endpoints. Full auth, user accounts, and per-user history remain future work.
+
 ## Troubleshooting
 
 ### API Build Failure

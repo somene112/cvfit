@@ -6,6 +6,8 @@ This roadmap starts from the Phase 0 final baseline and keeps deployment, produc
 
 Phase 1A completed: the Render MVP deployment smoke test passed against the deployed API, worker, Redis/Postgres, and S3-backed storage. This confirms demo deployment viability only; it is not production readiness.
 
+Phase 1B completed: the access-token MVP passed local and Render smoke tests. Result, report metadata, and report download endpoints now require the per-job access token. Full auth and user accounts remain future work.
+
 ### Goals
 
 - Deploy the current MVP safely to Render.
