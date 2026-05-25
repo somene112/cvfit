@@ -117,7 +117,8 @@ Set these on both the API service and worker service.
 - Create a Render PostgreSQL database or compatible Postgres service that supports the `vector` extension.
 - Copy the internal database URL into `DATABASE_URL`.
 - Set the same `DATABASE_URL` on the API and worker.
-- Alembic baseline migrations now exist, but the app still keeps startup table creation for MVP compatibility.
+- API and worker startup verify that the database schema is at Alembic head; they do not create tables or patch columns.
+- For an empty database, run the reviewed Alembic migration. For an existing database, take a backup and use the schema/adoption workflow before upgrading or stamping.
 
 ## Render Redis / Key Value
 
@@ -202,7 +203,7 @@ Remaining risks at Phase 1A closeout:
 
 - No full auth yet.
 - UUID-only access existed before the Phase 1B access-token patch.
-- Alembic baseline exists, but the migration workflow is not production-proven yet.
+- Alembic baseline exists; existing production-like databases need backup and schema/adoption checks before migration changes.
 - S3 lifecycle cleanup still needed.
 - Docker image still large.
 - First model load can be slow.
@@ -257,6 +258,7 @@ Phase 1B adds MVP access-token protection for result, report metadata, and repor
 - Confirm API and worker use the same internal Render Postgres URL.
 - Confirm the database is available before restarting the API.
 - Confirm the selected Postgres service supports the `vector` extension.
+- If logs mention missing schema or Alembic head, run the documented migration/adoption workflow instead of relying on app startup side effects.
 
 ### S3 AccessDenied
 
@@ -300,7 +302,7 @@ Phase 1B adds MVP access-token protection for result, report metadata, and repor
 - No full auth yet.
 - MVP access-token protection is not full account auth.
 - Job status polling remains public by UUID for the current UI flow.
-- Alembic baseline exists, but startup `create_all()` compatibility remains for the MVP.
+- API and worker startup require the database schema to be initialized and tracked by Alembic.
 - S3 lifecycle cleanup still needed.
 - Docker image remains large.
 - The deployment is for MVP/demo validation, not production exposure.

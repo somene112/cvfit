@@ -67,6 +67,14 @@ cd backend && pip install -r requirements.txt
 cd backend && celery -A app.workers.celery_app:celery_app worker --loglevel=INFO -Q cvfit
 ```
 
+The API and worker do not run migrations at startup. Before starting or
+restarting services against a new/changed database, apply the reviewed Alembic
+migrations from a trusted operator environment. For an empty Render database,
+that means running `cd backend && alembic upgrade head` with the intended
+Render `DATABASE_URL` set in that operator shell. For an existing Render
+database, take a backup and run the schema/adoption checks described in
+[database_migrations.md](database_migrations.md) before upgrading or stamping.
+
 ## Pre-Deploy Checklist
 
 Before creating Render services:
@@ -78,7 +86,8 @@ Before creating Render services:
 5. Create a private object-storage bucket and prefix for the MVP.
 6. Run the S3-backed smoke test in [s3_smoke_test.md](s3_smoke_test.md).
 7. Set the required environment variables on both Render services.
-8. Confirm uploaded CVs and reports are not committed to git.
+8. Confirm the Render database is initialized or safely adopted to Alembic head before starting API/worker runtime.
+9. Confirm uploaded CVs and reports are not committed to git.
 
 ## Local Docker Smoke Test
 
@@ -86,6 +95,11 @@ Start the full local stack:
 
 ```bash
 docker compose down -v
+docker compose up --build -d postgres redis
+cd backend
+DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:5432/cvfit \
+alembic upgrade head
+cd ..
 docker compose up --build -d
 ```
 
@@ -182,7 +196,7 @@ Expected response:
 - S3 lifecycle cleanup is still needed for uploaded CVs and generated reports.
 - Render free tier is suitable only for demo/testing, not production.
 - The first scoring run may be slower if the embedding model has to download at runtime.
-- Alembic baseline migrations exist, but the app still keeps startup table creation for MVP compatibility.
+- API and worker startup verify schema state but do not silently create or patch database schema. Missing or outdated schema must be fixed through Alembic.
 
 ## Manual Smoke Test Checklist
 

@@ -77,7 +77,8 @@ Create a Render Postgres database.
 - Use a PostgreSQL plan/provider that supports the `vector` extension.
 - Copy the internal database URL into `DATABASE_URL`.
 - Set the same `DATABASE_URL` on the API and worker.
-- Current app startup creates tables automatically; formal migrations are still future work.
+- App startup verifies schema state but does not create tables or patch columns.
+- Initialize an empty database with Alembic, or safely adopt an existing database after backup and schema checks.
 
 ## S3 Environment Setup
 
@@ -189,7 +190,7 @@ Expected success criteria:
 - Current app still has no full auth.
 - Job status polling remains UUID-based; result, report metadata, and report download use MVP access-token protection.
 - S3 lifecycle cleanup is still needed.
-- Alembic baseline migrations exist, but startup table creation remains for MVP compatibility.
+- API and worker startup require the database schema to be at Alembic head.
 - First scoring run may be slower if the embedding model has to download at runtime.
 
 ## Troubleshooting
@@ -200,5 +201,6 @@ Expected success criteria:
 - S3 credentials fail: confirm `AWS_USE_IAM_ROLE=false` when using access keys, and verify the keys have object read/write permissions for the selected prefix.
 - S3 endpoint errors: set `S3_ENDPOINT_URL` only when the provider requires it, and use the provider's required region value.
 - Database errors mention vector support: confirm the database supports the `vector` extension or choose a compatible Postgres provider/plan.
+- Database errors mention missing schema or Alembic head: run the documented migration/adoption workflow after backup and schema checks; do not rely on app startup to create tables.
 - Smoke test cannot reach the API: confirm `API_BASE_URL` has the public Render Web Service URL and no trailing path.
 - Unexpected auth assumptions: this MVP does not include full auth yet; do not expose it as a production application.
