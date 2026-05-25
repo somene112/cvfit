@@ -78,6 +78,56 @@ python -m pytest
 
 There is intentionally no root requirements.txt; install from backend/requirements.txt for runtime or backend/requirements-dev.txt for local development and tests.
 
+## CI Checks
+
+GitHub Actions runs the backend hygiene checks on pull requests and pushes to
+`main`. CI uses only safe local/test environment values:
+
+```env
+DATABASE_URL=sqlite+pysqlite:///:memory:
+REDIS_URL=redis://localhost:6379/0
+```
+
+CI does not use Render `DATABASE_URL`, S3 credentials, API tokens, or any
+production secret. Database migrations and existing production-like database
+adoption remain operator-controlled; CI never upgrades or stamps Render
+PostgreSQL.
+
+The CI job checks:
+
+```bash
+python scripts/ci_guard.py
+python -m compileall backend/app
+cd backend && python -m pytest --basetemp pytest-cache-files-local -p no:cacheprovider
+cd backend && alembic heads
+cd backend && alembic history
+docker compose config
+```
+
+On Windows Anaconda Prompt, run the same local checks with:
+
+```bat
+set "DATABASE_URL=sqlite+pysqlite:///:memory:"
+set "REDIS_URL=redis://localhost:6379/0"
+set "PYTHONPYCACHEPREFIX=backend/pytest-cache-files-local/pycache-prefix"
+python scripts/ci_guard.py
+python -m compileall backend/app
+cd backend
+python -m pytest --basetemp pytest-cache-files-local -p no:cacheprovider
+alembic heads
+alembic history
+cd ..
+docker compose config
+set "PYTHONPYCACHEPREFIX="
+```
+
+After a deploy, verify the public API without touching the database directly:
+
+```bat
+set "API_BASE_URL=https://your-render-api.onrender.com"
+curl "%API_BASE_URL%/health"
+```
+
 ## Database Migrations
 
 Migration workflow and Render adoption notes are in [Database migrations](docs/database_migrations.md). For a disposable/local PostgreSQL validation run:
