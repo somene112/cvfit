@@ -8,7 +8,9 @@ Phase 1A completed: the Render MVP deployment smoke test passed against the depl
 
 Phase 1B completed: the access-token MVP passed local and Render smoke tests. Result, report metadata, and report download endpoints now require the per-job access token. Full auth and user accounts remain future work.
 
-Phase 1C / Phase 1.3 migration adoption completed on 2026-05-23: Alembic has been added for the current schema, the initial migration has been validated against disposable local PostgreSQL/pgvector databases, and the existing Render database passed the schema checker before the safe adoption helper stamped it to head. Sanitized closeout evidence: schema checker passed, adoption helper completed `stamp`, and `alembic current` returned `20260522_0001 (head)`. Startup `create_all()` compatibility remains during the MVP phase.
+Phase 1C / Phase 1.3 migration adoption completed on 2026-05-23: Alembic has been added for the current schema, the initial migration has been validated against disposable local PostgreSQL/pgvector databases, and the existing Render database passed the schema checker before the safe adoption helper stamped it to head. Sanitized closeout evidence: schema checker passed, adoption helper completed `stamp`, and `alembic current` returned `20260522_0001 (head)`.
+
+Phase 1D / Phase 1.4 runtime hardening makes Alembic the intentional schema-management path. API and worker startup verify the schema and Alembic revision instead of silently creating tables or patching columns.
 
 ### Goals
 

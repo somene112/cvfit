@@ -1,7 +1,11 @@
 import os
 import importlib.util
 from pathlib import Path
+import subprocess
 import sys
+
+import pytest
+from sqlalchemy import create_engine, inspect, text
 
 
 os.environ.setdefault("DATABASE_URL", "sqlite+pysqlite:///:memory:")
@@ -113,3 +117,143 @@ def test_adoption_script_requires_database_url_without_printing_secret(monkeypat
     captured = capsys.readouterr()
     assert "DATABASE_URL is required" in captured.err
     assert "://" not in captured.err
+
+
+def _sqlite_engine_with_runtime_schema(
+    *,
+    include_alembic=True,
+    alembic_version=None,
+    omit_columns=None,
+):
+    from app.db import init_db
+
+    omit_columns = omit_columns or {}
+    alembic_version = alembic_version or init_db.EXPECTED_ALEMBIC_HEAD
+    test_engine = create_engine("sqlite+pysqlite:///:memory:")
+    with test_engine.begin() as conn:
+        for table_name, columns in init_db._required_schema().items():
+            column_defs = [
+                f'"{column_name}" TEXT'
+                for column_name in sorted(columns - omit_columns.get(table_name, set()))
+            ]
+            conn.execute(text(f'CREATE TABLE "{table_name}" ({", ".join(column_defs)})'))
+
+        if include_alembic:
+            conn.execute(text('CREATE TABLE "alembic_version" ("version_num" TEXT NOT NULL)'))
+            conn.execute(
+                text("INSERT INTO alembic_version (version_num) VALUES (:version_num)"),
+                {"version_num": alembic_version},
+            )
+
+    return test_engine
+
+
+def test_runtime_expected_alembic_head_matches_script_head():
+    from app.db import init_db
+
+    result = subprocess.run(
+        [sys.executable, "-m", "alembic", "heads"],
+        cwd=BACKEND_ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.stdout.strip() == f"{init_db.EXPECTED_ALEMBIC_HEAD} (head)"
+
+
+def test_runtime_init_module_has_no_schema_mutation_calls():
+    source = (BACKEND_ROOT / "app" / "db" / "init_db.py").read_text(encoding="utf-8")
+
+    assert "create_all" not in source
+    assert "CREATE EXTENSION" not in source
+    assert "ALTER TABLE" not in source
+
+
+def test_runtime_init_does_not_call_create_all(monkeypatch):
+    from app.db import init_db
+
+    test_engine = create_engine("sqlite+pysqlite:///:memory:")
+
+    def fail_create_all(*args, **kwargs):
+        raise AssertionError("runtime init must not create tables")
+
+    monkeypatch.setattr(init_db, "engine", test_engine)
+    monkeypatch.setattr(init_db.Base.metadata, "create_all", fail_create_all)
+
+    with pytest.raises(init_db.RuntimeSchemaError, match="Run alembic upgrade head"):
+        init_db.init_db()
+
+
+def test_runtime_init_fails_clearly_for_missing_schema(monkeypatch):
+    from app.db import init_db
+
+    test_engine = create_engine("sqlite+pysqlite:///:memory:")
+    monkeypatch.setattr(init_db, "engine", test_engine)
+
+    with pytest.raises(init_db.RuntimeSchemaError) as exc:
+        init_db.init_db()
+
+    assert "Database schema is not initialized" in str(exc.value)
+    assert "Run alembic upgrade head" in str(exc.value)
+    assert "analysis_jobs" in str(exc.value)
+    assert inspect(test_engine).get_table_names() == []
+
+
+def test_runtime_schema_check_passes_for_alembic_head_schema(monkeypatch):
+    from app.db import init_db
+
+    monkeypatch.setattr(init_db, "engine", _sqlite_engine_with_runtime_schema())
+
+    init_db.check_runtime_schema()
+
+
+def test_runtime_schema_check_requires_alembic_version(monkeypatch):
+    from app.db import init_db
+
+    monkeypatch.setattr(
+        init_db,
+        "engine",
+        _sqlite_engine_with_runtime_schema(include_alembic=False),
+    )
+
+    with pytest.raises(init_db.RuntimeSchemaError, match="Missing alembic_version table"):
+        init_db.check_runtime_schema()
+
+
+def test_runtime_schema_check_reports_wrong_alembic_version(monkeypatch):
+    from app.db import init_db
+
+    monkeypatch.setattr(
+        init_db,
+        "engine",
+        _sqlite_engine_with_runtime_schema(alembic_version="wrong_revision"),
+    )
+
+    with pytest.raises(init_db.RuntimeSchemaError) as exc:
+        init_db.check_runtime_schema()
+
+    assert "Database schema is not at Alembic head" in str(exc.value)
+    assert "Expected 20260522_0001, found wrong_revision" in str(exc.value)
+
+
+def test_access_token_hash_is_not_silently_added_at_runtime(monkeypatch):
+    from app.db import init_db
+
+    test_engine = _sqlite_engine_with_runtime_schema(
+        omit_columns={"analysis_jobs": {"access_token_hash"}}
+    )
+    monkeypatch.setattr(
+        init_db,
+        "engine",
+        test_engine,
+    )
+
+    with pytest.raises(init_db.RuntimeSchemaError) as exc:
+        init_db.init_db()
+
+    assert "analysis_jobs.access_token_hash" in str(exc.value)
+    column_names = {
+        column["name"] for column in inspect(test_engine).get_columns("analysis_jobs")
+    }
+    assert "access_token_hash" not in column_names

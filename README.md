@@ -26,7 +26,15 @@ FastAPI + Celery + Redis + PostgreSQL.
 
 ## Local Docker Run
 
-```bash
+For a fresh local Docker database, start Postgres and Redis first, run Alembic,
+then start the API and worker:
+
+```powershell
+docker compose up --build -d postgres redis
+cd backend
+$env:DATABASE_URL="postgresql+psycopg2://cvfit:cvfit@localhost:5432/cvfit"
+alembic upgrade head
+cd ..
 docker compose up --build -d
 ```
 
@@ -43,11 +51,13 @@ docker compose down
 
 ## Local Backend-Only Run
 
-Start PostgreSQL and Redis separately, then:
+Start PostgreSQL and Redis separately, make sure `DATABASE_URL` points to that
+local database, then:
 
 ```bash
 cd backend
 pip install -r requirements-dev.txt
+alembic upgrade head
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
@@ -74,10 +84,16 @@ Migration workflow and Render adoption notes are in [Database migrations](docs/d
 
 ```bash
 cd backend
-alembic upgrade head
+DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:5432/cvfit alembic upgrade head
 cd ..
 python scripts/check_db_schema.py
 ```
+
+API and worker startup do not silently create or patch database tables. If the
+schema is missing or behind Alembic head, startup fails with an error that tells
+you to run `alembic upgrade head` against the intended local/disposable
+database. Do not run migrations blindly against an existing production database
+without a backup and schema/adoption checks.
 
 ## Smoke Test
 
