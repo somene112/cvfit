@@ -44,6 +44,24 @@ Open:
 http://localhost:8000
 ```
 
+## Frontend Demo
+
+The MVP frontend is served by the FastAPI backend from `frontend/templates` and
+`frontend/static`; there is no separate Node/React/Next app or separate
+frontend deployment. On Render, the demo URL is the backend Web Service root,
+for example:
+
+```text
+https://cvfit.onrender.com/
+```
+
+The page uses same-origin API calls for the real MVP flow: upload a CV through
+`/v1/cv/upload`, create a score job through `/v1/jobs/create-score`, poll job
+status, fetch the token-protected result/report metadata, and expose a DOCX
+report download link. Use only synthetic CV/JD data for demos. The access token
+is MVP per-job protection, not full account auth; the current app has no cleanup
+endpoint, so mutating demos create records and a report.
+
 Stop:
 ```bash
 docker compose down
