@@ -59,3 +59,83 @@ jobs:
 
       - name: Validate Docker Compose config
         run: docker compose config
+
+  postgres-migrations:
+    name: PostgreSQL Migration Checks
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: cvfit
+          POSTGRES_PASSWORD: cvfit
+          POSTGRES_DB: cvfit_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U cvfit -d cvfit_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: "postgresql+psycopg2://cvfit:cvfit@localhost:5432/cvfit_ci"
+      REDIS_URL: "redis://localhost:6379/0"
+      PYTHONPYCACHEPREFIX: ${{ github.workspace }}/backend/pytest-cache-files-local/pycache-prefix
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.txt
+            backend/requirements-dev.txt
+            backend/requirements-ml.txt
+
+      - name: Install backend dev dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r backend/requirements-dev.txt
+
+      - name: Wait for PostgreSQL
+        run: |
+          python - <<'PY'
+          import time
+
+          import psycopg2
+
+          database_url = "postgresql://cvfit:cvfit@localhost:5432/cvfit_ci"
+          deadline = time.monotonic() + 60
+          while True:
+              try:
+                  with psycopg2.connect(database_url):
+                      break
+              except psycopg2.OperationalError:
+                  if time.monotonic() >= deadline:
+                      raise
+                  time.sleep(2)
+          PY
+
+      - name: Run Alembic migrations on disposable PostgreSQL
+        working-directory: backend
+        run: alembic upgrade head
+
+      - name: Check Alembic current revision
+        working-directory: backend
+        run: |
+          current_output="$(alembic current)"
+          echo "$current_output"
+          case "$current_output" in
+            20260522_0001*) ;;
+            *) exit 1 ;;
+          esac
+
+      - name: Validate PostgreSQL schema
+        run: python scripts/check_db_schema.py

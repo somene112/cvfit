@@ -45,6 +45,18 @@ python scripts/check_db_schema.py
 
 The checker reads `DATABASE_URL`, reports required tables/columns, confirms `analysis_jobs.access_token_hash`, reports whether `alembic_version` exists, and checks the PostgreSQL `vector` extension. It does not print the database URL or secret values.
 
+CI has two database-related paths:
+
+- The backend hygiene/test job uses SQLite in memory for tests and Alembic
+  metadata checks.
+- The PostgreSQL migration job starts a disposable `pgvector/pgvector:pg16`
+  service, runs `alembic upgrade head`, verifies revision `20260522_0001`, and
+  runs the schema checker against that disposable CI database.
+
+The PostgreSQL CI job does not use Render `DATABASE_URL`, real secrets, Render
+APIs, deploy commands, or adoption/stamp helpers. Production and Render
+migrations remain operator-controlled.
+
 API and worker startup are non-mutating. If the runtime database is empty,
 missing a required column, or lacks the expected Alembic revision, startup fails
 with a message such as:
