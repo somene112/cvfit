@@ -80,8 +80,9 @@ There is intentionally no root requirements.txt; install from backend/requiremen
 
 ## CI Checks
 
-GitHub Actions runs the backend hygiene checks on pull requests and pushes to
-`main`. CI uses only safe local/test environment values:
+GitHub Actions runs backend hygiene checks plus disposable PostgreSQL migration
+validation on pull requests and pushes to `main`. The backend job uses only
+safe local/test environment values:
 
 ```env
 DATABASE_URL=sqlite+pysqlite:///:memory:
@@ -93,7 +94,7 @@ production secret. Database migrations and existing production-like database
 adoption remain operator-controlled; CI never upgrades or stamps Render
 PostgreSQL.
 
-The CI job checks:
+The backend job checks:
 
 ```bash
 python scripts/ci_guard.py
@@ -103,6 +104,12 @@ cd backend && alembic heads
 cd backend && alembic history
 docker compose config
 ```
+
+The PostgreSQL migration job starts a disposable `pgvector/pgvector:pg16`
+service with local CI-only credentials, runs `alembic upgrade head`, verifies
+the current revision is `20260522_0001`, and runs `python scripts/check_db_schema.py`
+against that disposable database. It does not use Render secrets, call Render
+APIs, deploy, or run adoption/stamp helpers.
 
 On Windows Anaconda Prompt, run the same local checks with:
 
