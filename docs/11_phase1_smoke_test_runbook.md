@@ -1,5 +1,23 @@
 # Phase 1 Smoke Test Runbook
 
+## Repeatable backend smoke script
+
+Use the scripted smoke test after deploying the backend and worker. It uploads one tester-provided dummy PDF/DOCX CV, creates a job, verifies access-token protection, waits for the job, fetches result/report metadata, and verifies DOCX download. The script does not print the access token or raw CV content.
+
+No safe sample CV is committed in this repo. Use a dummy CV only; do not use a real personal CV.
+
+```powershell
+$env:API_BASE_URL="https://cvfit.onrender.com"
+$env:TEST_CV_PATH="D:\path\to\dummy_cv.docx"
+python scripts/smoke_phase1_backend.py
+```
+
+Optional timeout override:
+
+```powershell
+$env:SMOKE_TIMEOUT_SECONDS="300"
+```
+
 ## Backend health
 
 ```powershell
