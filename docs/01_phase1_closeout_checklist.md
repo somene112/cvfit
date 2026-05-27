@@ -5,19 +5,19 @@ Nguyên tắc: không chốt bằng cảm tính; mỗi mục cần có evidence.
 
 | Nhóm việc | Task | Owner | Status | Evidence cần có | Blocker | Must-have before close? | Can move Phase 2? |
 |---|---|---:|---|---|---|---|---|
-| Deploy | Render backend chạy ổn | Phúc | TODO | `/health` OK, logs không crash | Env / build / start command | Yes | No |
-| Deploy | Worker chạy ổn | Phúc/Đạt | TODO | queue job chạy từ queued → running → succeeded/failed rõ | Redis/Celery/env | Yes | No |
-| Storage | S3 upload/download smoke | Phúc | TODO | upload CV thành công, report download được | AWS credentials, bucket, region | Yes | No |
-| Security MVP | Access token bảo vệ result/report | Phúc/Đạt | TODO | không token → 401/403; token đúng → 200; token sai → 401/403 | API chưa enforce | Yes | No |
-| API Contract | Contract cho Next frontend | Phúc | TODO | `docs/api-contract-next.md` merge vào repo | Endpoint chưa thống nhất | Yes | No |
+| Deploy | Render backend chạy ổn | Phúc | DONE | Render smoke passed; `/health` OK | none | Yes | No |
+| Deploy | Worker chạy ổn | Phúc/Đạt | DONE | Render smoke job ran `running` → `succeeded` | none | Yes | No |
+| Storage | S3 upload/download smoke | Phúc | DONE | Render smoke uploaded CV and downloaded DOCX report | none | Yes | No |
+| Security MVP | Access token bảo vệ result/report | Phúc/Đạt | DONE | missing/wrong token rejected; correct token allowed result/report/download | none | Yes | No |
+| API Contract | Contract cho Next frontend | Phúc | DONE | `docs/02_api_contract_next_frontend.md` matches implemented backend routes | none | Yes | No |
 | Frontend | Next landing page | Quân | TODO | mở được page deploy/local | Design/API mismatch | Yes | No, nếu Jinja fallback |
 | Frontend | Analyze page: upload CV + paste JD | Quân | TODO | gửi request thật tới backend | CORS/API contract | Yes | No, nếu Jinja fallback |
 | Frontend | Loading/result/download flow | Quân + Phúc | TODO | job polling + result + download OK | access_token handling | Yes | No, nếu Jinja fallback |
 | Migration | Alembic baseline validation | Đạt/Phúc | DONE | disposable PostgreSQL/pgvector DB chạy `alembic upgrade head` OK | none | Yes | No |
 | Cleanup | S3 lifecycle cleanup | Phúc/Đạt | DONE | lifecycle policy applied and verified on bucket | none | Should | Yes, nếu có runbook |
-| Docs | Runbook smoke test | Phúc | TODO | `docs/runbook-phase1.md` có lệnh chạy | thiếu endpoint/env | Yes | No |
-| Product | Phase 2 Product Spec | Phúc | TODO | `docs/phase2-product-spec.md` | chưa thống nhất scope | Should | No |
-| Demo | Demo script 3–5 phút | Phúc | TODO | script + fallback notes | Next chưa ổn | Yes | No |
+| Docs | Runbook smoke test | Phúc | DONE | `docs/11_phase1_smoke_test_runbook.md` and `scripts/smoke_phase1_backend.py` exist; live smoke passed | none | Yes | No |
+| Product | Phase 2 Product Spec | Phúc | DONE | `docs/06_phase2_product_spec.md` exists | none | Should | No |
+| Demo | Demo script 3–5 phút | Phúc | DONE | `docs/phase1_demo_script.md` includes 3-5 minute script and fallback notes | none | Yes | No |
 
 ## Definition of Done Phase 1
 
@@ -77,3 +77,11 @@ Phase 1 chỉ nên close khi đạt tối thiểu:
 - Existing bucket lifecycle config was checked before apply; no lifecycle config existed.
 - Verified lifecycle rules after apply: `expire-temporary-uploads`, `expire-raw-cv-uploads`, `expire-generated-reports`, and `abort-incomplete-multipart-uploads`.
 - No manual S3 object deletion was performed.
+
+## Evidence note - final closeout audit 2026-05-27
+
+- Backend route contract checked against implementation for `POST /v1/cv/upload`, `POST /v1/jobs/create-score`, `GET /v1/jobs/{job_id}`, `GET /v1/jobs/{job_id}/result`, `GET /v1/jobs/{job_id}/report`, and `GET /v1/jobs/{job_id}/report/download`.
+- Render backend smoke evidence covers `/health`, CV upload, create-score, queued/running/succeeded worker processing, access-token rejection, result/report access, and DOCX download.
+- Smoke runbook and script are present; `scripts/smoke_phase1_backend.py` compiled successfully.
+- Existing frontend in this repo is the FastAPI-served Jinja/vanilla JS fallback. Next frontend validation remains a separate owner follow-up.
+- Demo script and fallback notes are documented in `docs/phase1_demo_script.md`.
