@@ -41,6 +41,43 @@ DATABASE_URL=postgresql+psycopg2://user:password@host:5432/cvfit_migration_test
 
 Không dùng production URL khi thử migration lần đầu.
 
+Migration hiện tại dùng PostgreSQL-specific features (`vector` extension,
+PostgreSQL UUID/JSONB/ENUM), nên không dùng SQLite để thay thế validation
+`alembic upgrade head`.
+
+## Commands - Windows cmd.exe disposable Docker
+
+```cmd
+cd D:\Nguyen_Duc_Hoang_Phuc\SP26\EXE101\project
+
+docker run -d --rm --name cvfit-alembic-validation ^
+  -e POSTGRES_USER=cvfit ^
+  -e POSTGRES_PASSWORD=cvfit ^
+  -e POSTGRES_DB=cvfit_migration_test ^
+  -p 55432:5432 ^
+  pgvector/pgvector:pg16
+
+set DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:55432/cvfit_migration_test
+set REDIS_URL=redis://localhost:6379/0
+
+cd backend
+alembic heads
+alembic history
+alembic current
+alembic upgrade head
+alembic current
+
+cd ..
+python scripts\check_db_schema.py
+docker stop cvfit-alembic-validation
+```
+
+Expected result:
+- `alembic heads` shows one head: `20260522_0001`.
+- `alembic current` after upgrade shows `20260522_0001 (head)`.
+- `python scripts\check_db_schema.py` reports baseline schema check passed.
+- Production DB is not touched.
+
 ## Smoke sau migration
 
 ```powershell
