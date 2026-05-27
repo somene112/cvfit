@@ -1,0 +1,44 @@
+{
+  "Rules": [
+    {
+      "ID": "expire-temporary-uploads",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "tmp/"
+      },
+      "Expiration": {
+        "Days": 1
+      }
+    },
+    {
+      "ID": "expire-raw-cv-uploads",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "uploads/"
+      },
+      "Expiration": {
+        "Days": 30
+      }
+    },
+    {
+      "ID": "expire-generated-reports",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": "reports/"
+      },
+      "Expiration": {
+        "Days": 30
+      }
+    },
+    {
+      "ID": "abort-incomplete-multipart-uploads",
+      "Status": "Enabled",
+      "Filter": {
+        "Prefix": ""
+      },
+      "AbortIncompleteMultipartUpload": {
+        "DaysAfterInitiation": 7
+      }
+    }
+  ]
+}
