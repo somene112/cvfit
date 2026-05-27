@@ -14,7 +14,7 @@ Nguyên tắc: không chốt bằng cảm tính; mỗi mục cần có evidence.
 | Frontend | Analyze page: upload CV + paste JD | Quân | TODO | gửi request thật tới backend | CORS/API contract | Yes | No, nếu Jinja fallback |
 | Frontend | Loading/result/download flow | Quân + Phúc | TODO | job polling + result + download OK | access_token handling | Yes | No, nếu Jinja fallback |
 | Migration | Alembic baseline validation | Đạt/Phúc | DONE | disposable PostgreSQL/pgvector DB chạy `alembic upgrade head` OK | none | Yes | No |
-| Cleanup | S3 lifecycle cleanup | Phúc/Đạt | TODO | lifecycle policy JSON hoặc console screenshot | quyền AWS | Should | Yes, nếu có runbook |
+| Cleanup | S3 lifecycle cleanup | Phúc/Đạt | DONE | lifecycle policy applied and verified on bucket | none | Should | Yes, nếu có runbook |
 | Docs | Runbook smoke test | Phúc | TODO | `docs/runbook-phase1.md` có lệnh chạy | thiếu endpoint/env | Yes | No |
 | Product | Phase 2 Product Spec | Phúc | TODO | `docs/phase2-product-spec.md` | chưa thống nhất scope | Should | No |
 | Demo | Demo script 3–5 phút | Phúc | TODO | script + fallback notes | Next chưa ổn | Yes | No |
@@ -70,3 +70,10 @@ Phase 1 chỉ nên close khi đạt tối thiểu:
 - `alembic upgrade head` validated against a disposable local PostgreSQL/pgvector database.
 - Baseline schema check passed, including required tables, `alembic_version`, and `vector` extension.
 - Production DB was not touched.
+
+## Evidence note - S3 lifecycle cleanup 2026-05-27
+
+- Lifecycle policy applied to bucket `2026-fpt-exe-app` in region `ap-southeast-2`.
+- Existing bucket lifecycle config was checked before apply; no lifecycle config existed.
+- Verified lifecycle rules after apply: `expire-temporary-uploads`, `expire-raw-cv-uploads`, `expire-generated-reports`, and `abort-incomplete-multipart-uploads`.
+- No manual S3 object deletion was performed.
