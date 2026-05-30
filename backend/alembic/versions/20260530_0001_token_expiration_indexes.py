@@ -18,7 +18,7 @@ def upgrade() -> None:
         sa.Column("access_token_expires_at", sa.DateTime(), nullable=True)
     )
 
-    # Chỉ tạo index MỚI chưa có trong file trước
+    # Chỉ tạo index MỚI chưa có trong file trước    
     op.create_index(
         "ix_analysis_jobs_cv_file_id",
         "analysis_jobs",
