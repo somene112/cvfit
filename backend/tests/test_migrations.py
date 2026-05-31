@@ -57,6 +57,7 @@ def test_initial_migration_exists_and_mentions_current_schema():
 def test_models_still_import():
     from app.db import models
 
+    assert models.User.__tablename__ == "users"
     assert models.CVFile.__tablename__ == "cv_files"
     assert models.JDDoc.__tablename__ == "jd_docs"
     assert models.AnalysisJob.__tablename__ == "analysis_jobs"
@@ -69,9 +70,26 @@ def test_schema_checker_script_tracks_baseline_schema():
     text = script.read_text(encoding="utf-8")
 
     assert "REQUIRED_SCHEMA" in text
+    assert '"users"' in text
     assert '"analysis_jobs"' in text
+    assert '"user_id"' in text
     assert '"access_token_hash"' in text
     assert "alembic_version" in text
+
+
+def test_auth_foundation_migration_exists_and_mentions_schema_changes():
+    migration = BACKEND_ROOT / "alembic" / "versions" / "20260531_0001_add_users_and_job_ownership.py"
+
+    text = migration.read_text(encoding="utf-8")
+
+    assert 'revision = "20260531_0001"' in text
+    assert 'down_revision = "20260522_0001"' in text
+    assert '"users"' in text
+    assert '"email"' in text
+    assert '"password_hash"' in text
+    assert '"user_id"' in text
+    assert "fk_analysis_jobs_user_id_users" in text
+    assert "ix_analysis_jobs_user_id" in text
 
 
 def test_adoption_logic_refuses_schema_mismatch():
@@ -285,7 +303,7 @@ def test_runtime_schema_check_reports_wrong_alembic_version(monkeypatch):
         init_db.check_runtime_schema()
 
     assert "Database schema is not at Alembic head" in str(exc.value)
-    assert "Expected 20260522_0001, found wrong_revision" in str(exc.value)
+    assert f"Expected {init_db.EXPECTED_ALEMBIC_HEAD}, found wrong_revision" in str(exc.value)
 
 
 def test_access_token_hash_is_not_silently_added_at_runtime(monkeypatch):

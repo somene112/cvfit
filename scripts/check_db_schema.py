@@ -11,6 +11,15 @@ from sqlalchemy.exc import SAWarning
 
 
 REQUIRED_SCHEMA = {
+    "users": {
+        "id",
+        "email",
+        "password_hash",
+        "full_name",
+        "is_active",
+        "created_at",
+        "updated_at",
+    },
     "cv_files": {
         "id",
         "original_filename",
@@ -24,6 +33,7 @@ REQUIRED_SCHEMA = {
         "id",
         "cv_file_id",
         "jd_id",
+        "user_id",
         "status",
         "progress",
         "error_message",

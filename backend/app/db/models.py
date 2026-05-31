@@ -9,13 +9,27 @@ except ImportError:
     def Vector(dim):
         return JSON
 
-from sqlalchemy import String, Text, DateTime, Integer, Enum, ForeignKey
+from sqlalchemy import Boolean, String, Text, DateTime, Integer, Enum, ForeignKey, true
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
 
 JOB_STATUS = ("queued", "running", "succeeded", "failed")
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    full_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default=true())
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    jobs = relationship("AnalysisJob", back_populates="user")
 
 
 class CVFile(Base):
@@ -46,6 +60,7 @@ class AnalysisJob(Base):
 
     cv_file_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("cv_files.id"))
     jd_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("jd_docs.id"))
+    user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
 
     status: Mapped[str] = mapped_column(Enum(*JOB_STATUS, name="job_status"), default="queued")
     progress: Mapped[int] = mapped_column(Integer, default=0)
@@ -60,6 +75,7 @@ class AnalysisJob(Base):
 
     cv_file = relationship("CVFile", back_populates="jobs")
     jd_doc = relationship("JDDoc", back_populates="jobs")
+    user = relationship("User", back_populates="jobs")
 
 
 class TextEmbedding(Base):
