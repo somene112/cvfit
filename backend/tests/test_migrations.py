@@ -27,6 +27,15 @@ def _load_adoption_module():
     return module
 
 
+def _load_current_checker_module():
+    module_path = BACKEND_ROOT.parent / "scripts" / "check_alembic_current.py"
+    spec = importlib.util.spec_from_file_location("check_alembic_current", module_path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_alembic_config_exists():
     assert (BACKEND_ROOT / "alembic.ini").is_file()
     assert (BACKEND_ROOT / "alembic" / "env.py").is_file()
@@ -151,6 +160,7 @@ def _sqlite_engine_with_runtime_schema(
 def test_runtime_expected_alembic_head_matches_script_head():
     from app.db import init_db
 
+    current_checker = _load_current_checker_module()
     result = subprocess.run(
         [sys.executable, "-m", "alembic", "heads"],
         cwd=BACKEND_ROOT,
@@ -159,7 +169,48 @@ def test_runtime_expected_alembic_head_matches_script_head():
         text=True,
     )
 
-    assert result.stdout.strip() == f"{init_db.EXPECTED_ALEMBIC_HEAD} (head)"
+    revisions = current_checker.parse_alembic_revisions(
+        f"{result.stdout}\n{result.stderr}"
+    )
+
+    assert revisions == [init_db.EXPECTED_ALEMBIC_HEAD]
+
+
+def test_alembic_revision_parser_ignores_info_lines_and_head_marker():
+    current_checker = _load_current_checker_module()
+
+    output = "\n".join(
+        [
+            "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+            "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+            "20260530_0001 (head)",
+        ]
+    )
+
+    assert current_checker.parse_alembic_revisions(output) == ["20260530_0001"]
+
+
+def test_alembic_current_checker_accepts_current_matching_heads():
+    current_checker = _load_current_checker_module()
+
+    current_output = "\n".join(
+        [
+            "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+            "20260530_0001 (head)",
+        ]
+    )
+    heads_output = "20260530_0001 (head)"
+
+    assert current_checker.alembic_current_matches_heads(current_output, heads_output)
+
+
+def test_alembic_current_checker_rejects_stale_current_revision():
+    current_checker = _load_current_checker_module()
+
+    assert not current_checker.alembic_current_matches_heads(
+        "20260522_0001",
+        "20260530_0001 (head)",
+    )
 
 
 def test_runtime_init_module_has_no_schema_mutation_calls():

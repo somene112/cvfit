@@ -125,9 +125,9 @@ docker compose config
 
 The PostgreSQL migration job starts a disposable `pgvector/pgvector:pg16`
 service with local CI-only credentials, runs `alembic upgrade head`, verifies
-the current revision is `20260522_0001`, and runs `python scripts/check_db_schema.py`
-against that disposable database. It does not use Render secrets, call Render
-APIs, deploy, or run adoption/stamp helpers.
+`alembic current` matches `alembic heads`, and runs
+`python scripts/check_db_schema.py` against that disposable database. It does
+not use Render secrets, call Render APIs, deploy, or run adoption/stamp helpers.
 
 On Windows Anaconda Prompt, run the same local checks with:
 

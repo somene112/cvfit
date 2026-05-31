@@ -129,13 +129,7 @@ jobs:
 
       - name: Check Alembic current revision
         working-directory: backend
-        run: |
-          current_output="$(alembic current)"
-          echo "$current_output"
-          case "$current_output" in
-            20260522_0001*) ;;
-            *) exit 1 ;;
-          esac
+        run: python ../scripts/check_alembic_current.py
 
       - name: Validate PostgreSQL schema
         run: python scripts/check_db_schema.py
