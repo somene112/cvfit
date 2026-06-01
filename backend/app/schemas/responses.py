@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 from typing import Optional, Any
 
 class UploadResponse(BaseModel):
@@ -29,3 +30,16 @@ class JobResultResponse(BaseModel):
     missing_skills: Optional[list[Any]] = None
     recommendations: Optional[list[Any]] = None
     evidence: Optional[list[Any]] = None
+
+class JobHistoryItemResponse(BaseModel):
+    job_id: str
+    status: str
+    progress: int
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+    overall_fit_score: Optional[float] = None
+    has_report: bool
+    target_role: Optional[str] = None
+
+class JobHistoryResponse(BaseModel):
+    items: list[JobHistoryItemResponse]

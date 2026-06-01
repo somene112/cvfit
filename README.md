@@ -164,6 +164,10 @@ cd ..
 python scripts/check_db_schema.py
 ```
 
+The current Alembic head for the Phase 2 auth foundation is `20260531_0001`.
+It adds the `users` table and nullable `analysis_jobs.user_id` for logged-in job
+ownership while preserving guest jobs.
+
 API and worker startup do not silently create or patch database tables. If the
 schema is missing or behind Alembic head, startup fails with an error that tells
 you to run `alembic upgrade head` against the intended local/disposable

@@ -2,6 +2,26 @@
 
 Phase 1C added an Alembic baseline so schema changes can be reviewed and applied deliberately. Phase 1D makes Alembic the intentional schema-management path: API and worker startup verify the schema, but no longer silently create tables or patch columns.
 
+Current Alembic head:
+
+```text
+20260531_0001
+```
+
+Revision chain:
+
+```text
+20260522_0001 -> 20260531_0001
+```
+
+`20260531_0001` is the Phase 2 auth foundation migration. It creates the
+`users` table, adds nullable `analysis_jobs.user_id`, adds the
+`analysis_jobs.user_id -> users.id` foreign key, and adds indexes for
+`users.email` and `analysis_jobs.user_id`.
+
+`analysis_jobs.user_id` must stay nullable because guest jobs remain supported.
+Guest mode still creates analysis jobs without an account.
+
 ## Why Alembic Was Added
 
 - Make database schema changes explicit and reviewable.
@@ -43,7 +63,10 @@ To validate a disposable/local PostgreSQL database after upgrading:
 python scripts/check_db_schema.py
 ```
 
-The checker reads `DATABASE_URL`, reports required tables/columns, confirms `analysis_jobs.access_token_hash`, reports whether `alembic_version` exists, and checks the PostgreSQL `vector` extension. It does not print the database URL or secret values.
+The checker reads `DATABASE_URL`, reports required tables/columns, confirms
+auth-era schema items such as `users` and `analysis_jobs.user_id`, reports
+whether `alembic_version` exists, and checks the PostgreSQL `vector` extension.
+It does not print the database URL or secret values.
 
 CI has two database-related paths:
 
@@ -79,6 +102,74 @@ cd ..
 docker compose up --build -d
 ```
 
+Windows CMD equivalent:
+
+```bat
+docker compose up -d postgres redis
+cd backend
+set "DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:5432/cvfit"
+set "REDIS_URL=redis://localhost:6379/0"
+alembic upgrade head
+alembic current
+cd ..
+python scripts/check_db_schema.py
+```
+
+Disposable container validation, independent of any existing Compose volume:
+
+```powershell
+docker run --rm -d --name cvfit-auth-migration-check `
+  -e POSTGRES_USER=cvfit `
+  -e POSTGRES_PASSWORD=cvfit `
+  -e POSTGRES_DB=cvfit `
+  -p 55432:5432 `
+  pgvector/pgvector:pg16
+
+docker exec cvfit-auth-migration-check pg_isready -U cvfit -d cvfit
+
+cd backend
+$env:DATABASE_URL="postgresql+psycopg2://cvfit:cvfit@localhost:55432/cvfit"
+$env:REDIS_URL="redis://localhost:6379/0"
+alembic upgrade head
+alembic current
+cd ..
+python scripts/check_db_schema.py
+
+docker stop cvfit-auth-migration-check
+```
+
+Disposable CMD equivalent:
+
+```bat
+docker run --rm -d --name cvfit-auth-migration-check -e POSTGRES_USER=cvfit -e POSTGRES_PASSWORD=cvfit -e POSTGRES_DB=cvfit -p 55432:5432 pgvector/pgvector:pg16
+docker exec cvfit-auth-migration-check pg_isready -U cvfit -d cvfit
+cd backend
+set "DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:55432/cvfit"
+set "REDIS_URL=redis://localhost:6379/0"
+alembic upgrade head
+alembic current
+cd ..
+python scripts/check_db_schema.py
+docker stop cvfit-auth-migration-check
+```
+
+Optional local-only downgrade/re-upgrade validation on a disposable database:
+
+```bat
+cd backend
+set "DATABASE_URL=postgresql+psycopg2://cvfit:cvfit@localhost:55432/cvfit"
+set "REDIS_URL=redis://localhost:6379/0"
+alembic downgrade 20260522_0001
+alembic current
+alembic upgrade head
+alembic current
+cd ..
+python scripts/check_db_schema.py
+```
+
+Do not run downgrade on production without explicit data-loss approval. The
+auth downgrade removes the `users` table and `analysis_jobs.user_id`.
+
 ## Create A New Migration
 
 After changing SQLAlchemy models:
@@ -101,9 +192,15 @@ Before running migrations against a Render database:
 
 1. Confirm the target `DATABASE_URL` points to the intended Render database.
 2. Take a database backup or snapshot.
-3. Review the migration file.
-4. Run the migration from a trusted local/dev environment with `backend/requirements-dev.txt` installed.
-5. Redeploy or restart API/worker only after the migration succeeds.
+3. Inspect current schema without printing secrets:
+   `python scripts/check_db_schema.py`.
+4. Confirm current Alembic revision from a trusted shell:
+   `cd backend && alembic current`.
+5. Review the migration file.
+6. Run the migration from a trusted local/dev environment with
+   `backend/requirements-dev.txt` installed.
+7. Run `python scripts/check_db_schema.py` after migration.
+8. Redeploy or restart API/worker only after the migration succeeds.
 
 Example:
 
@@ -112,23 +209,48 @@ cd backend
 alembic upgrade head
 ```
 
-Never commit Render secrets, database URLs, S3 credentials, or copied dashboard values.
+Never commit Render secrets, database URLs, JWT secrets, S3 credentials, or
+copied dashboard values. Never paste `DATABASE_URL` or `JWT_SECRET_KEY` into
+logs, screenshots, PR comments, or chats.
+
+Required env vars for migration/runtime:
+
+```env
+DATABASE_URL=<target database URL>
+REDIS_URL=<required by app settings/runtime checks>
+JWT_SECRET_KEY=<required for runtime, not normally used by Alembic>
+```
+
+If Render DB is currently at `20260522_0001`, apply only the reviewed migration
+to `20260531_0001` after backup and local/disposable validation.
+
+If Render DB is already at `20260531_0001`, do not run another upgrade. Run the
+schema checker and proceed with deploy readiness checks.
 
 ## Existing Database Adoption Strategy
 
-Use the initial migration differently depending on the database state:
+Use migrations differently depending on the database state:
 
 - Empty database: run `alembic upgrade head`.
 - Existing database already created by `Base.metadata.create_all()`: do not blindly run the initial migration because it will try to create tables that already exist.
-- Existing database with matching baseline schema: first verify the schema, then run `alembic stamp head` to mark the database as current without recreating tables.
+- Existing database with matching `20260522_0001` baseline schema but missing or
+  wrong `alembic_version`: first verify the schema, then run
+  `alembic stamp 20260522_0001`, then run `alembic upgrade head` after backup
+  and local validation.
+- Existing database with matching `20260531_0001` schema but missing or wrong
+  `alembic_version`: stop and verify how that happened. If it is confirmed to
+  match the current head exactly, stamp `20260531_0001` only after backup and
+  documented approval.
 - Existing database with schema drift: stop and resolve the mismatch deliberately before stamping or upgrading.
 
-For the current Render MVP database, take a backup first, verify the schema without printing secrets, and only stamp if it matches the baseline:
+For an old Render MVP database, take a backup first, verify the schema without
+printing secrets, and only stamp if it matches the expected baseline:
 
 ```bash
 python scripts/check_db_schema.py
 cd backend
-alembic stamp head
+alembic stamp 20260522_0001
+alembic upgrade head
 alembic current
 ```
 
@@ -161,6 +283,12 @@ cd ..
 If the checker reports missing tables or columns, stop. Do not stamp. Fix the mismatch deliberately after identifying why the live schema differs from the baseline.
 
 Do not run `alembic upgrade head` on an existing database that was already created by the old `Base.metadata.create_all()` startup fallback unless you have first verified the schema and planned the adoption path. The initial migration creates the baseline tables and will collide with an already-populated MVP database. For an empty database only, `alembic upgrade head` is appropriate; the adoption helper requires `--allow-empty-upgrade` before it will run that path.
+
+After the auth branch, the adoption helper and schema checker should be used
+carefully: a database at the old baseline will be missing `users` and
+`analysis_jobs.user_id` until the auth migration is applied. If the live DB is
+at `20260522_0001`, the expected path is backup, verify old baseline, then
+`alembic upgrade head`.
 
 ## pgvector Notes
 

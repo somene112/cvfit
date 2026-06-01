@@ -4,28 +4,26 @@ Owner backend auth/API contract: Phuc
 Owner Next/React frontend: Quan
 
 This document is the Phase 2 Full Auth/Login MVP contract draft. It records the
-backend state that exists now and the planned JWT Bearer auth contract. It does
-not mean the auth endpoints are implemented yet.
+backend state that exists now and the JWT Bearer auth contract.
 
 ## Auth Status Audit
 
 Original audit classification before the DB foundation:
 Frontend-only login placeholder exists
 
-Current foundation status after revision `20260531_0001`:
-Partial backend auth foundation exists. This means the user table and nullable
-job ownership column exist in the model/migration contract, but login/register
-behavior is still not implemented.
+Current backend auth core status:
+Basic backend auth endpoints exist for register, login, me, and stateless logout.
+Job ownership, history, and owner-based result/report access are implemented.
 
 Current repository state:
 
-- No implemented backend auth endpoints.
 - `users` model/table foundation exists after applying Alembic revision
   `20260531_0001`.
-- No password hashing utility or dependency.
-- No JWT/session utility or dependency.
-- No `Authorization: Bearer` parsing in backend routes.
-- No history endpoint.
+- Password hashing uses Passlib `bcrypt_sha256` with the bcrypt backend.
+- JWT creation and validation uses `python-jose[cryptography]`.
+- `Authorization: Bearer <token>` parsing exists for `/v1/auth/me` and
+  `/v1/auth/logout`, optional logged-in job creation, owner result/report access,
+  and `/v1/jobs/history`.
 - `frontend/templates/login.html` is a static login form placeholder, but it is
   not wired to a backend auth route and is not included by `backend/app/main.py`.
 - Guest mode is implemented with per-job `access_token` protection for result,
@@ -61,9 +59,21 @@ Next frontend:
 NEXT_PUBLIC_API_BASE_URL=https://cvfit.onrender.com
 ```
 
-Contract gap: backend CORS is not currently configured in `backend/app/main.py`.
-Before a separate Next/Vercel frontend calls the API, add explicit allowed
-origins for local Next and the deployed frontend domain.
+CORS support is implemented with explicit allowed origins.
+
+Local defaults:
+
+```env
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOW_CREDENTIALS=false
+CORS_ALLOWED_METHODS=GET,POST,OPTIONS
+CORS_ALLOWED_HEADERS=Authorization,Content-Type
+```
+
+Production should set `CORS_ALLOWED_ORIGINS` to the deployed Next/Vercel
+frontend origin. Do not use `*` together with `CORS_ALLOW_CREDENTIALS=true`.
+The JWT Bearer MVP does not require cookies, so credentials should stay false
+unless the frontend architecture changes.
 
 ## Current Implemented Endpoints
 
@@ -280,6 +290,16 @@ Current behavior:
 - Returns `403` for missing or wrong token.
 - Returns `409` when the report is not ready.
 - Returns `404` when the stored report object cannot be found.
+- Logged-in owners can also download with `Authorization: Bearer <jwt>`.
+
+Frontend download note:
+
+- A normal browser `<a href="...">` download cannot attach an Authorization
+  header. For that path, use the guest-token `download_url` returned by report
+  metadata and do not log the URL.
+- To download by owner JWT without `access_token`, use `fetch()` with
+  `Authorization: Bearer <token>`, convert the response to a blob, and trigger a
+  client-side download.
 
 ## Current Guest Access Token Flow
 
@@ -301,10 +321,20 @@ so frontend and logs must redact those URLs.
 
 Auth strategy: JWT Bearer Token.
 
+Implementation details:
+
+- Passwords are stored only as Passlib `bcrypt_sha256` password hashes.
+- JWTs are signed with `JWT_SECRET_KEY`, `JWT_ALGORITHM`, and
+  `JWT_ACCESS_TOKEN_EXPIRE_MINUTES`.
+- `JWT_ALGORITHM` defaults to `HS256`.
+- `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` defaults to `1440`.
+- The development fallback `JWT_SECRET_KEY` is intentionally insecure and must
+  be overridden in production.
+
 DB foundation added in revision `20260531_0001`:
 
-- `users.id`, `users.email`, `users.password_hash`, `users.full_name`,
-  `users.is_active`, `users.created_at`, and `users.updated_at`.
+- `users` stores account identity fields and an internal password hash column.
+  Password hash values are never part of API responses.
 - Unique email index: `ix_users_email`.
 - Nullable job owner field: `analysis_jobs.user_id`.
 - Job owner index: `ix_analysis_jobs_user_id`.
@@ -318,6 +348,11 @@ Request format:
 ```http
 Authorization: Bearer <jwt>
 ```
+
+Logged-in frontend calls should send this header for `/v1/auth/me`,
+`/v1/auth/logout`, logged-in `/v1/jobs/create-score`, `/v1/jobs/history`, and
+owner access to result/report/download. Never `console.log` JWTs or job
+`access_token` values.
 
 Initial MVP can use a single access token response without refresh tokens.
 Logout can be stateless from the backend perspective unless token revocation is
@@ -349,7 +384,8 @@ Planned response:
   "user": {
     "id": "2c81c4b6-b716-43c6-b9d3-3d7d00c6fd15",
     "email": "student@example.com",
-    "full_name": "Example Student"
+    "full_name": "Example Student",
+    "is_active": true
   }
 }
 ```
@@ -384,7 +420,8 @@ Planned response:
   "user": {
     "id": "2c81c4b6-b716-43c6-b9d3-3d7d00c6fd15",
     "email": "student@example.com",
-    "full_name": "Example Student"
+    "full_name": "Example Student",
+    "is_active": true
   }
 }
 ```
@@ -407,7 +444,8 @@ Planned response:
 {
   "id": "2c81c4b6-b716-43c6-b9d3-3d7d00c6fd15",
   "email": "student@example.com",
-  "full_name": "Example Student"
+  "full_name": "Example Student",
+  "is_active": true
 }
 ```
 
@@ -434,7 +472,7 @@ MVP note: if JWTs are stateless, frontend deletes the stored token and backend
 returns success for a valid token. Token revocation can be a later hardening
 item.
 
-## Planned Job Ownership Behavior
+## Implemented Job Ownership Behavior
 
 ### Create Score Job With Optional JWT
 
@@ -444,7 +482,7 @@ Authorization: Bearer <jwt>
 Content-Type: application/json
 ```
 
-Planned behavior:
+Implemented behavior:
 
 - If `Authorization: Bearer <jwt>` is present and valid, set
   `analysis_jobs.user_id = current_user.id`.
@@ -482,12 +520,13 @@ GET /v1/jobs/{job_id}/report/download
 Authorization: Bearer <jwt>
 ```
 
-Planned behavior:
+Implemented behavior:
 
 - `access_token` path continues to work for guest compatibility.
 - Owner JWT path works only when `analysis_jobs.user_id` matches current user.
 - Non-owner JWT returns `403`.
-- Missing both guest token and JWT returns `401` or `403`.
+- Missing both guest token and JWT returns `403` on result/report/download.
+- Invalid Bearer token returns `401`.
 
 ### History
 
@@ -496,7 +535,7 @@ GET /v1/jobs/history
 Authorization: Bearer <jwt>
 ```
 
-Planned response:
+Implemented response:
 
 ```json
 {
@@ -515,7 +554,7 @@ Planned response:
 }
 ```
 
-Planned behavior:
+Implemented behavior:
 
 - Requires valid JWT.
 - Returns only jobs where `analysis_jobs.user_id = current_user.id`.
@@ -538,23 +577,23 @@ Planned behavior:
 
 ## Backend Implementation Plan
 
-1. Add auth settings and dependencies: JWT secret, algorithm, expiry, password
-   hashing library, and JWT library.
-2. Add `User` model and Alembic migration; add nullable
+1. Done: add auth settings and dependencies: JWT secret, algorithm, expiry,
+   password hashing library, and JWT library.
+2. Done: add `User` model and Alembic migration; add nullable
    `analysis_jobs.user_id` with an index and foreign key.
-3. Add auth schemas and security utilities for password hashing, JWT creation,
-   JWT decoding, and current-user dependency.
-4. Add `/v1/auth/register`, `/v1/auth/login`, `/v1/auth/me`, and
+3. Done: add auth schemas and security utilities for password hashing, JWT
+   creation, JWT decoding, and current-user dependency.
+4. Done: add `/v1/auth/register`, `/v1/auth/login`, `/v1/auth/me`, and
    `/v1/auth/logout` routes.
-5. Update `POST /v1/jobs/create-score` to accept optional auth and attach owned
-   jobs to `current_user.id`.
-6. Update result/report/download authorization to allow valid guest token or
-   owner JWT.
-7. Add `GET /v1/jobs/history` for current user's jobs only.
-8. Add focused backend tests for auth endpoints, ownership checks, guest
+5. Done: update `POST /v1/jobs/create-score` to accept optional auth and attach
+   owned jobs to `current_user.id`.
+6. Done: update result/report/download authorization to allow valid guest token
+   or owner JWT.
+7. Done: add `GET /v1/jobs/history` for current user's jobs only.
+8. Done: add focused backend tests for auth endpoints, ownership checks, guest
    backward compatibility, and history filtering.
-9. Add CORS configuration for the separate Next frontend.
-10. Run migrations only against local/disposable databases first; do not run
+9. Done: add CORS configuration for the separate Next frontend.
+10. For deployment: run migrations only against local/disposable databases first; do not run
     migrations against Render DB without an explicit deployment step.
 
 ## Files Likely To Change Next
@@ -580,18 +619,7 @@ Planned behavior:
 
 ## Contract Gaps And TODOs
 
-- Decide exact JWT library and password hashing package.
-- Decide user fields beyond `id`, `email`, `password_hash`, `full_name`,
-  `created_at`, and `updated_at`.
-- Decide email normalization and uniqueness behavior.
-- Decide password length/complexity MVP validation.
-- Decide JWT expiry duration and whether refresh tokens are out of scope.
-- Decide whether logged-in create-score should still return guest
-  `access_token`; recommended for backward compatibility in the MVP.
-- Decide exact `401` versus `403` convention for missing credentials on
-  result/report endpoints.
 - Decide pagination parameters for `GET /v1/jobs/history`.
-- Add CORS allowed origins before separate Next frontend integration.
 - Add Render migration/deployment checklist for the new auth migration.
 
 ## Files Inspected For This Audit
