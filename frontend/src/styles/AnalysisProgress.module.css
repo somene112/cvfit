@@ -1,0 +1,250 @@
+/* ========================================
+   AnalysisProgress — Step Indicator
+   ======================================== */
+
+.card {
+  background: var(--color-card);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border);
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+/* Steps */
+.steps {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  position: relative;
+}
+
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  right: 40px;
+  height: 2px;
+  background: var(--color-border);
+  z-index: 0;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  position: relative;
+  z-index: 1;
+  flex: 1;
+}
+
+.stepCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--transition-base);
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.stepCircle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.stepActive .stepCircle {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.stepCompleted .stepCircle {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.stepFailed .stepCircle {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: white;
+}
+
+.stepLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  text-align: center;
+  transition: color var(--transition-fast);
+}
+
+.stepActive .stepLabel {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.stepCompleted .stepLabel {
+  color: var(--color-success);
+}
+
+.stepFailed .stepLabel {
+  color: var(--color-danger);
+}
+
+/* Progress Bar */
+.progressWrapper {
+  margin-bottom: var(--space-4);
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  background-size: 200% 100%;
+  animation: gradientShift 2s ease-in-out infinite;
+  transition: width 0.5s ease;
+}
+
+.progressBarFillSuccess {
+  background: var(--color-success);
+  animation: none;
+}
+
+.progressBarFillFailed {
+  background: var(--color-danger);
+  animation: none;
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-3);
+}
+
+.progressPercent {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+/* Status Badge */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: capitalize;
+}
+
+.statusQueued {
+  background: var(--color-warning-light);
+  color: #B45309;
+}
+
+.statusRunning {
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.statusSucceeded {
+  background: var(--color-success-light);
+  color: #047857;
+}
+
+.statusFailed {
+  background: var(--color-danger-light);
+  color: var(--color-danger);
+}
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.statusRunning .statusDot {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Error */
+.errorContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--color-danger-light);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.errorContainer svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-danger);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.errorContainer p {
+  font-size: var(--font-size-sm);
+  color: #991B1B;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .card {
+    padding: var(--space-5);
+  }
+
+  .steps {
+    gap: var(--space-2);
+  }
+
+  .steps::before {
+    left: 20px;
+    right: 20px;
+  }
+
+  .stepCircle {
+    width: 34px;
+    height: 34px;
+  }
+
+  .stepLabel {
+    font-size: 10px;
+  }
+}
