@@ -1,0 +1,45 @@
+em làm xong phần của mình cho phase 2 rồi, anh Đạt tập trung vào QA/security/guardrails/S3 cleanup.
+
+Việc cần làm:
+
+1. Auth QA checklist
+- Register success.
+- Register duplicate email.
+- Login success.
+- Login wrong password.
+- /auth/me không token -> 401.
+- /auth/me token đúng -> 200.
+- Logout -> ok.
+- Token sai/expired -> không được vào.
+
+2. Job ownership QA
+- Guest vẫn upload CV + create-score + xem result/report được bằng access_token.
+- User login create-score thì job xuất hiện trong /history.
+- User A không thấy job của User B.
+- Result/report xem được bằng owner JWT.
+- Result/report vẫn xem được bằng guest access_token.
+- Non-owner JWT bị 403.
+
+3. Token/privacy guardrails
+- Không log JWT.
+- Không log password.
+- Không log access_token.
+- Không log raw CV text.
+- Không expose local path/S3 key/report path trong API response.
+- Nếu có URL chứa access_token thì không paste vào docs/log.
+
+4. S3 lifecycle cleanup docs
+- Viết hoặc hoàn thiện docs/s3_lifecycle_cleanup.md.
+- Đề xuất retention:
+  render-smoke: xóa sau 1–3 ngày
+  dev: xóa sau 7–14 ngày
+  uploads/reports: theo policy sản phẩm
+- Không xóa production object bừa bãi.
+
+5. Manual QA sau khi Quân xong frontend
+- Test guest flow.
+- Test logged-in flow.
+- Test history page.
+- Test report download.
+- Check console không leak token.
+- Check error state 400/401/403/404/500 không show stack trace.
