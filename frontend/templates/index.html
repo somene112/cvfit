@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI CV Fit Analyzer</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div>
+    <h2>AI CV Fit Analyzer</h2>
+    <p>AI-powered hiring insights</p>
+  </div>
+</header>
+
+<main class="dashboard-grid">
+
+  <section class="left-panel">
+
+    <div class="card">
+      <h3>Upload CV</h3>
+
+      <label class="upload-box" for="cvFile">
+        <input type="file" id="cvFile" accept=".pdf,.docx" hidden />
+
+        <div class="upload-content">
+          <div class="upload-icon">CV</div>
+          <p id="fileName">Select a PDF or DOCX CV</p>
+          <span>Maximum file size follows the API setting.</span>
+        </div>
+      </label>
+    </div>
+
+    <div class="card">
+      <h3>Job Description</h3>
+
+      <textarea
+        id="jobDescription"
+        placeholder="Paste the job requirements, responsibilities, and qualifications here..."
+      ></textarea>
+      <p class="field-hint">Use synthetic demo content only. Minimum 30 characters.</p>
+    </div>
+
+    <button id="analyzeBtn" class="analyze-btn">
+      Analyze CV
+    </button>
+
+    <div id="statusCard" class="status-card hidden" aria-live="polite">
+      <div class="status-header">
+        <strong id="statusTitle">Preparing analysis</strong>
+        <span id="statusPercent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+      <p id="statusMessage">Waiting to start.</p>
+    </div>
+
+    <div id="errorState" class="error-state hidden" role="alert"></div>
+
+  </section>
+
+  <aside class="right-panel">
+
+    <div id="resultCard" class="result-card hidden">
+      <div class="result-top">
+        <div>
+          <h3>Fit Result</h3>
+          <p id="resultSummary" class="result-desc">Analysis complete.</p>
+        </div>
+        <div id="fitScore" class="score">--</div>
+      </div>
+
+      <div id="scoreBreakdown" class="score-list"></div>
+
+      <div class="result-section">
+        <h4>Skill gaps</h4>
+        <ul id="skillGaps" class="compact-list"></ul>
+      </div>
+
+      <a id="downloadReport" class="download-btn hidden" href="#" download>
+        Download DOCX report
+      </a>
+    </div>
+
+  </aside>
+
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
