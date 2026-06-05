@@ -1,0 +1,16 @@
+Backend Engineer
+
+Requirements:
+- Python FastAPI
+- PostgreSQL
+- Redis
+- Docker
+- Building REST APIs
+- 1–2 years experience
+- Git version control
+
+Responsibilities:
+- Build API features
+- Write tests
+- Deploy services
+- Fix bugs

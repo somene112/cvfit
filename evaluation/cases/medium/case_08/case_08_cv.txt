@@ -1,0 +1,16 @@
+Name: Le Thi H
+Email: lethih@gmail.com
+
+Summary
+Frontend developer with React experience and basic Python scripting knowledge.
+
+Experience
+
+Company: WebStudio (2022–Present)
+- Built React user interfaces
+- Used CSS and Tailwind for styling
+- Made API calls to backend services
+- Wrote Python scripts for build automation
+
+Skills
+JavaScript, React, CSS, HTML, Python, Git

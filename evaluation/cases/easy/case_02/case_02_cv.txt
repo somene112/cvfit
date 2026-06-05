@@ -1,0 +1,15 @@
+Name: Le Van B
+Email: levanb@outlook.com
+
+Summary
+Full stack developer with solid Python and JavaScript experience.
+
+Experience
+
+Project: Internal Dashboard
+- Built Flask web application with SQLite database
+- Wrote REST endpoints for frontend integration
+- Wrote unit tests with pytest
+
+Skills
+Python, Flask, SQLite, JavaScript, HTML, CSS

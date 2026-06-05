@@ -1,0 +1,17 @@
+Backend Engineer
+
+Requirements:
+- Python FastAPI development
+- PostgreSQL database experience
+- Redis caching
+- Docker containerization
+- Building REST APIs with authentication
+- Celery async task processing
+- CI/CD with GitHub Actions
+
+Responsibilities:
+- Build FastAPI microservices
+- Design PostgreSQL schemas with proper indexing
+- Implement Redis caching strategies
+- Set up CI/CD pipelines
+- Write unit and integration tests

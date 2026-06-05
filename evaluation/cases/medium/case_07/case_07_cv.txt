@@ -1,0 +1,16 @@
+Name: Tran Van G
+Email: tranvg@gmail.com
+
+Summary
+Software engineer with some Python experience and strong data analysis background.
+
+Experience
+
+Company: DataCo (2021–Present)
+- Built Python scripts for data analysis using pandas
+- Used SQL for querying data warehouse
+- Created visualizations with matplotlib
+- Deployed scheduled jobs with cron
+
+Skills
+Python, SQL, pandas, matplotlib, Excel, Jupyter Notebook

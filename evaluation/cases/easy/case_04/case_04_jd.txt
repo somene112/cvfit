@@ -1,0 +1,14 @@
+Backend Developer
+
+Requirements:
+- Python programming
+- Django or FastAPI framework experience
+- Database management (SQLite or PostgreSQL)
+- REST API design
+- Git version control
+
+Responsibilities:
+- Build backend features
+- Design database models
+- Write API endpoints
+- Write tests

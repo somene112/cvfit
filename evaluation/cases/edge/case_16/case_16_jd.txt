@@ -1,0 +1,18 @@
+Senior Backend Engineer
+
+Requirements:
+- Python FastAPI development
+- PostgreSQL database optimization
+- Redis caching
+- Docker and Kubernetes
+- AWS cloud services
+- Building scalable microservices
+- CI/CD pipeline experience
+- 5+ years of backend development
+- Team leadership experience
+
+Responsibilities:
+- Architect backend systems
+- Lead engineering team
+- Design database schemas for high scale
+- Deploy on cloud platforms

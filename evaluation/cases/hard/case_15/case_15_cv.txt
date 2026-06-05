@@ -1,0 +1,18 @@
+Name: Nguyen Van P
+Email: nvnp@gmail.com
+
+Summary
+Software engineer specializing in cybersecurity and penetration testing.
+
+Experience
+
+Company: CyberSec (2020–Present)
+- Conducted penetration testing on web applications
+- Performed security audits and vulnerability assessments
+- Built secure authentication systems using OAuth2 and JWT
+- Implemented SSL/TLS encryption for data in transit
+- Used Burp Suite, Nmap, Metasploit for security testing
+- Wrote Python scripts for automating security checks
+
+Skills
+Python, Security, Penetration Testing, OAuth2, JWT, SSL/TLS, Burp Suite, Nmap, Metasploit, Linux, Bash

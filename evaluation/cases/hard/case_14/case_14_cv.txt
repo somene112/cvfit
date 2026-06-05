@@ -1,0 +1,19 @@
+Name: Pham Van O
+Email: pvno@gmail.com
+
+Summary
+Experienced in backend development.
+
+Experience
+
+Company A
+- Developed applications
+- Used Python, PostgreSQL
+- Worked with Docker
+
+Company B
+- Built services
+- Used various tools
+
+Skills
+Python, PostgreSQL, Docker

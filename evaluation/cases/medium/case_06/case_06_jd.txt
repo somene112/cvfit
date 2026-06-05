@@ -1,0 +1,13 @@
+Backend Engineer
+
+Requirements:
+- 2+ years Python with FastAPI or Flask
+- PostgreSQL database experience
+- Redis caching
+- Docker deployment
+- REST API development
+
+Responsibilities:
+- Build Python microservices
+- Design database models
+- Deploy and monitor services

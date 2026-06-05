@@ -1,0 +1,17 @@
+Name: Tran Van N
+Email: tvn@gmail.com
+
+Summary
+Skilled backend developer with expertise in multiple technologies.
+
+Experience
+
+Company: BigTech (2018–Present)
+- Built and scaled platforms serving millions of users
+- Led cross-functional teams across multiple countries
+- Architected solutions for enterprise clients
+- Delivered projects that generated significant revenue growth
+- Won multiple awards for technical excellence
+
+Skills
+Python, Java, Go, PostgreSQL, MongoDB, Redis, Kafka, Elasticsearch, Docker, Kubernetes, AWS, GCP, Terraform, Spring Boot, Django, FastAPI, Flask, GraphQL, gRPC

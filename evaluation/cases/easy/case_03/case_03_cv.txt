@@ -1,0 +1,16 @@
+Name: Nguyen Van C
+Email: nvcuong@gmail.com
+
+Summary
+Data engineer specializing in Python, SQL, and cloud platforms.
+
+Experience
+
+Project: Data Pipeline
+- Built Airflow DAGs for ETL processing
+- Used PostgreSQL for data warehouse
+- Deployed with Docker and Kubernetes on GCP
+- Monitored pipelines with Prometheus and Grafana
+
+Skills
+Python, SQL, PostgreSQL, Docker, Kubernetes, Airflow, GCP

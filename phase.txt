@@ -1,5 +1,3 @@
-em làm xong phần của mình cho phase 2 rồi, anh Đạt tập trung vào QA/security/guardrails/S3 cleanup.
-
 Việc cần làm:
 
 1. Auth QA checklist

@@ -1,0 +1,37 @@
+Name: Tran Van R
+Email: tvr@gmail.com
+
+Summary
+Backend engineer with extensive Python and FastAPI experience.
+
+Experience
+
+Company: BigCorp (2015–Present)
+- Built Python microservices with FastAPI serving 100M requests/day
+- Designed PostgreSQL schemas for high-throughput systems with billions of records
+- Implemented Redis caching reducing latency by 80%
+- Deployed on Kubernetes clusters managing 500+ pods
+- Led team of 15 engineers across 4 countries
+- Architected migration from monolith to microservices saving $2M/year
+
+Requirements for new role: Senior Backend Engineer with leadership focus
+- 5+ years Python
+- FastAPI, PostgreSQL, Redis
+- Docker, Kubernetes, AWS
+- Team leadership experience
+- Microservices architecture
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, AWS, Terraform, Celery, MongoDB, Kafka, GraphQL, gRPC, Spring Boot, Django, Flask, Java, Go, Rust, Machine Learning, Deep Learning, Computer Vision, NLP, React, Vue, Svelte, Angular, MongoDB, Cassandra, DynamoDB, BigQuery, Snowflake, Databricks, Spark, Hadoop, ETL, Data Engineering, Data Science, AI, LLM, RAG, Vector Databases, Blockchain, Web3, DevSecOps, SRE, Platform Engineering
+
+Responsibilities mentioned:
+- System architecture
+- Database design
+- Cloud infrastructure
+- Team management
+- Technical strategy
+- Performance optimization
+- Security hardening
+- Disaster recovery
+- Capacity planning
+- Cost optimization

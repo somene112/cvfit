@@ -1,0 +1,20 @@
+Name: Tran Thi Mai
+Email: maithitran@gmail.com
+Phone: 0912-345-678
+
+Summary
+Backend engineer with 3 years of experience building Python APIs and data pipelines.
+
+Experience
+
+Project: E-Commerce Search API
+- Built FastAPI service with PostgreSQL for product search
+- Used Redis for caching and Celery for async tasks
+- Deployed on Docker containers
+
+Project: User Analytics Pipeline
+- Developed Python ETL scripts processing 10GB data daily
+- Stored results in PostgreSQL and generated reports
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, Git

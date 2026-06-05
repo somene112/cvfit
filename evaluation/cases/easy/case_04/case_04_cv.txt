@@ -1,0 +1,15 @@
+Name: Pham Thi D
+Email: ptduong@gmail.com
+
+Summary
+Junior backend developer with Python and Django experience.
+
+Experience
+
+Project: Blog Website
+- Developed Django web application with SQLite
+- Implemented user authentication and blog CRUD
+- Deployed on Heroku
+
+Skills
+Python, Django, SQLite, HTML, CSS

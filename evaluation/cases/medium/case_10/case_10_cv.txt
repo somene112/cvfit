@@ -1,0 +1,16 @@
+Name: Pham Van K
+Email: pvank@gmail.com
+
+Summary
+Python developer with machine learning focus.
+
+Experience
+
+Company: AIFirm (2021–Present)
+- Built Python models using scikit-learn and TensorFlow
+- Processed data with pandas and NumPy
+- Deployed models via Flask APIs
+- Used Docker for model serving
+
+Skills
+Python, TensorFlow, scikit-learn, pandas, NumPy, Flask, Docker, MLflow

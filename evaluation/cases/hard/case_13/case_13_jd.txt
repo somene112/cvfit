@@ -1,0 +1,15 @@
+Mid-Level Backend Engineer
+
+Requirements:
+- 2–3 years Python experience
+- FastAPI or Flask framework
+- PostgreSQL database
+- Redis caching
+- Docker deployment
+- REST API development
+
+Responsibilities:
+- Build backend features
+- Write tests
+- Deploy to production
+- Collaborate with team

@@ -1,0 +1,17 @@
+Name: Hoang Van E
+Email: hoange@gmail.com
+
+Summary
+Senior backend engineer with 5 years building scalable Python microservices.
+
+Experience
+
+Company: TechCorp (2021–Present)
+- Led team building FastAPI microservices on AWS
+- Designed PostgreSQL and Redis caching layer
+- Implemented CI/CD pipelines with GitHub Actions
+- Deployed containers on Kubernetes clusters
+- Mentored junior developers
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, Kubernetes, AWS, CI/CD, GitHub Actions

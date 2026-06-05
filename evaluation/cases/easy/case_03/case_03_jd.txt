@@ -1,0 +1,14 @@
+Data Engineer
+
+Requirements:
+- Strong Python programming skills
+- SQL and database experience (PostgreSQL, MySQL)
+- Experience with data pipelines and ETL tools
+- Docker and Kubernetes deployment
+- Cloud platform experience (GCP or AWS)
+
+Responsibilities:
+- Design and build data pipelines
+- Manage cloud infrastructure
+- Optimize data storage and retrieval
+- Ensure pipeline reliability

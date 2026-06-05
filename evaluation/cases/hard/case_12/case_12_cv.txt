@@ -1,0 +1,17 @@
+Name: Le Van M
+Email: levanm@gmail.com
+
+Summary
+I have worked with many programming languages and frameworks over many years in the software industry.
+
+Experience
+
+I have experience building various types of software applications using different technologies and methodologies.
+
+Project A
+- Built something using some tools
+- Worked with databases and servers
+- Used cloud platforms sometimes
+
+Skills
+Java, C++, JavaScript, HTML, SQL, AWS, Docker, Node.js, MongoDB, Spring Boot, React

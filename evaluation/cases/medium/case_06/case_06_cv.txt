@@ -1,0 +1,16 @@
+Name: Dao Van F
+Email: daovanf@gmail.com
+
+Summary
+Backend developer with experience in Node.js and MongoDB, transitioning to Python.
+
+Experience
+
+Company: StartupXYZ (2022–Present)
+- Developed REST APIs using Node.js and Express
+- Managed MongoDB databases for application data
+- Used Docker for local development
+- Wrote unit tests with Jest
+
+Skills
+Node.js, JavaScript, MongoDB, Express, Docker, Git

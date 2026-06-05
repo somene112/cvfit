@@ -1,0 +1,25 @@
+Name: Le Van S
+Email: levanS@gmail.com
+
+Summary
+I am a highly skilled software engineer. I know Python and I have worked with databases and cloud. I have built many applications and services. I have strong experience in software development. I am confident I can do any job. I have worked with Python and Java and C++ and JavaScript and Go and Rust and many other languages. I have experience with all databases including SQL and NoSQL. I can do everything required for any backend position.
+
+Experience
+
+I have worked at multiple companies doing various things with computers and technology.
+
+Company 1: Built things
+- Built stuff using technology
+- Worked with databases and services
+- Used cloud and containers
+- Developed applications
+- Created software solutions
+
+Company 2: More work
+- Built more things
+- Used various tools
+- Worked on many projects
+- Created various solutions
+
+Skills
+Python, Java, C++, JavaScript, Go, Rust, SQL, NoSQL, MongoDB, PostgreSQL, MySQL, Redis, Docker, Kubernetes, AWS, Azure, GCP, HTML, CSS, React, Vue, Angular, Node.js, Flask, Django, FastAPI, Spring Boot, .NET, Ruby, PHP, Perl, Swift, Kotlin, Scala, R, MATLAB, Julia, Machine Learning, AI, Data Science, DevOps, SRE, Blockchain, Web3, IoT, Embedded Systems, Security, Networking, Linux, Unix, Windows, macOS

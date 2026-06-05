@@ -1,0 +1,14 @@
+Backend Developer
+
+Requirements:
+- Proficiency in Python
+- Experience with Flask or Django
+- Database design with SQL (SQLite, PostgreSQL, MySQL)
+- REST API development
+- Git version control
+
+Responsibilities:
+- Develop backend services
+- Write clean, maintainable code
+- Write unit and integration tests
+- Collaborate with frontend team

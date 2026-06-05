@@ -1,0 +1,16 @@
+Name: Nguyen Van I
+Email: nvani@gmail.com
+
+Summary
+DevOps engineer with strong Python and infrastructure skills.
+
+Experience
+
+Company: CloudOps (2020–Present)
+- Built CI/CD pipelines with Jenkins and GitHub Actions
+- Managed Docker and Kubernetes clusters on AWS
+- Wrote Python scripts for infrastructure automation
+- Monitored services with Prometheus and Grafana
+
+Skills
+Python, Docker, Kubernetes, AWS, Jenkins, GitHub Actions, Prometheus, Grafana, Terraform
