@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, Any
 
@@ -12,6 +12,14 @@ class UploadResponse(BaseModel):
 class JobCreateResponse(BaseModel):
     job_id: str
     access_token: str
+    status: str = "queued"
+
+class JobReanalysisResponse(BaseModel):
+    job_id: str
+    access_token: str
+    parent_job_id: str
+    analysis_group_id: str
+    revision_number: int
     status: str = "queued"
 
 class JobStatusResponse(BaseModel):
@@ -40,6 +48,24 @@ class JobHistoryItemResponse(BaseModel):
     overall_fit_score: Optional[float] = None
     has_report: bool
     target_role: Optional[str] = None
+    parent_job_id: Optional[str] = None
+    analysis_group_id: Optional[str] = None
+    revision_number: int = 1
 
 class JobHistoryResponse(BaseModel):
     items: list[JobHistoryItemResponse]
+
+class JobComparisonResponse(BaseModel):
+    base_job_id: str
+    new_job_id: str
+    base_score: Optional[float] = None
+    new_score: Optional[float] = None
+    score_delta: Optional[float] = None
+    breakdown_delta: dict[str, float] = Field(default_factory=dict)
+    resolved_missing_skills: list[Any] = Field(default_factory=list)
+    still_missing_skills: list[Any] = Field(default_factory=list)
+    newly_matched_skills: list[Any] = Field(default_factory=list)
+    new_evidence: list[Any] = Field(default_factory=list)
+    keyword_stuffing_warnings: list[Any] = Field(default_factory=list)
+    improvement_summary: str
+    next_actions: list[Any] = Field(default_factory=list)

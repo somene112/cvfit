@@ -61,6 +61,14 @@ class AnalysisJob(Base):
     cv_file_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("cv_files.id"))
     jd_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("jd_docs.id"))
     user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True, index=True)
+    parent_job_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("analysis_jobs.id"),
+        nullable=True,
+        index=True,
+    )
+    analysis_group_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    revision_number: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
 
     status: Mapped[str] = mapped_column(Enum(*JOB_STATUS, name="job_status"), default="queued")
     progress: Mapped[int] = mapped_column(Integer, default=0)

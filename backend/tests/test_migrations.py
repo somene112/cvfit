@@ -74,6 +74,9 @@ def test_schema_checker_script_tracks_baseline_schema():
     assert '"analysis_jobs"' in text
     assert '"user_id"' in text
     assert '"access_token_hash"' in text
+    assert '"parent_job_id"' in text
+    assert '"analysis_group_id"' in text
+    assert '"revision_number"' in text
     assert "alembic_version" in text
 
 
@@ -90,6 +93,21 @@ def test_auth_foundation_migration_exists_and_mentions_schema_changes():
     assert '"user_id"' in text
     assert "fk_analysis_jobs_user_id_users" in text
     assert "ix_analysis_jobs_user_id" in text
+
+
+def test_analysis_revision_migration_exists_and_mentions_schema_changes():
+    migration = BACKEND_ROOT / "alembic" / "versions" / "20260606_0001_add_analysis_revisions.py"
+
+    text = migration.read_text(encoding="utf-8")
+
+    assert 'revision = "20260606_0001"' in text
+    assert 'down_revision = "20260531_0001"' in text
+    assert '"parent_job_id"' in text
+    assert '"analysis_group_id"' in text
+    assert '"revision_number"' in text
+    assert "fk_analysis_jobs_parent_job_id_analysis_jobs" in text
+    assert "ix_analysis_jobs_parent_job_id" in text
+    assert "ix_analysis_jobs_analysis_group_id" in text
 
 
 def test_adoption_logic_refuses_schema_mismatch():

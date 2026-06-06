@@ -2,11 +2,12 @@ import uuid
 import hashlib
 import hmac
 import secrets
+from pathlib import Path
 from typing import Annotated
 from typing import Any
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from app.api.deps import get_current_user, get_optional_current_user
@@ -19,11 +20,15 @@ from app.schemas.responses import (
     JobHistoryResponse,
     JobStatusResponse,
     JobResultResponse,
+    JobReanalysisResponse,
+    JobComparisonResponse,
 )
-from app.services.storage import StorageNotFoundError, get_storage
+from app.services.comparison import compare_results
+from app.services.storage import StorageNotFoundError, UploadValidationError, get_storage, save_upload
 from app.api.routes.utils import parse_uuid_or_400
 
 router = APIRouter(prefix="/v1/jobs", tags=["jobs"])
+SUPPORTED_CV_EXTENSIONS = {".pdf", ".docx"}
 
 
 def _new_access_token() -> str:
@@ -64,6 +69,9 @@ def _authorize_job_access_or_403(
 INTERNAL_RESPONSE_KEYS = {
     "access_token",
     "access_token_hash",
+    "Authorization",
+    "Bearer",
+    "JWT",
     "bucket",
     "cv_text",
     "file_path",
@@ -132,6 +140,9 @@ def _history_item(job: AnalysisJob) -> JobHistoryItemResponse:
         overall_fit_score=_extract_fit_score(result_json),
         has_report=bool(job.report_docx_path),
         target_role=getattr(jd_doc, "role", None),
+        parent_job_id=str(job.parent_job_id) if getattr(job, "parent_job_id", None) else None,
+        analysis_group_id=getattr(job, "analysis_group_id", None),
+        revision_number=getattr(job, "revision_number", 1) or 1,
     )
 
 
@@ -183,6 +194,119 @@ def job_history(
     return JobHistoryResponse(items=[_history_item(job) for job in jobs])
 
 
+@router.post("/{job_id}/reanalyze", response_model=JobReanalysisResponse)
+def reanalyze_job(
+    job_id: str,
+    file: UploadFile = File(...),
+    jd_text: str | None = Form(default=None),
+    access_token: str | None = Form(default=None),
+    db: Session = Depends(get_db),
+    current_user: Annotated[User | None, Depends(get_optional_current_user)] = None,
+):
+    parent_id = parse_uuid_or_400(job_id, "job_id")
+    parent = db.get(AnalysisJob, parent_id)
+    if not parent:
+        raise HTTPException(status_code=404, detail="job not found")
+    _authorize_reanalysis_parent_or_403(parent, access_token, current_user)
+
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="Missing filename")
+    suffix = Path(file.filename).suffix.lower()
+    if suffix not in SUPPORTED_CV_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Only pdf/docx supported")
+
+    parent_jd = db.get(JDDoc, parent.jd_id)
+    if not parent_jd:
+        raise HTTPException(status_code=409, detail="parent job is missing JD data")
+    child_jd_text = jd_text if jd_text and jd_text.strip() else parent_jd.jd_text
+
+    try:
+        path, digest, mime = save_upload(file)
+    except UploadValidationError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+    group_id = _ensure_analysis_group(db, parent)
+    revision_number = _next_revision_number(db, group_id)
+
+    cv = CVFile(
+        id=uuid.uuid4(),
+        original_filename=file.filename,
+        mime_type=mime,
+        storage_path=path,
+        sha256=digest,
+    )
+    jd = JDDoc(id=uuid.uuid4(), jd_text=child_jd_text, role=getattr(parent_jd, "role", None))
+    child_access_token = _new_access_token()
+    child = AnalysisJob(
+        id=uuid.uuid4(),
+        cv_file_id=cv.id,
+        jd_id=jd.id,
+        status="queued",
+        progress=0,
+        access_token_hash=_hash_access_token(child_access_token),
+        user_id=current_user.id if current_user else getattr(parent, "user_id", None),
+        parent_job_id=parent.id,
+        analysis_group_id=group_id,
+        revision_number=revision_number,
+    )
+    db.add(cv)
+    db.add(jd)
+    db.add(child)
+    db.commit()
+
+    from app.workers.tasks import run_job
+    run_job.delay(str(child.id))
+
+    return JobReanalysisResponse(
+        job_id=str(child.id),
+        access_token=child_access_token,
+        parent_job_id=str(parent.id),
+        analysis_group_id=group_id,
+        revision_number=revision_number,
+    )
+
+
+@router.get("/{base_job_id}/comparison/{new_job_id}", response_model=JobComparisonResponse)
+def job_comparison(
+    base_job_id: str,
+    new_job_id: str,
+    access_token: str | None = None,
+    base_access_token: str | None = None,
+    new_access_token: str | None = None,
+    db: Session = Depends(get_db),
+    current_user: Annotated[User | None, Depends(get_optional_current_user)] = None,
+):
+    base_uuid = parse_uuid_or_400(base_job_id, "base_job_id")
+    new_uuid = parse_uuid_or_400(new_job_id, "new_job_id")
+    base_job = db.get(AnalysisJob, base_uuid)
+    new_job = db.get(AnalysisJob, new_uuid)
+    if not base_job or not new_job:
+        raise HTTPException(status_code=404, detail="job not found")
+
+    _authorize_comparison_or_403(
+        base_job,
+        new_job,
+        current_user=current_user,
+        access_token=access_token,
+        base_access_token=base_access_token,
+        new_access_token=new_access_token,
+    )
+    if not _jobs_are_comparable(base_job, new_job):
+        raise HTTPException(status_code=409, detail="jobs are not linked or comparable")
+    if base_job.status != "succeeded" or new_job.status != "succeeded":
+        raise HTTPException(status_code=409, detail="comparison requires completed jobs")
+    if not base_job.result_json or not new_job.result_json:
+        raise HTTPException(status_code=409, detail="comparison requires result data")
+
+    payload = compare_results(
+        _scrub_internal_fields(base_job.result_json),
+        _scrub_internal_fields(new_job.result_json),
+        base_job_id=str(base_job.id),
+        new_job_id=str(new_job.id),
+    )
+    return JobComparisonResponse(**payload)
+
+
 @router.get("/{job_id}", response_model=JobStatusResponse)
 def job_status(job_id: str, db: Session = Depends(get_db)):
     job_uuid = parse_uuid_or_400(job_id, "job_id")
@@ -196,6 +320,74 @@ def job_status(job_id: str, db: Session = Depends(get_db)):
         error_message=job.error_message,
         error=job.error_message,
     )
+
+
+def _authorize_reanalysis_parent_or_403(
+    parent: AnalysisJob,
+    access_token: str | None,
+    current_user: User | None,
+) -> None:
+    if current_user is not None:
+        if _user_owns_job(parent, current_user):
+            return
+        raise HTTPException(status_code=403, detail="invalid access token")
+    _verify_access_token_or_403(parent, access_token)
+
+
+def _ensure_analysis_group(db: Session, parent: AnalysisJob) -> str:
+    group_id = getattr(parent, "analysis_group_id", None)
+    if not group_id:
+        group_id = f"grp_{uuid.uuid4().hex}"
+        parent.analysis_group_id = group_id
+    if not getattr(parent, "revision_number", None):
+        parent.revision_number = 1
+    db.flush()
+    return group_id
+
+
+def _next_revision_number(db: Session, group_id: str) -> int:
+    try:
+        jobs = db.query(AnalysisJob).filter_by(analysis_group_id=group_id).all()
+    except AttributeError:
+        jobs = []
+    revisions = [getattr(job, "revision_number", 1) or 1 for job in jobs]
+    return max(revisions or [1]) + 1
+
+
+def _authorize_comparison_or_403(
+    base_job: AnalysisJob,
+    new_job: AnalysisJob,
+    *,
+    current_user: User | None,
+    access_token: str | None,
+    base_access_token: str | None,
+    new_access_token: str | None,
+) -> None:
+    if current_user is not None:
+        if _user_owns_job(base_job, current_user) and _user_owns_job(new_job, current_user):
+            return
+        raise HTTPException(status_code=403, detail="invalid access token")
+
+    if base_access_token is not None or new_access_token is not None:
+        if _access_token_matches(base_job, base_access_token) and _access_token_matches(new_job, new_access_token):
+            return
+        raise HTTPException(status_code=403, detail="invalid access token")
+
+    if _same_analysis_group(base_job, new_job) and _access_token_matches(new_job, access_token):
+        return
+    raise HTTPException(status_code=403, detail="invalid access token")
+
+
+def _jobs_are_comparable(base_job: AnalysisJob, new_job: AnalysisJob) -> bool:
+    if _same_analysis_group(base_job, new_job):
+        return True
+    return getattr(new_job, "parent_job_id", None) == getattr(base_job, "id", None)
+
+
+def _same_analysis_group(base_job: AnalysisJob, new_job: AnalysisJob) -> bool:
+    base_group = getattr(base_job, "analysis_group_id", None)
+    new_group = getattr(new_job, "analysis_group_id", None)
+    return bool(base_group and new_group and base_group == new_group)
 
 @router.get("/{job_id}/result", response_model=JobResultResponse)
 def job_result(
