@@ -16,6 +16,11 @@ MAX_EVIDENCE_ITEMS = 12
 SENSITIVE_KEYS = {
     "access_token",
     "access_token_hash",
+    "authorization",
+    "bearer",
+    "jwt",
+    "password",
+    "password_hash",
     "bucket",
     "cv_text",
     "file_path",
@@ -30,6 +35,10 @@ SENSITIVE_KEYS = {
 
 SENSITIVE_PATTERNS = [
     re.compile(r"access_token\s*=\s*[^&\s]+", re.IGNORECASE),
+    re.compile(r"access_token=[^&\s]+", re.IGNORECASE),
+    re.compile(r"bearer\s+[A-Za-z0-9._\-]+", re.IGNORECASE),
+    re.compile(r"jwt\s*[:=]\s*[A-Za-z0-9._\-]+", re.IGNORECASE),
+    re.compile(r"https?://[^\s?]+?\?[^\s]+", re.IGNORECASE),
     re.compile(r"(uploads|reports|private)/[^\s]+", re.IGNORECASE),
     re.compile(r"[A-Za-z]:[\\/][^\s]+"),
     re.compile(r"s3://[^\s]+", re.IGNORECASE),
@@ -39,6 +48,7 @@ SENSITIVE_PATTERNS = [
 def build_docx_report(result: dict, out_path: str):
     safe_result = _scrub_sensitive(result or {})
     evidence_by_id = _evidence_by_id(safe_result)
+    include_v3_sections = _has_v3_report_sections(safe_result)
 
     doc = Document()
 
@@ -48,8 +58,12 @@ def build_docx_report(result: dict, out_path: str):
     _add_matched_skills(doc, safe_result, evidence_by_id)
     _add_missing_skills(doc, safe_result)
     _add_evidence_highlights(doc, safe_result)
-    _add_improvement_actions(doc, safe_result)
-    _add_limitations(doc, safe_result)
+    _add_improvement_actions(doc, safe_result, include_v3_sections=include_v3_sections)
+    if include_v3_sections:
+        _add_safe_rewrite_suggestions(doc, safe_result)
+        _add_interview_prep(doc, safe_result)
+        _add_learning_roadmap(doc, safe_result)
+    _add_limitations(doc, safe_result, include_v3_sections=include_v3_sections)
     _add_safe_appendix(doc, safe_result)
 
     doc.save(out_path)
@@ -163,9 +177,13 @@ def _add_evidence_highlights(doc: Document, result: dict) -> None:
             doc.add_paragraph(f"Similarity: {_format_score(item.get('similarity'))}")
 
 
-def _add_improvement_actions(doc: Document, result: dict) -> None:
+def _add_improvement_actions(doc: Document, result: dict, *, include_v3_sections: bool) -> None:
     actions = _improvement_actions(result)
-    doc.add_heading("Improvement Actions", level=2)
+    if include_v3_sections:
+        doc.add_heading("Improvement Action Plan", level=2)
+        doc.add_paragraph("Improvement Actions")
+    else:
+        doc.add_heading("Improvement Actions", level=2)
     if not actions:
         doc.add_paragraph("No improvement actions are available.")
         return
@@ -174,12 +192,101 @@ def _add_improvement_actions(doc: Document, result: dict) -> None:
         doc.add_paragraph(
             f"{_safe_text(item.get('priority') or '-').upper()}: {_safe_text(item.get('title') or '-')}"
         )
-        doc.add_paragraph(f"Suggestion: {_safe_text(item.get('suggestion') or '-')}")
-        doc.add_paragraph(f"Guardrail: {_safe_text(item.get('guardrail') or 'Only add this if it is true.')}")
+        linked_skill = item.get("linked_skill") or item.get("related_skill")
+        if linked_skill:
+            doc.add_paragraph(f"Linked skill: {_safe_text(linked_skill)}")
+        if item.get("reason"):
+            doc.add_paragraph(f"Reason: {_safe_text(item.get('reason'))}")
+        suggestion = item.get("safe_suggestion") or item.get("suggestion")
+        doc.add_paragraph(f"Safe suggestion: {_safe_text(suggestion or '-')}")
+        doc.add_paragraph(f"Status: {_safe_text(item.get('status') or '-')}")
+        guardrail = item.get("guardrail") or "Only add this if it is true. Do not fabricate skills or experience."
+        if item.get("do_not_fabricate") is True and "fabricate" not in str(guardrail).lower():
+            guardrail = f"{guardrail} Do not fabricate skills or experience."
+        doc.add_paragraph(f"Guardrail: {_safe_text(guardrail)}")
 
 
-def _add_limitations(doc: Document, result: dict) -> None:
-    doc.add_heading("Limitations", level=2)
+def _add_safe_rewrite_suggestions(doc: Document, result: dict) -> None:
+    suggestions = _safe_rewrite_suggestions(result)
+    doc.add_heading("Safe Rewrite Suggestions", level=2)
+    if not suggestions:
+        doc.add_paragraph("No safe rewrite suggestions are available.")
+        return
+
+    for index, item in enumerate(suggestions, start=1):
+        doc.add_paragraph(f"Suggestion {index}")
+        source_evidence = _safe_list(item.get("source_evidence"))
+        if source_evidence:
+            doc.add_paragraph(
+                "Source evidence: "
+                + "; ".join(_truncate(_safe_text(value), MAX_SNIPPET_CHARS) for value in source_evidence[:3])
+            )
+        doc.add_paragraph(f"Suggested structure: {_safe_text(item.get('suggested_structure') or '-')}")
+        missing_context = _safe_list(item.get("missing_context_to_confirm"))
+        if missing_context:
+            doc.add_paragraph("Missing context to confirm: " + "; ".join(_safe_text(value) for value in missing_context[:6]))
+        warning = item.get("warning") or "Only use details that are true and can be defended in an interview."
+        doc.add_paragraph(f"Warning: {_safe_text(warning)}")
+        if item.get("do_not_fabricate") is True:
+            doc.add_paragraph("Do not fabricate skills, experience, metrics, employers, dates, or certifications.")
+
+
+def _add_interview_prep(doc: Document, result: dict) -> None:
+    questions = _interview_prep(result)
+    doc.add_heading("Interview Prep", level=2)
+    if not questions:
+        doc.add_paragraph("No interview prep questions are available.")
+        return
+
+    for item in questions:
+        doc.add_paragraph(f"Question: {_safe_text(item.get('question') or '-')}")
+        doc.add_paragraph(f"Type: {_safe_text(item.get('type') or '-')}")
+        doc.add_paragraph(f"Why this question: {_safe_text(item.get('why_this_question') or '-')}")
+        doc.add_paragraph(f"Related JD requirement: {_safe_text(item.get('related_jd_requirement') or '-')}")
+        related_cv = _safe_list(item.get("related_cv_evidence"))
+        if related_cv:
+            doc.add_paragraph("Related CV evidence: " + "; ".join(_safe_text(value) for value in related_cv[:4]))
+        else:
+            doc.add_paragraph(MISSING_EVIDENCE_TEXT)
+        outline = _safe_list(item.get("suggested_answer_outline"))
+        if outline:
+            doc.add_paragraph("Suggested answer outline:")
+            for point in outline[:6]:
+                doc.add_paragraph(_safe_text(point), style="List Bullet")
+        doc.add_paragraph(f"Risk if user cannot answer: {_safe_text(item.get('risk_if_user_cannot_answer') or '-')}")
+
+
+def _add_learning_roadmap(doc: Document, result: dict) -> None:
+    items = _learning_roadmap(result)
+    doc.add_heading("Learning Roadmap", level=2)
+    if not items:
+        doc.add_paragraph("No learning roadmap items are available.")
+        return
+
+    for item in items:
+        doc.add_paragraph(
+            f"{_safe_text(item.get('priority') or '-').upper()}: {_safe_text(item.get('skill') or '-')}"
+        )
+        doc.add_paragraph(f"Why: {_safe_text(item.get('why') or '-')}")
+        topics = _safe_list(item.get("topics"))
+        if topics:
+            doc.add_paragraph("Topics: " + "; ".join(_safe_text(value) for value in topics[:8]))
+        doc.add_paragraph(f"Mini project: {_safe_text(item.get('mini_project') or '-')}")
+        doc.add_paragraph(f"Estimated effort: {_safe_text(item.get('estimated_effort') or '-')}")
+        doc.add_paragraph(
+            "CV evidence to add after learning: "
+            + _safe_text(item.get("cv_evidence_to_add_after_learning") or "-")
+        )
+        if item.get("do_not_claim_until_completed") is True:
+            doc.add_paragraph("Do not claim this skill until you have completed real work you can explain.")
+
+
+def _add_limitations(doc: Document, result: dict, *, include_v3_sections: bool) -> None:
+    if include_v3_sections:
+        doc.add_heading("Limitations / Safety Notes", level=2)
+        doc.add_paragraph("Limitations")
+    else:
+        doc.add_heading("Limitations", level=2)
     for item in _limitations(result):
         doc.add_paragraph(_safe_text(item), style=None)
 
@@ -330,15 +437,66 @@ def _improvement_actions(result: dict) -> list[dict]:
     return out
 
 
+def _safe_rewrite_suggestions(result: dict) -> list[dict]:
+    return _safe_dict_list(result.get("safe_rewrite_suggestions"))
+
+
+def _interview_prep(result: dict) -> list[dict]:
+    return _safe_dict_list(result.get("interview_prep"))
+
+
+def _learning_roadmap(result: dict) -> list[dict]:
+    return _safe_dict_list(result.get("learning_roadmap"))
+
+
+def _has_v3_report_sections(result: dict) -> bool:
+    if _safe_text(result.get("schema_version")).strip() == "3.0":
+        return True
+
+    for key in ("safe_rewrite_suggestions", "interview_prep", "learning_roadmap"):
+        if key in result:
+            return True
+
+    actions = result.get("improvement_actions")
+    if isinstance(actions, list):
+        for item in actions:
+            if not isinstance(item, dict):
+                continue
+            if any(
+                key in item
+                for key in (
+                    "safe_suggestion",
+                    "linked_skill",
+                    "linked_evidence",
+                    "status",
+                    "do_not_fabricate",
+                )
+            ):
+                return True
+
+    limitations = result.get("limitations")
+    if isinstance(limitations, list):
+        limitation_text = " ".join(_safe_text(item).lower() for item in limitations)
+        if "do not fabricate" in limitation_text or "not found in the parsed cv" in limitation_text:
+            return True
+
+    return False
+
+
 def _limitations(result: dict) -> list[str]:
     limitations = result.get("limitations")
-    if isinstance(limitations, list) and limitations:
-        return [_safe_text(item) for item in limitations]
-    return [
+    out = [_safe_text(item) for item in limitations if item] if isinstance(limitations, list) else []
+    required = [
         "This analysis estimates CV-to-JD fit only and does not guarantee any hiring outcome.",
-        "The score is based on parsed CV/JD text and scoring heuristics.",
-        "Missing evidence is not absolute proof that the candidate lacks a skill.",
+        "Do not fabricate skills, experience, projects, employers, dates, certifications, or metrics.",
+        "Missing evidence means support was not found in the parsed CV, not that the candidate definitely lacks the skill.",
     ]
+    for item in required:
+        if not any(item.lower() == existing.lower() for existing in out):
+            out.append(item)
+    if not out:
+        out.append("The score is based on parsed CV/JD text and scoring heuristics.")
+    return out
 
 
 def _evidence(result: dict) -> list[dict]:
@@ -421,11 +579,25 @@ def _scrub_sensitive(value: Any) -> Any:
         return {
             key: _scrub_sensitive(item)
             for key, item in value.items()
-            if key not in SENSITIVE_KEYS
+            if str(key).lower() not in SENSITIVE_KEYS
         }
     if isinstance(value, list):
         return [_scrub_sensitive(item) for item in value]
+    if isinstance(value, str):
+        return _safe_text(value)
     return value
+
+
+def _safe_dict_list(value: Any) -> list[dict]:
+    if not isinstance(value, list):
+        return []
+    return [_scrub_sensitive(item) for item in value if isinstance(item, dict)]
+
+
+def _safe_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [_safe_text(item) for item in value if item is not None]
 
 
 def _safe_text(value: Any) -> str:

@@ -165,6 +165,75 @@ def legacy_result():
     }
 
 
+def v3_result():
+    result = v2_result()
+    result["schema_version"] = "3.0"
+    result["improvement_actions"] = [
+        {
+            "priority": "high",
+            "title": "Address PostgreSQL evidence gap",
+            "linked_skill": "PostgreSQL",
+            "reason": "The JD mentions PostgreSQL, but PostgreSQL evidence was not found in the parsed CV.",
+            "safe_suggestion": "If you have actually used PostgreSQL, add truthful project context. Only add this if it is true.",
+            "status": "open",
+            "do_not_fabricate": True,
+            "access_token": "secret-token",
+        }
+    ]
+    result["safe_rewrite_suggestions"] = [
+        {
+            "source_evidence": [
+                "ev_cv_skill_001",
+                "https://example.com/report?access_token=secret-token",
+                "storage_path uploads/private-cv.docx",
+            ],
+            "suggested_structure": (
+                "Built [actual feature] using [actual database] for [actual users], "
+                "with [real metric or actual outcome]."
+            ),
+            "missing_context_to_confirm": ["actual database", "real metric"],
+            "warning": "Only use details that are true and can be defended in an interview.",
+            "do_not_fabricate": True,
+            "s3_key": "private/key.docx",
+        }
+    ]
+    result["interview_prep"] = [
+        {
+            "question": "Can you explain a real FastAPI project?",
+            "type": "project_deep_dive",
+            "why_this_question": "The JD values FastAPI and the parsed CV contains related evidence.",
+            "related_jd_requirement": "Required: FastAPI service development.",
+            "related_cv_evidence": ["ev_cv_skill_001"],
+            "suggested_answer_outline": [
+                "State the real project context.",
+                "Describe your specific responsibility.",
+            ],
+            "risk_if_user_cannot_answer": "The match may appear shallow in interview.",
+            "local_path": "C:/private/cv.docx",
+        }
+    ]
+    result["learning_roadmap"] = [
+        {
+            "skill": "PostgreSQL",
+            "priority": "high",
+            "why": "The JD mentions PostgreSQL, but PostgreSQL evidence was not found in the parsed CV.",
+            "topics": ["SQL joins", "Indexes"],
+            "mini_project": "Build a small project using PostgreSQL in a realistic workflow.",
+            "estimated_effort": "2-4 weeks",
+            "cv_evidence_to_add_after_learning": (
+                "After completing the project, add a truthful CV bullet describing the PostgreSQL task."
+            ),
+            "do_not_claim_until_completed": True,
+            "raw_cv_text": "full private cv",
+        }
+    ]
+    result["limitations"] = [
+        "This analysis estimates CV-to-JD fit only and does not guarantee any hiring outcome.",
+        "Missing evidence means support was not found in the parsed CV, not that the candidate definitely lacks the skill.",
+    ]
+    return result
+
+
 def test_build_docx_report_works_with_v2_result(tmp_path):
     out_path = tmp_path / "report-v2.docx"
 
@@ -179,6 +248,44 @@ def test_build_docx_report_works_with_v2_result(tmp_path):
     assert "Evidence Highlights" in text
     assert "Improvement Actions" in text
     assert "Limitations" in text
+    assert "Improvement Action Plan" not in text
+    assert "Safe Rewrite Suggestions" not in text
+    assert "Interview Prep" not in text
+    assert "Learning Roadmap" not in text
+    assert "Limitations / Safety Notes" not in text
+
+
+def test_build_docx_report_includes_v3_sections(tmp_path):
+    out_path = tmp_path / "report-v3.docx"
+
+    build_docx_report(v3_result(), str(out_path))
+
+    assert out_path.exists()
+    text = read_docx_text(out_path)
+    for heading in (
+        "Improvement Action Plan",
+        "Safe Rewrite Suggestions",
+        "Interview Prep",
+        "Learning Roadmap",
+        "Limitations / Safety Notes",
+    ):
+        assert heading in text
+    assert "Linked skill: PostgreSQL" in text
+    assert "Safe suggestion:" in text
+    assert "Suggested structure:" in text
+    assert "Can you explain a real FastAPI project?" in text
+    assert "Do not claim this skill until you have completed real work you can explain." in text
+
+
+def test_docx_report_v3_includes_guardrail_wording(tmp_path):
+    out_path = tmp_path / "report-v3-guardrails.docx"
+
+    build_docx_report(v3_result(), str(out_path))
+
+    text = read_docx_text(out_path)
+    assert "does not guarantee any hiring outcome" in text
+    assert "Do not fabricate skills or experience" in text
+    assert "was not found in the parsed CV" in text
 
 
 def test_build_docx_report_works_with_legacy_result(tmp_path):
@@ -192,6 +299,10 @@ def test_build_docx_report_works_with_legacy_result(tmp_path):
     assert "Fit level: partial" in text
     assert "python" in text
     assert "FastAPI" in text
+    assert "Improvement Action Plan" not in text
+    assert "Safe Rewrite Suggestions" not in text
+    assert "Interview Prep" not in text
+    assert "Learning Roadmap" not in text
 
 
 def test_docx_report_contains_v2_content(tmp_path):
@@ -205,6 +316,54 @@ def test_docx_report_contains_v2_content(tmp_path):
     assert "JD requires PostgreSQL, but PostgreSQL evidence was not found in the parsed CV." in text
     assert "If you have actually used PostgreSQL" in text
     assert "Only add this if it is true" in text
+
+
+def test_docx_report_v3_excludes_sensitive_fields_and_values(tmp_path):
+    out_path = tmp_path / "report-v3-safe.docx"
+
+    build_docx_report(v3_result(), str(out_path))
+
+    text = read_docx_text(out_path)
+    for unsafe in (
+        "access_token",
+        "secret-token",
+        "storage_path",
+        "s3_key",
+        "local_path",
+        "raw_cv_text",
+        "report_docx_path",
+        "uploads/private-cv.docx",
+        "private/key.docx",
+        "C:/private/cv.docx",
+        "full private cv",
+        "https://example.com/report?access_token=secret-token",
+    ):
+        assert unsafe not in text
+
+
+def test_docx_report_ignores_absent_or_malformed_v3_sections(tmp_path):
+    result = v2_result()
+    result.update(
+        {
+            "schema_version": "3.0",
+            "safe_rewrite_suggestions": {"unexpected": "dict"},
+            "interview_prep": "not-a-list",
+            "learning_roadmap": [None, "bad", {"skill": "PostgreSQL"}],
+            "improvement_actions": [],
+        }
+    )
+    out_path = tmp_path / "report-v3-malformed.docx"
+
+    build_docx_report(result, str(out_path))
+
+    text = read_docx_text(out_path)
+    assert "AI CV Fit Report" in text
+    assert "Safe Rewrite Suggestions" in text
+    assert "No safe rewrite suggestions are available." in text
+    assert "Interview Prep" in text
+    assert "No interview prep questions are available." in text
+    assert "Learning Roadmap" in text
+    assert "PostgreSQL" in text
 
 
 def test_docx_report_excludes_sensitive_keys_and_values(tmp_path):

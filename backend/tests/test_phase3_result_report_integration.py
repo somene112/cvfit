@@ -15,6 +15,7 @@ from app.services.parsing.cv_parser import parse_cv_to_text
 from app.services.parsing.jd_parser import parse_jd
 from app.services.reporting.report_docx import build_docx_report
 from app.services.scoring.result_v2 import build_result_v2
+from app.services.scoring.result_v3 import build_result_v3
 from app.services.scoring.scorer import score
 
 
@@ -202,3 +203,40 @@ def test_v2_result_api_and_report_download_compatibility(monkeypatch, tmp_path):
     assert "AI CV Fit Report" in downloaded_text
     assert "Executive Summary" in downloaded_text
     assert "Score Breakdown" in downloaded_text
+
+
+def test_v3_result_report_download_includes_phase4_sections(monkeypatch, tmp_path):
+    result = build_result_v3(_build_worker_compatible_result(monkeypatch, tmp_path))
+    report_path = tmp_path / "report-v3-api.docx"
+    build_docx_report(result, str(report_path))
+    report_bytes = report_path.read_bytes()
+
+    job_id = uuid.uuid4()
+    access_token = "correct-token"
+    job = SimpleNamespace(
+        id=job_id,
+        status="succeeded",
+        progress=100,
+        error_message=None,
+        result_json=result,
+        report_docx_path="reports/report-v3-api.docx",
+        access_token_hash=jobs_route._hash_access_token(access_token),
+    )
+    fake_db = SimpleNamespace(get=lambda model, key: job if model is AnalysisJob else None)
+    fake_storage = SimpleNamespace(read_bytes=lambda path: report_bytes)
+
+    app = FastAPI()
+    app.include_router(jobs_route.router)
+    app.dependency_overrides[get_db] = lambda: fake_db
+    monkeypatch.setattr(jobs_route, "get_storage", lambda: fake_storage)
+    client = TestClient(app)
+
+    download_response = client.get(f"/v1/jobs/{job_id}/report/download?access_token={access_token}")
+
+    assert download_response.status_code == 200
+    downloaded_text = _docx_text(BytesIO(download_response.content))
+    assert "Improvement Action Plan" in downloaded_text
+    assert "Safe Rewrite Suggestions" in downloaded_text
+    assert "Interview Prep" in downloaded_text
+    assert "Learning Roadmap" in downloaded_text
+    assert "does not guarantee any hiring outcome" in downloaded_text
