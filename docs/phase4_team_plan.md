@@ -112,6 +112,13 @@ Phase 4 is done when:
 - Frontend renders v3 and v2 states without breaking guest or logged-in flows.
 - No tokens, raw CV text, storage paths, or internal report paths leak in API responses, reports, logs, or docs.
 
+## Backend Closeout Status
+
+Phúc's Phase 4 backend scope is production-smoke-passed. See
+[Phase 4 backend closeout](phase4_backend_closeout.md) for sanitized smoke
+evidence, operational commands, frontend handoff notes, QA handoff notes, and
+known follow-ups.
+
 ## Risks And Mitigations
 
 | Risk | Mitigation |
