@@ -5,7 +5,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import styles from '@/styles/UploadCV.module.css';
 import { ACCEPTED_EXTENSIONS } from '@/utils/constants';
 
-export default function UploadCV({ file, onFileSelect, progress, isUploading, error, onRemove, disabled }) {
+export default function UploadCV({ file, onFileSelect, progress, isUploading, error, errorHint, onRemove, disabled }) {
   const { t } = useLanguage();
   const fileInputRef = useRef(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -177,7 +177,12 @@ export default function UploadCV({ file, onFileSelect, progress, isUploading, er
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-          {error}
+          <div>
+            <span>{error}</span>
+            {errorHint && (
+              <span className={styles.errorHint}>Hint: {errorHint}</span>
+            )}
+          </div>
         </div>
       )}
     </div>

@@ -100,46 +100,85 @@ export default function HistoryPage() {
           <div className={styles.emptyCard}>No analysis jobs found yet.</div>
         )}
 
-        {!isLoading && !error && items.length > 0 && (
-          <div className={styles.list}>
-            {items.map((item) => (
-              <article key={item.job_id} className={styles.historyItem}>
-                <div className={styles.itemHeader}>
-                  <div>
-                    <div className={styles.jobId}>Job {item.job_id}</div>
-                    {item.target_role && (
-                      <div className={styles.role}>{item.target_role}</div>
-                    )}
-                  </div>
-                  <span className={styles.statusBadge}>{item.status || 'unknown'}</span>
-                </div>
+        {!isLoading && !error && items.length > 0 && (() => {
+          // Group by target_role (or "Unknown Role")
+          const grouped = items.reduce((acc, item) => {
+            const role = item.target_role || 'Unknown Role';
+            if (!acc[role]) acc[role] = [];
+            acc[role].push(item);
+            return acc;
+          }, {});
 
-                <div className={styles.metaGrid}>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Progress</span>
-                    <span className={styles.metaValue}>{item.progress ?? 0}%</span>
+          return (
+            <div className={styles.groupedList}>
+              {Object.entries(grouped).map(([role, roleItems]) => (
+                <section key={role} className={styles.roleGroup}>
+                  <h2 className={styles.roleTitle}>{role}</h2>
+                  <div className={styles.list}>
+                    {roleItems.map((item, index) => {
+                      const prevItem = index < roleItems.length - 1 ? roleItems[index + 1] : null;
+                      const canCompare = item.status === 'succeeded' && prevItem?.status === 'succeeded';
+                      
+                      return (
+                        <article key={item.job_id} className={styles.historyItem}>
+                          <div className={styles.itemHeader}>
+                            <div>
+                              <div className={styles.jobId}>Job {item.job_id}</div>
+                            </div>
+                            <span className={styles.statusBadge}>{item.status || 'unknown'}</span>
+                          </div>
+
+                          <div className={styles.metaGrid}>
+                            <div className={styles.metaItem}>
+                              <span className={styles.metaLabel}>Progress</span>
+                              <span className={styles.metaValue}>{item.progress ?? 0}%</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                              <span className={styles.metaLabel}>Fit score</span>
+                              <span className={styles.metaValue}>{formatScore(item.overall_fit_score)}</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                              <span className={styles.metaLabel}>Report</span>
+                              <span className={styles.metaValue}>{formatReport(item.has_report)}</span>
+                            </div>
+                            <div className={styles.metaItem}>
+                              <span className={styles.metaLabel}>Created</span>
+                              <span className={styles.metaValue}>{formatDate(item.created_at)}</span>
+                            </div>
+                          </div>
+                          
+                          <div className={styles.actionRow}>
+                            {item.status === 'succeeded' && (
+                              <Link 
+                                href={`/dashboard?job_id=${item.job_id}`}
+                                className={styles.viewResultBtn}
+                              >
+                                View Result
+                              </Link>
+                            )}
+                            {canCompare && (
+                              <Link 
+                                href={`/dashboard?job_id=${item.job_id}&compare_with=${prevItem.job_id}`}
+                                className={styles.compareBtn}
+                              >
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" width="16" height="16">
+                                  <line x1="18" y1="20" x2="18" y2="10" />
+                                  <line x1="12" y1="20" x2="12" y2="4" />
+                                  <line x1="6" y1="20" x2="6" y2="14" />
+                                </svg>
+                                Compare with Previous
+                              </Link>
+                            )}
+                          </div>
+                        </article>
+                      );
+                    })}
                   </div>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Fit score</span>
-                    <span className={styles.metaValue}>{formatScore(item.overall_fit_score)}</span>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Report</span>
-                    <span className={styles.metaValue}>{formatReport(item.has_report)}</span>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Created</span>
-                    <span className={styles.metaValue}>{formatDate(item.created_at)}</span>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Updated</span>
-                    <span className={styles.metaValue}>{formatDate(item.updated_at)}</span>
-                  </div>
-                </div>
-              </article>
-            ))}
-          </div>
-        )}
+                </section>
+              ))}
+            </div>
+          );
+        })()}
       </main>
     </div>
   );

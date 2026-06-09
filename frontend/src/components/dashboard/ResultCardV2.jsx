@@ -6,6 +6,11 @@ import { getResultData, getFitLevel } from '@/utils/resultHelpers';
 import ScoreCircle from './ScoreCircle';
 import DownloadReport from './DownloadReport';
 import EmptyState from './EmptyState';
+import EvidenceSection from '@/components/results/EvidenceSection';
+import ImprovementPlan from '@/components/results/ImprovementPlan';
+import SafeRewrite from '@/components/results/SafeRewrite';
+import InterviewPrep from '@/components/results/InterviewPrep';
+import LearningRoadmap from '@/components/results/LearningRoadmap';
 import styles from '@/styles/ResultCardV2.module.css';
 
 /**
@@ -39,6 +44,8 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
   const missingSkills = data.missing_skills ?? [];
   const improvementActions = data.improvement_actions ?? [];
   const limitations = data.limitations ?? [];
+  const interviewPrep = data.interview_prep ?? null;
+  const learningRoadmap = data.learning_roadmap ?? null;
 
   const hasBreakdown = scoreBreakdown.length > 0;
   const hasMatched = matchedSkills.length > 0;
@@ -46,6 +53,9 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
   const hasMissing = missingSkills.length > 0;
   const hasImprovement = improvementActions.length > 0;
   const hasLimitations = limitations.length > 0;
+  const hasInterviewPrep = interviewPrep?.questions?.length > 0;
+  const hasLearningRoadmap = learningRoadmap?.items?.length > 0;
+  const hasRewriteActions = improvementActions.some((a) => a.type === 'cv_rewrite');
 
   /* ── Fit level style mapping ── */
   const fitLevelClass = {
@@ -197,7 +207,7 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
       )}
 
       {/* ═══════════════════════════════════════════════
-          4. Evidence Section
+          4. Evidence Section (Phase 4 — Grouped/Truncated)
           ═══════════════════════════════════════════════ */}
       {hasEvidence && (
         <section className={styles.sectionCard} id="v2-evidence">
@@ -212,41 +222,14 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
               </svg>
             </div>
             <div>
-              <h2 className={styles.sectionTitle}>{t('resultV2.evidence.title')}</h2>
+              <h2 className={styles.sectionTitle}>{t('phase4.evidence.title')}</h2>
               <p className={styles.sectionSubtitle}>
-                {evidence.length} {t('resultV2.evidence.found')}
+                {t('phase4.evidence.subtitle')}
               </p>
             </div>
           </div>
 
-          <div className={styles.evidenceList}>
-            {evidence.map((ev, index) => (
-              <div
-                key={ev.id ?? `ev-${index}`}
-                className={styles.evidenceCard}
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className={styles.evidenceCardHeader}>
-                  <span className={styles.evidenceSkill}>
-                    {ev.normalized_skill ?? ev.kind ?? t('resultV2.evidence.snippet')}
-                  </span>
-                  <span className={`${styles.evidenceSourceBadge} ${ev.source === 'cv' ? styles.sourceCv : styles.sourceJd}`}>
-                    {ev.source === 'cv' ? t('resultV2.evidence.source.cv') : t('resultV2.evidence.source.jd')}
-                  </span>
-                  {ev.location?.section && (
-                    <span className={styles.evidenceSectionTag}>
-                      {ev.location.section}
-                    </span>
-                  )}
-                </div>
-                {ev.text && (
-                  <div className={styles.evidenceText}>
-                    {ev.text}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <EvidenceSection evidence={evidence} />
         </section>
       )}
 
@@ -301,7 +284,7 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
       )}
 
       {/* ═══════════════════════════════════════════════
-          6. Improvement Actions
+          6. Improvement Action Plan (Phase 4 — Expandable)
           ═══════════════════════════════════════════════ */}
       {hasImprovement && (
         <section className={styles.sectionCard} id="v2-improvement-actions">
@@ -313,38 +296,78 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
               </svg>
             </div>
             <div>
-              <h2 className={styles.sectionTitle}>{t('resultV2.improvement.title')}</h2>
-              <p className={styles.sectionSubtitle}>{t('resultV2.improvement.subtitle')}</p>
+              <h2 className={styles.sectionTitle}>{t('phase4.improvement.title')}</h2>
+              <p className={styles.sectionSubtitle}>{t('phase4.improvement.subtitle')}</p>
             </div>
           </div>
 
-          <div className={styles.improvementList}>
-            {improvementActions.map((action, index) => (
-              <div
-                key={action.id ?? `imp-${index}`}
-                className={styles.improvementCard}
-                style={{ animationDelay: `${index * 0.06}s` }}
-              >
-                <div className={styles.improvementHeader}>
-                  <span className={`${styles.priorityBadge} ${priorityClass(action.priority)}`}>
-                    {action.priority?.toUpperCase() ?? 'LOW'}
-                  </span>
-                  <span className={styles.improvementTitle}>{action.title}</span>
-                </div>
-                {action.suggestion && (
-                  <p className={styles.improvementDescription}>{action.suggestion}</p>
-                )}
-                {action.guardrail && (
-                  <div className={styles.safeRewriteNote}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                    {action.guardrail}
-                  </div>
-                )}
-              </div>
-            ))}
+          <ImprovementPlan actions={improvementActions} />
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════
+          6b. Safe Rewrite Suggestions (Phase 4)
+          ═══════════════════════════════════════════════ */}
+      {hasRewriteActions && (
+        <section className={styles.sectionCard} id="v2-safe-rewrite">
+          <div className={styles.sectionHeader}>
+            <div className={`${styles.sectionIconBox} ${styles.iconWarning}`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 20h9" />
+                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className={styles.sectionTitle}>{t('phase4.safeRewrite.title')}</h2>
+              <p className={styles.sectionSubtitle}>{t('phase4.safeRewrite.subtitle')}</p>
+            </div>
           </div>
+
+          <SafeRewrite actions={improvementActions} evidence={evidence} />
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════
+          6c. Interview Prep Pack (Phase 4)
+          ═══════════════════════════════════════════════ */}
+      {hasInterviewPrep && (
+        <section className={styles.sectionCard} id="v2-interview-prep">
+          <div className={styles.sectionHeader}>
+            <div className={`${styles.sectionIconBox} ${styles.iconPrimary}`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className={styles.sectionTitle}>{t('phase4.interviewPrep.title')}</h2>
+              <p className={styles.sectionSubtitle}>{t('phase4.interviewPrep.subtitle')}</p>
+            </div>
+          </div>
+
+          <InterviewPrep interviewPrep={interviewPrep} />
+        </section>
+      )}
+
+      {/* ═══════════════════════════════════════════════
+          6d. Learning Roadmap (Phase 4)
+          ═══════════════════════════════════════════════ */}
+      {hasLearningRoadmap && (
+        <section className={styles.sectionCard} id="v2-learning-roadmap">
+          <div className={styles.sectionHeader}>
+            <div className={`${styles.sectionIconBox} ${styles.iconSuccess}`}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 2 7 12 12 22 7 12 2" />
+                <polyline points="2 17 12 22 22 17" />
+                <polyline points="2 12 12 17 22 12" />
+              </svg>
+            </div>
+            <div>
+              <h2 className={styles.sectionTitle}>{t('phase4.roadmap.title')}</h2>
+              <p className={styles.sectionSubtitle}>{t('phase4.roadmap.subtitle')}</p>
+            </div>
+          </div>
+
+          <LearningRoadmap learningRoadmap={learningRoadmap} />
         </section>
       )}
 

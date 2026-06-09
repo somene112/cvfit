@@ -1,0 +1,283 @@
+/* ========================================
+   ComparisonDashboard — Phase 4 Before/After
+   ======================================== */
+
+.comparisonContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Score comparison */
+.scoreComparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.scoreBox {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.scoreLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.scoreValue {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.scoreUnit {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-muted);
+}
+
+/* Delta arrow */
+.deltaContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.deltaArrow {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.4s ease-out 0.3s both;
+}
+
+.deltaArrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+.deltaImproved {
+  background: var(--color-success-light);
+  color: #047857;
+}
+
+.deltaRegressed {
+  background: var(--color-danger-light);
+  color: #991B1B;
+}
+
+.deltaNoChange {
+  background: var(--color-bg);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+.deltaValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+}
+
+.deltaValuePositive { color: #047857; }
+.deltaValueNegative { color: #991B1B; }
+.deltaValueNeutral { color: var(--color-text-muted); }
+
+.deltaLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Sections */
+.comparisonSection {
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-5);
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.sectionIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.sectionTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.sectionCount {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  padding: 1px 8px;
+  background: var(--color-card);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+  margin-left: auto;
+}
+
+/* Skill chips */
+.skillChipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.skillChipResolved {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-success-light);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #047857;
+}
+
+.skillChipResolved svg {
+  width: 12px;
+  height: 12px;
+}
+
+.skillChipMissing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-warning-light);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #B45309;
+}
+
+.skillChipNew {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  background: #DBEAFE;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: #1D4ED8;
+}
+
+.skillChipNew svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Warning banner */
+.stuffingWarning {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: linear-gradient(135deg, var(--color-danger-light), rgba(239, 68, 68, 0.05));
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.stuffingWarning svg {
+  width: 20px;
+  height: 20px;
+  color: var(--color-danger);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.stuffingContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.stuffingTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: #991B1B;
+}
+
+.stuffingDetail {
+  font-size: var(--font-size-xs);
+  color: #B91C1C;
+  line-height: 1.5;
+}
+
+/* Empty section message */
+.emptySectionMessage {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding: var(--space-2) 0;
+}
+
+/* Unavailable state */
+.unavailableState {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scoreComparison {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+
+  .deltaContainer {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .deltaArrow {
+    width: 36px;
+    height: 36px;
+  }
+
+  .deltaArrow svg {
+    width: 18px;
+    height: 18px;
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .comparisonSection {
+    padding: var(--space-4);
+  }
+}

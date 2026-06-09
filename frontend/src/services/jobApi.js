@@ -10,7 +10,31 @@ import apiClient from './apiClient';
  */
 export async function createScoreJob(payload) {
   const response = await apiClient.post('/v1/jobs/create-score', payload);
-  return response.data;
+  const data = response.data;
+  if (data?.job_id && data?.access_token) {
+    try {
+      const stored = JSON.parse(localStorage.getItem('cvfit_tokens') || '{}');
+      stored[data.job_id] = data.access_token;
+      localStorage.setItem('cvfit_tokens', JSON.stringify(stored));
+    } catch (err) {
+      // Ignore localStorage errors
+    }
+  }
+  return data;
+}
+
+/**
+ * Retrieve a stored access token for a given job ID.
+ * @param {string} jobId
+ * @returns {string|null}
+ */
+export function getStoredAccessToken(jobId) {
+  try {
+    const stored = JSON.parse(localStorage.getItem('cvfit_tokens') || '{}');
+    return stored[jobId] || null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -39,9 +63,8 @@ export async function getJobHistory() {
  * @returns {Promise<Object>}
  */
 export async function getJobResult(jobId, accessToken) {
-  const response = await apiClient.get(`/v1/jobs/${jobId}/result`, {
-    params: { access_token: accessToken },
-  });
+  const params = accessToken ? { access_token: accessToken } : {};
+  const response = await apiClient.get(`/v1/jobs/${jobId}/result`, { params });
   return response.data;
 }
 
@@ -52,9 +75,8 @@ export async function getJobResult(jobId, accessToken) {
  * @returns {Promise<Object>}
  */
 export async function getReportMetadata(jobId, accessToken) {
-  const response = await apiClient.get(`/v1/jobs/${jobId}/report`, {
-    params: { access_token: accessToken },
-  });
+  const params = accessToken ? { access_token: accessToken } : {};
+  const response = await apiClient.get(`/v1/jobs/${jobId}/report`, { params });
   return response.data;
 }
 

@@ -1,0 +1,227 @@
+/* ========================================
+   LearningRoadmap — Phase 4 Learning Path
+   ======================================== */
+
+.roadmapContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+}
+
+/* Timeline connector line */
+.roadmapContainer::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  bottom: 40px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary), var(--color-success));
+  border-radius: var(--radius-full);
+  opacity: 0.3;
+}
+
+/* Roadmap card */
+.roadmapCard {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  position: relative;
+  animation: fadeInUp 0.4s ease-out both;
+}
+
+/* Timeline dot */
+.timelineDot {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.dotHigh {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+
+.dotMedium {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+}
+
+.dotLow {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+
+/* Card content */
+.cardContent {
+  flex: 1;
+  background: var(--color-bg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  transition: all var(--transition-fast);
+}
+
+.cardContent:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border-hover);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.skillName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.priorityBadge {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.priorityHigh {
+  background: var(--color-danger-light);
+  color: #991B1B;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.priorityMedium {
+  background: var(--color-warning-light);
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.priorityLow {
+  background: #DBEAFE;
+  color: #1D4ED8;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+}
+
+/* Why section */
+.whySection {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Detail block */
+.detailBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detailLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.detailLabel svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Topic chips */
+.topicChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.topicChip {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-primary-50);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  transition: all var(--transition-fast);
+}
+
+.topicChip:hover {
+  background: var(--color-primary-light);
+  transform: translateY(-1px);
+}
+
+/* Mini project */
+.miniProjectBox {
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, #F3E8FF, rgba(139, 92, 246, 0.08));
+  border-radius: var(--radius-sm);
+  border-left: 3px solid #8B5CF6;
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* CV evidence callout */
+.cvEvidenceBox {
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(135deg, var(--color-success-light), rgba(16, 185, 129, 0.08));
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--color-success);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .roadmapContainer::before {
+    left: 15px;
+  }
+
+  .timelineDot {
+    width: 32px;
+    height: 32px;
+    font-size: var(--font-size-xs);
+  }
+
+  .cardContent {
+    padding: var(--space-4);
+  }
+
+  .roadmapCard {
+    gap: var(--space-3);
+  }
+}

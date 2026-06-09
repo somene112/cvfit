@@ -254,6 +254,20 @@
   flex-shrink: 0;
 }
 
+.errorText > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.errorHint {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  margin-top: 2px;
+}
+
 /* Responsive */
 @media (max-width: 640px) {
   .card {

@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/dashboard/Header';
 import UploadCV from '@/components/dashboard/UploadCV';
 import JobDescription from '@/components/dashboard/JobDescription';
@@ -9,11 +10,14 @@ import ResultCard from '@/components/dashboard/ResultCard';
 import ResultCardV2 from '@/components/dashboard/ResultCardV2';
 import EmptyState from '@/components/dashboard/EmptyState';
 import ErrorState from '@/components/dashboard/ErrorState';
+import ComparisonDashboard from '@/components/results/ComparisonDashboard';
+import ReanalysisUpload from '@/components/results/ReanalysisUpload';
 import { isResultV2 } from '@/utils/resultHelpers';
+import { extractApiError } from '@/utils/errorHelpers';
 import { useUploadCV } from '@/hooks/useUploadCV';
 import { useJobPolling } from '@/hooks/useJobPolling';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
-import { createScoreJob, getJobResult } from '@/services/jobApi';
+import { createScoreJob, getJobResult, getJobStatus } from '@/services/jobApi';
 import { useLanguage } from '@/context/LanguageContext';
 import {
   STRICTNESS_OPTIONS,
@@ -23,9 +27,11 @@ import {
 } from '@/utils/constants';
 import styles from '@/styles/Dashboard.module.css';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { t } = useLanguage();
   const { isAuthChecking } = useRequireAuth();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
   /* ──── State ──── */
   const [jdText, setJdText] = useState('');
@@ -37,6 +43,8 @@ export default function DashboardPage() {
   const [jobId, setJobId] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [result, setResult] = useState(null);
+  const [previousResult, setPreviousResult] = useState(null);
+  const [isComparing, setIsComparing] = useState(false);
   const [workflowError, setWorkflowError] = useState(null);
 
   const {
@@ -59,25 +67,55 @@ export default function DashboardPage() {
 
   /* ──── Fetch result when job succeeds ──── */
   useEffect(() => {
-    if (jobStatus === JOB_STATUS.SUCCEEDED && jobId && accessToken) {
+    if (jobStatus === JOB_STATUS.SUCCEEDED && jobId && accessToken && workflowStep !== WORKFLOW_STEPS.RESULT) {
       (async () => {
         try {
           const data = await getJobResult(jobId, accessToken);
           setResult(data);
           setWorkflowStep(WORKFLOW_STEPS.RESULT);
         } catch (err) {
-          const message =
-            err.response?.data?.message || err.message || 'Failed to fetch results.';
+          const { message } = extractApiError(err, 'Failed to fetch results.');
           setWorkflowError(message);
           setWorkflowStep(WORKFLOW_STEPS.ERROR);
         }
       })();
     }
-    if (jobStatus === JOB_STATUS.FAILED) {
+    if (jobStatus === JOB_STATUS.FAILED && workflowStep !== WORKFLOW_STEPS.ERROR) {
       setWorkflowStep(WORKFLOW_STEPS.ERROR);
       setWorkflowError(pollingError || 'Analysis failed. Please try again.');
     }
-  }, [jobStatus, jobId, accessToken, pollingError]);
+  }, [jobStatus, jobId, accessToken, pollingError, workflowStep]);
+
+  /* ──── Load from URL Params (History Link) ──── */
+  useEffect(() => {
+    const urlJobId = searchParams.get('job_id');
+    const urlToken = searchParams.get('access_token');
+    const compareWithJobId = searchParams.get('compare_with');
+    
+    if (urlJobId && !isAuthChecking) {
+      setWorkflowStep(WORKFLOW_STEPS.POLLING);
+      setJobId(urlJobId);
+      if (urlToken) setAccessToken(urlToken);
+      
+      // If comparing, fetch the previous result immediately
+      if (compareWithJobId) {
+        (async () => {
+          try {
+            const prevData = await getJobResult(compareWithJobId, urlToken);
+            setPreviousResult(prevData);
+            setIsComparing(true);
+          } catch (err) {
+            console.error('Failed to load previous result for comparison', err);
+          }
+        })();
+      }
+
+      // Clean up URL without reloading page
+      const currentUrl = new URL(window.location.href);
+      currentUrl.search = '';
+      window.history.replaceState({}, document.title, currentUrl.pathname);
+    }
+  }, [searchParams, isAuthChecking]);
 
   /* ──── Analyze Handler ──── */
   const handleAnalyze = useCallback(async () => {
@@ -122,12 +160,21 @@ export default function DashboardPage() {
       /* Step 3: Start Polling */
       setWorkflowStep(WORKFLOW_STEPS.POLLING);
     } catch (err) {
-      const message =
-        err.response?.data?.message || err.message || 'Failed to create analysis job.';
+      const { message } = extractApiError(err, 'Failed to create analysis job.');
       setWorkflowError(message);
       setWorkflowStep(WORKFLOW_STEPS.ERROR);
     }
   }, [file, jdText, targetRole, language, strictness, upload, t]);
+
+  /* ──── Reanalysis Handler ──── */
+  const handleReanalysisComplete = useCallback((newResult, newJobId, newAccessToken) => {
+    setPreviousResult(result);
+    setResult(newResult);
+    setJobId(newJobId);
+    setAccessToken(newAccessToken);
+    setIsComparing(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [result]);
 
   /* Start polling when jobId is set and we're in polling step */
   useEffect(() => {
@@ -142,6 +189,8 @@ export default function DashboardPage() {
     setJobId(null);
     setAccessToken(null);
     setResult(null);
+    setPreviousResult(null);
+    setIsComparing(false);
     setWorkflowError(null);
     setJdText('');
     setTargetRole('');
@@ -324,23 +373,58 @@ export default function DashboardPage() {
           </div>
         ) : (
           /* Results */
-          isResultV2(result) ? (
-            <ResultCardV2
-              result={result}
-              jobId={jobId}
-              accessToken={accessToken}
-              onNewAnalysis={handleNewAnalysis}
-            />
-          ) : (
-            <ResultCard
-              result={result}
-              jobId={jobId}
-              accessToken={accessToken}
-              onNewAnalysis={handleNewAnalysis}
-            />
-          )
+          <div className={styles.resultsWrapper} style={{ display: 'flex', flexDirection: 'column', gap: '2rem', width: '100%' }}>
+            {isComparing && previousResult && result && (
+              <ComparisonDashboard
+                previousResult={previousResult}
+                currentResult={result}
+              />
+            )}
+            
+            {isResultV2(result) ? (
+              <ResultCardV2
+                result={result}
+                jobId={jobId}
+                accessToken={accessToken}
+                onNewAnalysis={handleNewAnalysis}
+              />
+            ) : (
+              <ResultCard
+                result={result}
+                jobId={jobId}
+                accessToken={accessToken}
+                onNewAnalysis={handleNewAnalysis}
+              />
+            )}
+
+            {/* Reanalysis Flow below results */}
+            <div style={{ marginTop: '1rem' }}>
+              <ReanalysisUpload
+                jdText={jdText}
+                targetRole={targetRole}
+                language={language}
+                strictness={strictness}
+                onReanalysisComplete={handleReanalysisComplete}
+                onCompare={() => setIsComparing(true)}
+              />
+            </div>
+          </div>
         )}
       </main>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={
+      <div className={styles.page}>
+        <main className={styles.main}>
+          <div className={styles.analyzeSpinner} style={{ margin: '0 auto', display: 'block', width: '40px', height: '40px', borderWidth: '4px' }} />
+        </main>
+      </div>
+    }>
+      <DashboardContent />
+    </Suspense>
   );
 }
