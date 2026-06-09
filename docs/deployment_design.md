@@ -63,7 +63,7 @@ DATABASE_URL=postgresql+psycopg2://...
 REDIS_URL=redis://...
 STORAGE_BACKEND=local|s3
 STORAGE_ROOT=./data
-CV_MAX_UPLOAD_MB=5
+CV_MAX_UPLOAD_MB=10
 FRONTEND_TEMPLATES_DIR=../frontend/templates
 FRONTEND_STATIC_DIR=../frontend/static
 ```

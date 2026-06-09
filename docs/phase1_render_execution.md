@@ -88,7 +88,7 @@ Set these on both the API service and worker service.
 | `REDIS_URL` | `<render-redis-internal-url>` | Yes | Use the same value on API and worker. |
 | `STORAGE_BACKEND` | `s3` | Yes | Render trial should use S3-compatible storage. |
 | `STORAGE_ROOT` | `./data` | Yes | Kept for config compatibility and local paths. |
-| `CV_MAX_UPLOAD_MB` | `5` | Yes | Keep aligned across API and worker. |
+| `CV_MAX_UPLOAD_MB` | `10` | Yes | Keep aligned across API and worker. |
 
 ## API-Only Env Vars
 

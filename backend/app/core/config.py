@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     REDIS_URL: str
     STORAGE_BACKEND: str = "local"
     STORAGE_ROOT: str = "./data"
-    CV_MAX_UPLOAD_MB: int = 5
+    CV_MAX_UPLOAD_MB: int = 10
     S3_BUCKET: str = ""
     S3_REGION: str = ""
     S3_ENDPOINT_URL: str = ""

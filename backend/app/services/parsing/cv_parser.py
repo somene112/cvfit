@@ -7,6 +7,11 @@ from pypdf import PdfReader
 import docx2txt
 
 from app.services.ontology.skill_ontology import get_skill_ontology
+from app.services.parsing.text_normalization import (
+    normalize_extracted_text,
+    normalize_evidence_snippet,
+    dedupe_snippets,
+)
 
 
 SECTION_HEADERS = [
@@ -29,6 +34,7 @@ def parse_cv_to_text(storage_path: str) -> dict:
         raise ValueError(f"Unsupported file type: {suffix}")
 
     text = clean_text(text)
+    text = normalize_extracted_text(text)
     sections = split_sections(text)
     bullets = extract_bullets(text)
     ontology = get_skill_ontology()
@@ -82,10 +88,14 @@ def extract_bullets(text: str) -> list[str]:
         if line.startswith(("-", "\u2022", "*")):
             line = line.lstrip("-\u2022* ").strip()
         if len(line) >= 25:
-            bullets.append(line)
+            bullets.append(normalize_evidence_snippet(line))
 
     # fallback: if no bullet-like lines, slice longer lines
     if not bullets:
-        bullets = [l.strip() for l in text.splitlines() if len(l.strip()) >= 40]
+        bullets = [
+            normalize_evidence_snippet(l.strip())
+            for l in text.splitlines()
+            if len(l.strip()) >= 40
+        ]
 
-    return bullets[:80]
+    return dedupe_snippets(bullets)[:80]

@@ -24,7 +24,7 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - STORAGE_BACKEND=local
       - STORAGE_ROOT=/data
-      - CV_MAX_UPLOAD_MB=5
+      - CV_MAX_UPLOAD_MB=10
       - FRONTEND_TEMPLATES_DIR=../frontend/templates
       - FRONTEND_STATIC_DIR=../frontend/static
     volumes:
@@ -46,7 +46,7 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - STORAGE_BACKEND=local
       - STORAGE_ROOT=/data
-      - CV_MAX_UPLOAD_MB=5
+      - CV_MAX_UPLOAD_MB=10
       - FRONTEND_TEMPLATES_DIR=../frontend/templates
       - FRONTEND_STATIC_DIR=../frontend/static
     volumes:
