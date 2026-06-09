@@ -42,8 +42,15 @@ export function useUploadCV() {
       setProgress(100);
       return data.cv_file_id;
     } catch (err) {
+      const detail = err.response?.data?.detail;
       const message =
-        err.response?.data?.message || err.message || 'Upload failed. Please try again.';
+        (detail && typeof detail === 'object' && detail.message)
+          ? detail.message
+          : (typeof detail === 'string' && detail)
+          ? detail
+          : err.response?.data?.message
+          || err.message
+          || 'Upload failed. Please try again.';
       setError(message);
       setIsUploading(false);
       setProgress(0);

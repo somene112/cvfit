@@ -62,7 +62,7 @@ $TEST_NAME = "Test User"
 □ Chọn file PDF hợp lệ → preview hiển thị filename
 □ Chọn file DOCX hợp lệ → preview hiển thị filename
 □ Upload file không hợp lệ (exe, txt, jpg) → error message hiển thị
-□ Upload file quá lớn (>5MB) → error message hiển thị
+□ Upload file quá lớn (>10MB) → error message hiển thị
 □ Upload file rỗng → error message hiển thị
 □ Xóa file đã chọn → upload box về trạng thái ban đầu
 ```
@@ -311,7 +311,7 @@ $TEST_NAME = "Test User"
 □ Error message user-friendly, có hướng dẫn cụ thể
 
 □ Ví dụ:
-  ✅ "Your CV file is too large. Maximum size is 5 MB."
+  ✅ "CV file is too large. Max size is 10 MB."
   ❌ "UploadValidationError: file exceeds CV_MAX_UPLOAD_MB"
 
   ✅ "Please upload a PDF or DOCX file."

@@ -96,7 +96,7 @@ S3_PREFIX=<render/test/prefix>
 AWS_ACCESS_KEY_ID=<secret>
 AWS_SECRET_ACCESS_KEY=<secret>
 AWS_USE_IAM_ROLE=false
-CV_MAX_UPLOAD_MB=5
+CV_MAX_UPLOAD_MB=10
 ```
 
 Notes:
@@ -120,7 +120,7 @@ S3_PREFIX=<render/test/prefix>
 AWS_ACCESS_KEY_ID=<secret>
 AWS_SECRET_ACCESS_KEY=<secret>
 AWS_USE_IAM_ROLE=false
-CV_MAX_UPLOAD_MB=5
+CV_MAX_UPLOAD_MB=10
 ```
 
 Render provides `PORT` for the Web Service start command.
@@ -139,7 +139,7 @@ S3_PREFIX=<same-as-api>
 AWS_ACCESS_KEY_ID=<secret>
 AWS_SECRET_ACCESS_KEY=<secret>
 AWS_USE_IAM_ROLE=false
-CV_MAX_UPLOAD_MB=5
+CV_MAX_UPLOAD_MB=10
 ```
 
 The worker does not need `PORT`.

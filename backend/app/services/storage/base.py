@@ -14,7 +14,9 @@ class StorageNotFoundError(StorageError):
 
 
 class UploadValidationError(StorageError):
-    pass
+    def __init__(self, message: str, code: str = "CV_UPLOAD_INVALID"):
+        super().__init__(message)
+        self.code = code
 
 
 class StorageService(ABC):

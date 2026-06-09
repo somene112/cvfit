@@ -403,7 +403,10 @@ def test_upload_rejects_invalid_extension():
         cv_route.upload_cv(file=upload, db=SimpleNamespace())
 
     assert exc.value.status_code == 400
-    assert exc.value.detail == "Only pdf/docx supported"
+    detail = exc.value.detail
+    assert isinstance(detail, dict)
+    assert detail["code"] == "CV_UNSUPPORTED_FILE_TYPE"
+    assert "PDF" in detail["message"] or "DOCX" in detail["message"]
 
 
 def test_upload_rejects_empty_file():
@@ -415,7 +418,13 @@ def test_upload_rejects_empty_file():
         cv_route.upload_cv(file=upload, db=SimpleNamespace())
 
     assert exc.value.status_code == 400
-    assert exc.value.detail == "Empty CV file"
+    detail = exc.value.detail
+    assert isinstance(detail, dict)
+    assert detail["code"] == "CV_FILE_EMPTY"
+    assert detail["message"]
+    # no raw file content or path in error
+    assert "storage_path" not in str(detail)
+    assert "uploads/" not in str(detail)
 
 
 def test_upload_rejects_oversized_file(monkeypatch):
@@ -428,7 +437,71 @@ def test_upload_rejects_oversized_file(monkeypatch):
         cv_route.upload_cv(file=upload, db=SimpleNamespace())
 
     assert exc.value.status_code == 400
-    assert exc.value.detail == "CV file too large. Max size is 1 MB."
+    detail = exc.value.detail
+    assert isinstance(detail, dict)
+    assert detail["code"] == "CV_FILE_TOO_LARGE"
+    assert "1 MB" in detail["message"]
+    assert detail["max_size_mb"] == 1
+    # no raw file content or path in error
+    assert "storage_path" not in str(detail)
+    assert "uploads/" not in str(detail)
+
+
+def test_upload_rejects_file_just_above_10mb(monkeypatch):
+    """File just above 10MB must be rejected with structured error citing 10MB."""
+    from app.api.routes import cv as cv_route
+
+    monkeypatch.setattr(settings, "CV_MAX_UPLOAD_MB", 10)
+    just_over = b"x" * (10 * 1024 * 1024 + 1)
+    upload = UploadFile(filename="cv.pdf", file=BytesIO(just_over))
+
+    with pytest.raises(HTTPException) as exc:
+        cv_route.upload_cv(file=upload, db=SimpleNamespace())
+
+    assert exc.value.status_code == 400
+    detail = exc.value.detail
+    assert isinstance(detail, dict)
+    assert detail["code"] == "CV_FILE_TOO_LARGE"
+    assert "10 MB" in detail["message"]
+    assert detail["max_size_mb"] == 10
+    assert "storage_path" not in str(detail)
+    assert "uploads/" not in str(detail)
+
+
+def test_upload_accepts_file_at_10mb(monkeypatch):
+    """File exactly at the 10MB limit must pass size validation."""
+    from app.api.routes import cv as cv_route
+
+    monkeypatch.setattr(settings, "CV_MAX_UPLOAD_MB", 10)
+    exactly_10mb = b"x" * (10 * 1024 * 1024)
+    upload = UploadFile(filename="cv.pdf", file=BytesIO(exactly_10mb))
+    monkeypatch.setattr(
+        cv_route,
+        "save_upload",
+        lambda f: ("uploads/cv.pdf", "a" * 64, "application/pdf"),
+    )
+
+    saved_rows = []
+    fake_db = SimpleNamespace(add=lambda row: saved_rows.append(row), commit=lambda: None)
+    response = cv_route.upload_cv(file=upload, db=fake_db)
+
+    assert isinstance(response.cv_file_id, str)
+
+
+def test_upload_error_detail_has_no_stack_trace(monkeypatch):
+    """Upload error responses must not expose stack traces or internal paths."""
+    from app.api.routes import cv as cv_route
+
+    monkeypatch.setattr(settings, "CV_MAX_UPLOAD_MB", 1)
+    upload = UploadFile(filename="cv.pdf", file=BytesIO(b"x" * (1024 * 1024 + 1)))
+
+    with pytest.raises(HTTPException) as exc:
+        cv_route.upload_cv(file=upload, db=SimpleNamespace())
+
+    detail_str = str(exc.value.detail)
+    assert "Traceback" not in detail_str
+    assert "File \"" not in detail_str
+    assert ".py" not in detail_str
 
 
 @pytest.mark.parametrize(

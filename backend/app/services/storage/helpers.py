@@ -29,12 +29,13 @@ def read_upload_bytes(file: UploadFile, max_bytes: int) -> bytes:
         total += len(chunk)
         if total > max_bytes:
             raise UploadValidationError(
-                f"CV file too large. Max size is {settings.CV_MAX_UPLOAD_MB} MB."
+                f"CV file too large. Max size is {settings.CV_MAX_UPLOAD_MB} MB.",
+                code="CV_FILE_TOO_LARGE",
             )
         chunks.append(chunk)
 
     if total == 0:
-        raise UploadValidationError("Empty CV file")
+        raise UploadValidationError("Empty CV file", code="CV_FILE_EMPTY")
 
     return b"".join(chunks)
 
