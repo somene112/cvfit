@@ -128,3 +128,39 @@ class CareerProfileItemResponse(BaseModel):
 class CareerProfileItemListResponse(BaseModel):
     items: List[CareerProfileItemResponse]
     total: int
+
+
+# ---------------------------------------------------------------------------
+# Application artifact schemas
+# ---------------------------------------------------------------------------
+
+ArtifactType = Literal[
+    "application_package",
+    "cover_letter_draft",
+    "interview_practice_result",
+    "readiness_summary",
+]
+
+
+class ArtifactResponse(BaseModel):
+    id: str
+    application_id: str
+    artifact_type: str
+    payload_json: Any
+    created_at: datetime
+
+
+class ArtifactGeneratedResponse(BaseModel):
+    application_id: str
+    artifact_id: str
+    status: str
+    artifact_type: str
+
+
+class CoverLetterPatch(BaseModel):
+    opening: Optional[str] = None
+    why_role_company: Optional[str] = None
+    relevant_evidence: Optional[List[Any]] = None
+    contribution_fit: Optional[str] = None
+    closing: Optional[str] = None
+    review_notes: Optional[List[str]] = None

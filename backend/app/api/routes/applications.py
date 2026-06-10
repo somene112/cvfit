@@ -5,19 +5,25 @@ from datetime import datetime
 from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
-from app.db.models import AnalysisJob, Application, User
+from app.db.models import AnalysisJob, Application, ApplicationArtifact, CareerProfileItem, User
 from app.db.session import get_db
 from app.schemas.phase5 import (
     ApplicationCreate,
     ApplicationListResponse,
     ApplicationResponse,
     ApplicationUpdate,
+    ArtifactGeneratedResponse,
+    ArtifactResponse,
     AttachAnalysisResponse,
+    CoverLetterPatch,
     ReadinessResponse,
 )
+from app.services.application_package import build_package_payload
+from app.services.cover_letter import build_cover_letter_payload
 
 router = APIRouter(prefix="/v1/applications", tags=["applications"])
 
@@ -157,6 +163,43 @@ def attach_analysis(
     )
 
 
+def _artifact_to_response(artifact: ApplicationArtifact) -> ArtifactResponse:
+    return ArtifactResponse(
+        id=str(artifact.id),
+        application_id=str(artifact.application_id),
+        artifact_type=artifact.artifact_type,
+        payload_json=artifact.payload_json,
+        created_at=artifact.created_at,
+    )
+
+
+def _get_latest_artifact(
+    db: Session,
+    application_id: uuid.UUID,
+    user_id: uuid.UUID,
+    artifact_type: str,
+) -> Optional[ApplicationArtifact]:
+    results = (
+        db.query(ApplicationArtifact)
+        .filter(
+            ApplicationArtifact.application_id == application_id,
+            ApplicationArtifact.user_id == user_id,
+            ApplicationArtifact.artifact_type == artifact_type,
+        )
+        .order_by(ApplicationArtifact.created_at.desc())
+        .all()
+    )
+    return results[0] if results else None
+
+
+def _get_profile_items(db: Session, user_id: uuid.UUID) -> list:
+    return (
+        db.query(CareerProfileItem)
+        .filter(CareerProfileItem.user_id == user_id)
+        .all()
+    )
+
+
 @router.get("/{application_id}/readiness", response_model=ReadinessResponse)
 def get_readiness(
     application_id: uuid.UUID,
@@ -238,3 +281,184 @@ def get_readiness(
         summary="Application readiness is based on the attached analysis result.",
         next_actions=next_actions,
     )
+
+
+# ---------------------------------------------------------------------------
+# Package endpoints
+# ---------------------------------------------------------------------------
+
+@router.post(
+    "/{application_id}/package/generate",
+    status_code=status.HTTP_201_CREATED,
+    response_model=ArtifactGeneratedResponse,
+)
+def generate_package(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> ArtifactGeneratedResponse:
+    app = _get_owned_application(application_id, current_user, db)
+
+    if app.best_analysis_job_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="attach an analysis job before generating a package",
+        )
+
+    job = db.get(AnalysisJob, app.best_analysis_job_id)
+    if job is None or job.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
+
+    profile_items = _get_profile_items(db, current_user.id)
+    payload = build_package_payload(app, job, profile_items)
+
+    artifact = ApplicationArtifact(
+        id=uuid.uuid4(),
+        user_id=current_user.id,
+        application_id=app.id,
+        artifact_type="application_package",
+        payload_json=payload,
+        created_at=datetime.utcnow(),
+    )
+    db.add(artifact)
+    db.commit()
+    db.refresh(artifact)
+
+    return ArtifactGeneratedResponse(
+        application_id=str(app.id),
+        artifact_id=str(artifact.id),
+        status="generated",
+        artifact_type="application_package",
+    )
+
+
+@router.get("/{application_id}/package/download")
+def download_package(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> JSONResponse:
+    app = _get_owned_application(application_id, current_user, db)
+    artifact = _get_latest_artifact(db, app.id, current_user.id, "application_package")
+    if artifact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="no package generated yet")
+    return JSONResponse(
+        content={
+            "download_format": "json",
+            "application_id": str(app.id),
+            "artifact_id": str(artifact.id),
+            "artifact_type": "application_package",
+            "payload_json": artifact.payload_json,
+        },
+        headers={"Content-Disposition": "attachment; filename=application_package.json"},
+    )
+
+
+@router.get("/{application_id}/package", response_model=ArtifactResponse)
+def get_package(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> ArtifactResponse:
+    app = _get_owned_application(application_id, current_user, db)
+    artifact = _get_latest_artifact(db, app.id, current_user.id, "application_package")
+    if artifact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="no package generated yet")
+    return _artifact_to_response(artifact)
+
+
+# ---------------------------------------------------------------------------
+# Cover letter endpoints
+# ---------------------------------------------------------------------------
+
+@router.post(
+    "/{application_id}/cover-letter/generate",
+    status_code=status.HTTP_201_CREATED,
+    response_model=ArtifactGeneratedResponse,
+)
+def generate_cover_letter(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> ArtifactGeneratedResponse:
+    app = _get_owned_application(application_id, current_user, db)
+
+    if app.best_analysis_job_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="attach an analysis job before generating a cover letter",
+        )
+
+    job = db.get(AnalysisJob, app.best_analysis_job_id)
+    if job is None or job.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
+
+    profile_items = _get_profile_items(db, current_user.id)
+    payload = build_cover_letter_payload(app, job, profile_items)
+
+    artifact = ApplicationArtifact(
+        id=uuid.uuid4(),
+        user_id=current_user.id,
+        application_id=app.id,
+        artifact_type="cover_letter_draft",
+        payload_json=payload,
+        created_at=datetime.utcnow(),
+    )
+    db.add(artifact)
+    db.commit()
+    db.refresh(artifact)
+
+    return ArtifactGeneratedResponse(
+        application_id=str(app.id),
+        artifact_id=str(artifact.id),
+        status="generated",
+        artifact_type="cover_letter_draft",
+    )
+
+
+@router.get("/{application_id}/cover-letter", response_model=ArtifactResponse)
+def get_cover_letter(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> ArtifactResponse:
+    app = _get_owned_application(application_id, current_user, db)
+    artifact = _get_latest_artifact(db, app.id, current_user.id, "cover_letter_draft")
+    if artifact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="no cover letter draft generated yet")
+    return _artifact_to_response(artifact)
+
+
+@router.patch("/{application_id}/cover-letter", response_model=ArtifactResponse)
+def patch_cover_letter(
+    application_id: uuid.UUID,
+    body: CoverLetterPatch,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> ArtifactResponse:
+    app = _get_owned_application(application_id, current_user, db)
+    artifact = _get_latest_artifact(db, app.id, current_user.id, "cover_letter_draft")
+    if artifact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="no cover letter draft generated yet")
+
+    payload = dict(artifact.payload_json)
+    if body.opening is not None:
+        payload["opening"] = body.opening
+    if body.why_role_company is not None:
+        payload["why_role_company"] = body.why_role_company
+    if body.relevant_evidence is not None:
+        payload["relevant_evidence"] = body.relevant_evidence
+    if body.contribution_fit is not None:
+        payload["contribution_fit"] = body.contribution_fit
+    if body.closing is not None:
+        payload["closing"] = body.closing
+    if body.review_notes is not None:
+        payload["review_notes"] = body.review_notes
+    # Always preserve disclaimer — not patchable.
+    payload["disclaimer"] = artifact.payload_json.get("disclaimer", "")
+
+    artifact.payload_json = payload
+    db.commit()
+    db.refresh(artifact)
+
+    return _artifact_to_response(artifact)
