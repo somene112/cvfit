@@ -1,0 +1,65 @@
+NGUYEN THI F
+Frontend Developer
+
+Email: nguyenthif@email.com
+Phone: 0977 890 123
+Location: Vung Tau, Vietnam
+
+========================================
+SUMMARY
+========================================
+Frontend Developer with 2+ years of experience building user interfaces.
+Proficient in JavaScript and React framework.
+
+========================================
+SKILLS
+========================================
+Languages: JavaScript, TypeScript, HTML, CSS
+Frameworks: React, Next.js, Vue.js (basic)
+Tools: Git, Webpack, Figma, VS Code
+Testing: Jest, React Testing Library
+
+========================================
+PROJECTS
+========================================
+
+E-Commerce Website
+Role: Frontend Developer
+Description: Responsive e-commerce website
+Details:
+- Built with React and Next.js
+- Product catalog with filtering and search
+- Shopping cart functionality
+- Responsive design with CSS modules
+
+Task Management Dashboard
+Role: Frontend Developer
+Description: Real-time task management dashboard
+- React-based SPA with Redux state management
+- Real-time updates with WebSocket
+- Interactive UI with drag-and-drop
+- Unit tests with Jest
+
+========================================
+EXPERIENCE
+========================================
+
+Frontend Developer
+WebAgency Vietnam | 2022 - Present
+- Developed React applications for client projects
+- Implemented responsive UI designs
+- Collaborated with backend developers for API integration
+- Wrote unit tests for components
+
+Junior Frontend Developer
+Digital Solutions | 2021 - 2022
+- Built landing pages and marketing sites
+- Maintained JavaScript codebases
+- Worked with design team on UI implementation
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+Vung Tau University | 2017 - 2021
+GPA: 3.0/4.0

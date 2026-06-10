@@ -1,0 +1,16 @@
+Name: Pham Tien Dat
+Email: tiendat@email.com
+Phone: 0956-678-901
+
+Summary
+Python Backend Developer with 1 year of experience. Focused on backend services and API development.
+
+Experience
+
+Backend Developer — WebSolutions Co. (2024-Present)
+- Built backend services using Python and Flask
+- Implemented REST APIs for web applications
+- Worked with SQL databases for data storage
+
+Skills
+Python, Flask, SQL, REST API, Git, HTML, CSS, JavaScript

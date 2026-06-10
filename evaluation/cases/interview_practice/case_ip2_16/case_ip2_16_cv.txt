@@ -1,0 +1,16 @@
+Name: Nguyen Thi Thuy Linh
+Email: thuylinh@email.com
+Phone: 0978-890-123
+
+Summary
+Python Backend Developer with 1.5 years of experience using Flask and SQL.
+
+Experience
+
+Backend Developer — TechServe Co. (2023-Present)
+- Built web applications using Flask framework
+- Implemented SQL database operations
+- Created basic REST endpoints
+
+Skills
+Python, Flask, SQL, Git, HTML

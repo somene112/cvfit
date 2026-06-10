@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe05-project-001",
+      "item_type": "project",
+      "title": "Web App",
+      "description": "Built a web app with Python. Created backend service and connected to database.",
+      "skills_json": ["Python"],
+      "evidence_text": "Web application project built with Python.",
+      "source": "pe05-project-001"
+    }
+  ]
+}

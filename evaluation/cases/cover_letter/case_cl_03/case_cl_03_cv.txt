@@ -1,0 +1,72 @@
+LE VAN C
+Senior Backend Engineer
+
+Email: levanc@email.com
+Phone: 0944 567 890
+Location: Da Nang, Vietnam
+
+========================================
+SUMMARY
+========================================
+Senior Backend Engineer with 5+ years of experience in building microservices and distributed systems.
+Expert in Python, FastAPI, and cloud-native technologies on AWS.
+
+========================================
+SKILLS
+========================================
+Languages: Python, Go, TypeScript
+Frameworks: FastAPI, Flask, Django, gRPC
+Databases: PostgreSQL, MySQL, MongoDB, Redis
+Cloud: AWS (EC2, ECS, Lambda, S3, RDS, CloudWatch)
+Container: Docker, Kubernetes, Helm
+Tools: Terraform, GitHub Actions, Prometheus, Grafana
+
+========================================
+PROJECTS
+========================================
+
+Product API
+Role: Tech Lead
+Description: E-commerce product management microservice
+Details:
+- Built with FastAPI and PostgreSQL
+- RESTful API with GraphQL gateway integration
+- Docker containerization with Kubernetes deployment
+- CI/CD pipeline with GitHub Actions
+- Deployed on AWS ECS with auto-scaling
+
+Auth Service
+Role: Senior Developer
+Description: AWS-based authentication and authorization microservice
+Details:
+- Built with Python and AWS Lambda
+- JWT and OAuth2 implementation
+- Integration with AWS Cognito
+- Deployed as serverless functions on AWS
+- S3 for token storage and logging
+
+========================================
+EXPERIENCE
+========================================
+
+Senior Backend Engineer
+CloudScale Vietnam | 2019 - Present
+- Led development of microservices architecture
+- Designed and implemented APIs using FastAPI
+- Managed AWS infrastructure and deployments
+- Mentored junior developers
+
+Backend Developer
+StartupHub | 2017 - 2019
+- Developed backend services using Python
+- Implemented CI/CD pipelines
+- Database optimization and migration
+
+========================================
+EDUCATION
+========================================
+Master of Computer Science
+Danang University of Technology | 2015 - 2017
+
+Bachelor of Computer Science
+Danang University of Technology | 2011 - 2015

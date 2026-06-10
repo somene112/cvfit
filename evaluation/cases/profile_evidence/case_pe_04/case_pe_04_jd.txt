@@ -1,0 +1,31 @@
+# Frontend Developer
+
+## Requirements
+
+We are seeking a Frontend Developer to build user interfaces for our web applications.
+
+### Required Skills
+
+- **JavaScript** — Strong proficiency in modern JavaScript
+- **React** — Experience building React applications
+- **CSS** — Styling and responsive design
+- **HTML5** — Semantic markup
+
+### Responsibilities
+
+- Build user interfaces with React
+- Create responsive, mobile-first designs
+- Collaborate with backend developers
+- Write clean, maintainable code
+
+### Nice to Have
+
+- TypeScript experience
+- Next.js experience
+- Testing library experience
+
+### Compensation
+
+- Salary: 15-25 million VND/month
+- Health insurance
+- Training opportunities

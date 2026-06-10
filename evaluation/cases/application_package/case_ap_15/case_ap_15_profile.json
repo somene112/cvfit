@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "Blog Application",
+      "skills": ["Python", "Flask"],
+      "description": "Personal blog with Flask backend"
+    }
+  ],
+  "skills": ["Python", "Flask"],
+  "certifications": [],
+  "education": []
+}

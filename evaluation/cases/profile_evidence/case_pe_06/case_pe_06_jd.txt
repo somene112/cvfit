@@ -1,0 +1,32 @@
+# Senior Backend Engineer
+
+## Requirements
+
+We are seeking a Senior Backend Engineer with strong Python skills and containerization experience.
+
+### Required Skills
+
+- **Python** — 3+ years of experience
+- **FastAPI** — Building production REST APIs
+- **Docker** — Containerization and deployment
+- **Kubernetes** — Container orchestration
+
+### Responsibilities
+
+- Design and implement scalable backend services
+- Containerize applications with Docker
+- Deploy and manage Kubernetes clusters
+- Mentor junior developers
+
+### Nice to Have
+
+- AWS or GCP experience
+- CI/CD pipeline experience
+- Microservices architecture experience
+
+### Compensation
+
+- Salary: 30-50 million VND/month
+- Stock options
+- Health insurance
+- Remote work available

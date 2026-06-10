@@ -1,0 +1,35 @@
+Backend Engineer
+Modern Tech Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Backend Engineer for our microservices platform team.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Proficiency in Python
+- Experience with Django and/or FastAPI
+- PostgreSQL database experience
+- Redis for caching and session management
+- Docker containerization
+- Microservices architecture knowledge
+
+Experience:
+- 2+ years of backend development experience
+- Experience with containerized deployments
+- Familiarity with API development
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services
+- Build microservices with containerization
+- Implement caching strategies
+- Optimize database performance
+- Collaborate with DevOps team
+- Write technical documentation

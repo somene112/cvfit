@@ -1,0 +1,34 @@
+Backend Engineer
+Tech Innovation Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Backend Engineer to help build our next-generation platform.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Proficiency in Python
+- Experience with FastAPI web framework
+- PostgreSQL database experience
+- RESTful API development
+- Understanding of async programming
+
+Experience:
+- 2+ years of backend development experience
+- Experience with modern Python frameworks
+- Familiarity with relational databases
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services with FastAPI
+- Build scalable RESTful APIs
+- Manage PostgreSQL databases
+- Write efficient database queries
+- Collaborate with team members
+- Participate in code reviews

@@ -1,0 +1,56 @@
+{
+  "overall_fit_score": 78,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Backend development"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "REST API development"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database management"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "Redis",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "Redis",
+      "action": "Add Redis caching to improve performance",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [
+    {
+      "question": "How do you structure a FastAPI application for scalability?",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["FastAPI used for REST API development"],
+      "related_jd_requirement": "FastAPI experience for scalable applications",
+      "why_this_question": "Assesses FastAPI architecture knowledge",
+      "risk_if_user_cannot_answer": "May indicate limited FastAPI experience"
+    },
+    {
+      "question": "Describe your PostgreSQL database design patterns",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["PostgreSQL used for database management"],
+      "related_jd_requirement": "PostgreSQL proficiency",
+      "why_this_question": "Validates database design skills",
+      "risk_if_user_cannot_answer": "May indicate shallow database knowledge"
+    }
+  ],
+  "learning_roadmap": [
+    {
+      "skill": "Redis",
+      "priority": "medium",
+      "topics": ["Caching strategies", "Cache invalidation", "Session management"],
+      "estimated_effort": "1-2 weeks"
+    }
+  ]
+}

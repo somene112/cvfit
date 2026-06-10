@@ -1,0 +1,33 @@
+Python Web Developer
+Creative Tech Solutions - Hanoi
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Python Web Developer to join our team and build web applications.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with Flask web framework
+- SQL database management (MySQL, PostgreSQL)
+- HTML, CSS, JavaScript
+- Git version control
+
+Experience:
+- 1+ years of web development experience
+- Experience with templating engines
+- Familiarity with web deployment
+
+========================================
+RESPONSIBILITIES
+========================================
+- Develop web applications using Python and Flask
+- Create database-driven web pages
+- Implement frontend-backend integration
+- Maintain and improve existing web projects
+- Collaborate with design team

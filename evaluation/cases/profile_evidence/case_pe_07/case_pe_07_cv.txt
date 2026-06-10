@@ -1,0 +1,46 @@
+# Bùi Đình Phú
+## Python Developer
+
+**Email:** dinhphu.dev@email.com
+**Phone:** 0932123456
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/dinhphu-dev
+
+---
+
+## Summary
+
+Python developer with 2 years of experience building web applications. Familiar with REST API development.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, JavaScript
+- **Frameworks:** Flask, Django
+- **Databases:** PostgreSQL, SQLite
+- **Tools:** Git, Docker
+
+---
+
+## Experience
+
+### Python Developer
+WebTech Vietnam | Aug 2021 – Present
+
+- Developed web applications with Python
+- Built REST APIs with Flask
+- Maintained database systems
+
+### Junior Developer
+IT Solutions Co. | Mar 2020 – Jul 2021
+
+- Created Python scripts for automation
+- Worked on Flask applications
+
+---
+
+## Education
+
+### Bachelor of Information Systems
+NEU | 2016 – 2020

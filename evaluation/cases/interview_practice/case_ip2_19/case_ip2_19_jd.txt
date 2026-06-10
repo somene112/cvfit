@@ -1,0 +1,14 @@
+Python Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- FastAPI framework experience
+- PostgreSQL database design
+- Redis caching integration
+- REST API best practices
+- Performance optimization
+
+Responsibilities:
+- Build and maintain backend services
+- Optimize application performance
+- Design database schemas

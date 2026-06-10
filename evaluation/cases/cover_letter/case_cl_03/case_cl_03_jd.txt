@@ -1,0 +1,33 @@
+Senior Backend Engineer
+Enterprise SaaS Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Senior Backend Engineer to join our platform team.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Expert proficiency in Python
+- Experience with FastAPI or similar modern web frameworks
+- Docker containerization and deployment experience
+- Microservices architecture experience
+- RESTful API design
+
+Experience:
+- 4+ years of backend development experience
+- Experience leading technical projects
+- Familiarity with cloud platforms (AWS, GCP, or Azure)
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement scalable backend services
+- Lead technical architecture decisions
+- Mentor junior team members
+- Collaborate with product and design teams
+- Drive best practices for code quality and testing

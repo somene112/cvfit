@@ -1,0 +1,46 @@
+# Trần Đình Nam
+## DevOps Engineer
+
+**Email:** dinhnam.devops@email.com
+**Phone:** 0944778899
+**Location:** Ho Chi Minh City, Vietnam
+**LinkedIn:** linkedin.com/in/dinhnam-devops
+
+---
+
+## Summary
+
+DevOps engineer with 3 years of experience in CI/CD pipelines, containerization, and cloud infrastructure.
+
+---
+
+## Skills
+
+- **Cloud:** AWS, GCP
+- **Container:** Docker, Kubernetes
+- **CI/CD:** Jenkins, GitLab CI
+- **Languages:** Python, Bash
+
+---
+
+## Experience
+
+### DevOps Engineer
+CloudFirst Solutions | Mar 2021 – Present
+
+- Managed CI/CD pipelines
+- Containerized applications with Docker
+- Deployed to Kubernetes clusters
+
+### Junior DevOps
+TechOps Co. | Jun 2019 – Feb 2021
+
+- Maintained Docker environments
+- Worked on AWS infrastructure
+
+---
+
+## Education
+
+### Bachelor of Network Engineering
+PTIT | 2015 – 2019

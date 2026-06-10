@@ -1,0 +1,77 @@
+{
+  "overall_fit_score": 78,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Used across all projects"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Built microservices with FastAPI"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database for production applications"
+    },
+    {
+      "skill": "Redis",
+      "evidence": "Caching and session management"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "Docker",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "Docker",
+      "action": "Add Docker containerization skills",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [
+    {
+      "question": "Describe your experience building microservices with FastAPI and how you handle authentication",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Microservices project using FastAPI for authentication and authorization"],
+      "related_jd_requirement": "Strong FastAPI experience for microservices architecture",
+      "why_this_question": "FastAPI is a key requirement for this role",
+      "risk_if_user_cannot_answer": "May indicate shallow FastAPI microservices knowledge"
+    },
+    {
+      "question": "How have you optimized PostgreSQL queries in high-traffic applications?",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Production applications using PostgreSQL for data storage"],
+      "related_jd_requirement": "PostgreSQL proficiency for database management",
+      "why_this_question": "Database optimization is critical for this backend role",
+      "risk_if_user_cannot_answer": "May indicate inability to handle production database loads"
+    },
+    {
+      "question": "Walk me through your Redis caching strategy and how you handle cache invalidation",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Redis used for caching and session management"],
+      "related_jd_requirement": "Experience with Redis for caching",
+      "why_this_question": "Redis is required for performance optimization",
+      "risk_if_user_cannot_answer": "May indicate lack of performance optimization experience"
+    },
+    {
+      "question": "Tell me about a time you had to debug a production issue in a Python application",
+      "type": "behavioral",
+      "related_cv_evidence": ["Python used across all backend projects"],
+      "related_jd_requirement": "Strong Python programming skills",
+      "why_this_question": "Assesses problem-solving and debugging skills",
+      "risk_if_user_cannot_answer": "May indicate limited production debugging experience"
+    },
+    {
+      "question": "Describe a situation where you had to learn a new technology quickly for a project",
+      "type": "behavioral",
+      "related_cv_evidence": ["FastAPI, Redis, PostgreSQL all learned for projects"],
+      "related_jd_requirement": "Ability to adapt and learn new technologies",
+      "why_this_question": "Tech roles require continuous learning",
+      "risk_if_user_cannot_answer": "May indicate fixed mindset rather than growth mindset"
+    }
+  ],
+  "learning_roadmap": []
+}

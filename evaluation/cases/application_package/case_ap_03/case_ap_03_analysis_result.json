@@ -1,0 +1,69 @@
+{
+  "overall_fit_score": 35,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": null
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    },
+    {
+      "skill": "Redis",
+      "evidence": null
+    },
+    {
+      "skill": "Docker",
+      "evidence": null
+    },
+    {
+      "skill": "AWS",
+      "evidence": null
+    },
+    {
+      "skill": "Kubernetes",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "FastAPI",
+      "action": "Learn FastAPI framework and build a REST API project",
+      "priority": "high"
+    },
+    {
+      "skill": "PostgreSQL",
+      "action": "Master PostgreSQL with database design and optimization",
+      "priority": "high"
+    },
+    {
+      "skill": "Redis",
+      "action": "Implement Redis caching in a project",
+      "priority": "medium"
+    },
+    {
+      "skill": "Docker",
+      "action": "Learn Docker containerization and docker-compose",
+      "priority": "medium"
+    },
+    {
+      "skill": "AWS",
+      "action": "Get AWS certified or build projects on AWS",
+      "priority": "medium"
+    },
+    {
+      "skill": "Kubernetes",
+      "action": "Learn Kubernetes orchestration basics",
+      "priority": "low"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

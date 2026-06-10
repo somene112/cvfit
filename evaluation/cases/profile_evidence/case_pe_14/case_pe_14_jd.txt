@@ -1,0 +1,24 @@
+# Backend API Developer
+
+## Requirements
+
+We are seeking a Backend API Developer for our team.
+
+### Required Skills
+
+- **Python** — 2+ years experience
+- **FastAPI** — Modern API framework
+- **PostgreSQL** — Database design
+- **API Design** — RESTful practices
+
+### Responsibilities
+
+- Build APIs with FastAPI
+- Design database schemas
+- Write clean code
+- Collaborate with team
+
+### Compensation
+
+- Salary: 20-30 million VND/month
+- Bonus

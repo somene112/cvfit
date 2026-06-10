@@ -1,0 +1,29 @@
+Name: Le Thi Mai Linh
+Email: mai.linh@email.com
+Phone: 0903-456-789
+
+Summary
+Senior Backend Engineer with 5+ years of experience building scalable microservices and data-intensive applications. Strong expertise in Python, FastAPI, and cloud-native architectures.
+
+Experience
+
+Senior Backend Engineer — TechCorp Vietnam (2021-Present)
+- Led architecture design for high-traffic e-commerce platform serving 100K+ daily users
+- Built FastAPI microservices with async processing, handling 10M+ API requests/day
+- Implemented PostgreSQL sharding strategy reducing query latency by 60%
+- Designed Redis caching layer achieving 99.9% cache hit rate
+- Mentored 3 junior developers and conducted code reviews
+
+Backend Engineer — StartupXYZ (2019-2021)
+- Developed FastAPI backend for fintech application with 50K+ active users
+- Implemented JWT authentication and OAuth2 integration
+- Optimized PostgreSQL queries reducing report generation time by 75%
+- Deployed services on AWS ECS with CI/CD pipelines
+
+Backend Developer — DataSoft Inc. (2018-2019)
+- Built REST APIs using Python and Django
+- Maintained MySQL database with 1M+ records
+- Implemented automated testing with 80% code coverage
+
+Skills
+Python, FastAPI, Django, PostgreSQL, Redis, MySQL, AWS (ECS, RDS, S3, Lambda, CloudWatch), Docker, Kubernetes, CI/CD (GitHub Actions), System Design, Microservices Architecture

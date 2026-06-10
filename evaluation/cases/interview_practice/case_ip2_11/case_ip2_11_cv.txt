@@ -1,0 +1,28 @@
+Name: Truong Thi Lan Huong
+Email: lanhuong@email.com
+Phone: 0923-345-678
+
+Summary
+Backend Developer with 2 years of experience. Passionate about technical writing and knowledge sharing.
+
+Experience
+
+Backend Developer — CodeCraft Studio (2022-Present)
+- Built REST APIs using Python and FastAPI
+- Implemented data processing pipelines
+- Wrote technical documentation for internal APIs
+
+Technical Communication
+
+- Technical Blog Author (Personal Blog, 2021-Present)
+  - Published 20+ articles on Python best practices and backend design
+  - Average 2,000 views per article
+  - Topics include API design, database optimization, testing strategies
+
+- Tech Meetup Speaker (Ho Chi Minh City Python User Group)
+  - Presented "Building Scalable APIs with FastAPI" to 80+ attendees
+  - Received positive feedback on clear explanations
+  - Created accompanying demo repository with 300+ stars
+
+Skills
+Python, FastAPI, PostgreSQL, Git, REST API Design, Technical Writing, Public Speaking

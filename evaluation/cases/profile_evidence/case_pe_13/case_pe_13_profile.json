@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe13-skill-001",
+      "item_type": "skill",
+      "title": "Graphic Design",
+      "description": "Created logos, banners, and visual assets for various projects. Proficient in Adobe Photoshop and Illustrator. Designed UI mockups and marketing materials.",
+      "skills_json": ["Photoshop", "Illustrator", "Design", "UI Design"],
+      "evidence_text": "Graphic design skills with experience in visual design, logo creation, and UI mockups using design tools.",
+      "source": "pe13-skill-001"
+    }
+  ]
+}

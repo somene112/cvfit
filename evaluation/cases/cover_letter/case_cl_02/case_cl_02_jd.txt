@@ -1,0 +1,32 @@
+Junior Data Engineer
+Startup - Hanoi
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Junior Data Engineer to join our data team.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Proficiency in Python programming
+- Experience with Flask or similar web frameworks
+- SQL database experience (PostgreSQL, MySQL, or SQLite)
+- Basic data processing knowledge
+
+Experience:
+- 1+ years of relevant experience
+- Experience building APIs
+- Familiarity with testing frameworks
+
+========================================
+RESPONSIBILITIES
+========================================
+- Build and maintain data pipelines
+- Develop APIs for data access
+- Optimize data queries and storage
+- Write automated tests
+- Collaborate with data science team

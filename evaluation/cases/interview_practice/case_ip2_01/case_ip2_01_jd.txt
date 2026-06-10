@@ -1,0 +1,15 @@
+Python Backend Engineer (Entry Level)
+
+Requirements:
+- 1+ years of Python backend development
+- Strong knowledge of algorithms and data structures
+- Experience with REST API development
+- Familiarity with SQL databases
+- Understanding of system design principles
+- Experience with version control (Git)
+
+Responsibilities:
+- Design and implement scalable backend services
+- Write clean, maintainable code
+- Optimize application performance
+- Collaborate with team members on technical solutions

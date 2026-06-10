@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe04-project-001",
+      "item_type": "project",
+      "title": "Portfolio Website",
+      "description": "Personal portfolio website built with React and JavaScript. Features responsive design with CSS Grid and Flexbox. Showcases web development projects.",
+      "skills_json": ["React", "JavaScript", "CSS", "HTML"],
+      "evidence_text": "Portfolio Website showcasing web development projects. Built with React and modern JavaScript. Features responsive design and smooth animations.",
+      "source": "https://github.com/quocviet-dev/portfolio"
+    }
+  ]
+}

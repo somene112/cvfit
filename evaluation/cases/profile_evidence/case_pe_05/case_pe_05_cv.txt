@@ -1,0 +1,56 @@
+# Đặng Minh Tuấn
+## Backend Developer
+
+**Email:** minhtuan.dev@email.com
+**Phone:** 0977123456
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/minhtuan-dev
+
+---
+
+## Summary
+
+Backend developer with 2 years of experience in Python and web technologies. Focused on building reliable server-side applications.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, JavaScript
+- **Frameworks:** FastAPI, Django
+- **Databases:** PostgreSQL, MySQL
+- **Tools:** Docker, Git, Linux
+
+---
+
+## Experience
+
+### Backend Developer
+Cloud Services JSC | Sep 2021 – Present
+
+- Developed backend services with Python
+- Built APIs for web applications
+- Maintained database systems
+
+### Junior Backend Developer
+Tech House | Mar 2020 – Aug 2021
+
+- Created Flask applications
+- Worked on database migrations
+- Implemented REST endpoints
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+VNU University of Engineering | 2016 – 2020
+
+---
+
+## Projects
+
+### Web App
+- Backend service for web application
+- Connected to database
+- REST API endpoints

@@ -1,0 +1,93 @@
+{
+  "overall_fit_score": 82,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Used in E-Commerce API and Data Pipeline projects"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Built E-Commerce API with 500+ endpoints"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database for E-Commerce API and Data Pipeline"
+    },
+    {
+      "skill": "Redis",
+      "evidence": "Caching layer in E-Commerce API"
+    },
+    {
+      "skill": "Docker",
+      "evidence": "Containerized E-Commerce API and Data Pipeline"
+    }
+  ],
+  "missing_skills": [],
+  "improvement_actions": [
+    {
+      "skill": "Python",
+      "action": "Ensure Python best practices are demonstrated in portfolio",
+      "priority": "low"
+    },
+    {
+      "skill": "FastAPI",
+      "action": "Highlight FastAPI performance optimizations in resume",
+      "priority": "low"
+    },
+    {
+      "skill": "PostgreSQL",
+      "action": "Add database performance metrics to portfolio",
+      "priority": "low"
+    },
+    {
+      "skill": "Redis",
+      "action": "Document Redis caching strategy and hit rates",
+      "priority": "low"
+    },
+    {
+      "skill": "Docker",
+      "action": "Include Docker Compose setup in project documentation",
+      "priority": "low"
+    }
+  ],
+  "interview_prep": [
+    {
+      "question": "Walk me through your E-Commerce API architecture using FastAPI and PostgreSQL",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["E-Commerce API project - 500+ endpoints built with FastAPI and PostgreSQL"],
+      "related_jd_requirement": "Strong experience with FastAPI and PostgreSQL",
+      "why_this_question": "Assesses hands-on experience with required technologies",
+      "risk_if_user_cannot_answer": "May indicate shallow FastAPI/PostgreSQL knowledge"
+    },
+    {
+      "question": "How did you implement Redis caching in your E-Commerce API and what were the results?",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["E-Commerce API - Redis caching layer implemented"],
+      "related_jd_requirement": "Experience with Redis for caching",
+      "why_this_question": "Validates Redis implementation and performance awareness",
+      "risk_if_user_cannot_answer": "May indicate inability to optimize API performance"
+    },
+    {
+      "question": "Describe your experience containerizing Python applications with Docker",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["E-Commerce API and Data Pipeline both containerized with Docker"],
+      "related_jd_requirement": "Docker proficiency for deployment",
+      "why_this_question": "Ensures production deployment capability",
+      "risk_if_user_cannot_answer": "Deployment pipeline gaps may exist"
+    }
+  ],
+  "learning_roadmap": [
+    {
+      "skill": "Kubernetes",
+      "priority": "medium",
+      "topics": ["Pod management", "Service networking", "Helm charts"],
+      "estimated_effort": "2-3 weeks"
+    },
+    {
+      "skill": "AWS",
+      "priority": "low",
+      "topics": ["EC2", "ECS", "RDS", "CloudWatch"],
+      "estimated_effort": "3-4 weeks"
+    }
+  ]
+}

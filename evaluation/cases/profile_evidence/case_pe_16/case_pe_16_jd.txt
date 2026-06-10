@@ -1,0 +1,31 @@
+# Senior Frontend Developer
+
+## Requirements
+
+We are seeking a Senior Frontend Developer to lead our UI team.
+
+### Required Skills
+
+- **JavaScript** — Expert level
+- **React** — Production experience
+- **TypeScript** — Strong proficiency
+- **CSS** — Advanced styling
+
+### Responsibilities
+
+- Build complex React applications
+- Mentor junior developers
+- Define coding standards
+- Collaborate with design team
+
+### Nice to Have
+
+- Next.js experience
+- Testing experience
+- Performance optimization
+
+### Compensation
+
+- Salary: 25-40 million VND/month
+- Health insurance
+- Training budget

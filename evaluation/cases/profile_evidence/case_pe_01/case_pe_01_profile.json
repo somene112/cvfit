@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe01-project-001",
+      "item_type": "project",
+      "title": "E-Commerce API",
+      "description": "Built REST API with FastAPI and PostgreSQL for product management. Implemented CRUD operations, pagination, and filtering. Added Redis caching layer.",
+      "skills_json": ["FastAPI", "PostgreSQL", "Redis", "Docker"],
+      "evidence_text": "Built a production-ready e-commerce API serving 10,000+ daily requests with FastAPI and PostgreSQL. Implemented pagination, filtering, and search functionality. Added Redis caching reducing database load by 60%.",
+      "source": "pe01-project-001"
+    }
+  ]
+}

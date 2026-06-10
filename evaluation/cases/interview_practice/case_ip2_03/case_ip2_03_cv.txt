@@ -1,0 +1,16 @@
+Name: Pham Van Tuan
+Email: vantuan@email.com
+Phone: 0934-567-890
+
+Summary
+Backend developer with some experience in Python. Currently learning web development.
+
+Experience
+
+Junior Developer — Local Company (3 months)
+- Wrote some Python scripts for automation
+- Assisted with basic data processing tasks
+- Helped maintain existing Excel spreadsheets
+
+Skills
+Python, Excel, Word

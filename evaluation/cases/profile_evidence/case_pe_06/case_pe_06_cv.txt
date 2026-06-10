@@ -1,0 +1,47 @@
+# Võ Thanh Sơn
+## Python Developer
+
+**Email:** thanhson.dev@email.com
+**Phone:** 0909876543
+**Location:** Ho Chi Minh City, Vietnam
+**LinkedIn:** linkedin.com/in/thanhson-dev
+
+---
+
+## Summary
+
+Python developer with 3 years of experience in backend development. Familiar with modern Python frameworks and deployment technologies.
+
+---
+
+## Skills
+
+- **Languages:** Python, JavaScript, SQL
+- **Frameworks:** FastAPI, Django, Flask
+- **Databases:** PostgreSQL, MySQL
+- **Tools:** Git, Docker, Linux
+
+---
+
+## Experience
+
+### Python Developer
+Tech Solutions Corp | Feb 2022 – Present
+
+- Developed backend services with Python and FastAPI
+- Built REST APIs for web and mobile applications
+- Maintained PostgreSQL databases
+
+### Junior Python Developer
+Software House VN | Jun 2020 – Jan 2022
+
+- Created Flask applications
+- Worked on Django projects
+- Database management with MySQL
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+University of Technology | 2016 – 2020

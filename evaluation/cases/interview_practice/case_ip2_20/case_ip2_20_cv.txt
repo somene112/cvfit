@@ -1,0 +1,18 @@
+Name: Vu Thi Mai
+Email: maivu@email.com
+Phone: 0923-234-567
+
+Summary
+Backend Developer with 1 year of experience in Python development.
+
+Experience
+
+Backend Developer — WebDev Co. (2024-Present)
+- Built web applications with Python
+- Created database-backed features
+
+Project: API Project
+- Built an API
+
+Skills
+Python, SQL

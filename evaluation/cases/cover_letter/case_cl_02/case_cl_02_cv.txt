@@ -1,0 +1,59 @@
+TRAN THI B
+Data Engineer
+
+Email: tranthib@email.com
+Phone: 0933 456 789
+Location: Hanoi, Vietnam
+
+========================================
+SUMMARY
+========================================
+Data Engineer with 2+ years of experience building data pipelines and analytics solutions.
+Specialized in Python, Flask, and data processing.
+
+========================================
+SKILLS
+========================================
+Languages: Python, SQL, JavaScript
+Frameworks: Flask, Django
+Databases: SQLite, PostgreSQL, MySQL
+Testing: pytest
+Tools: Git, Docker, Linux
+
+========================================
+PROJECTS
+========================================
+
+Analytics Dashboard
+Role: Lead Developer
+Description: Real-time analytics dashboard for business metrics
+Details:
+- Built data processing pipeline handling 10GB of daily data
+- Implemented Flask REST API for data visualization frontend
+- SQLite database for data aggregation and storage
+- pytest with 85% code coverage
+- Real-time data refresh every 15 minutes
+
+Data Collection Service
+Role: Backend Developer
+Description: Automated data collection service
+- Flask-based web scraper for competitor analysis
+- Scheduled tasks using APScheduler
+- Data stored in SQLite with efficient queries
+
+========================================
+EXPERIENCE
+========================================
+
+Data Engineer
+DataTech Vietnam | 2022 - Present
+- Built and maintained data pipelines processing millions of records daily
+- Developed Flask applications for internal tools
+- Implemented automated testing achieving 85% code coverage
+
+========================================
+EDUCATION
+========================================
+Bachelor of Information Technology
+Hanoi University of Science and Technology | 2018 - 2022
+GPA: 3.3/4.0

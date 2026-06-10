@@ -1,0 +1,72 @@
+{
+  "overall_fit_score": 92,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Primary language across all projects"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Production API development"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database architecture and optimization"
+    },
+    {
+      "skill": "Redis",
+      "evidence": "Caching and session management"
+    },
+    {
+      "skill": "Docker",
+      "evidence": "Containerization of all services"
+    },
+    {
+      "skill": "Git",
+      "evidence": "Version control for all projects"
+    }
+  ],
+  "missing_skills": [],
+  "improvement_actions": [
+    {
+      "skill": "Python",
+      "action": "Add more Python best practices documentation",
+      "priority": "low"
+    }
+  ],
+  "interview_prep": [
+    {
+      "question": "Describe your architecture decisions in building the production API system",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Production API development with FastAPI"],
+      "related_jd_requirement": "FastAPI experience for API development",
+      "why_this_question": "Assesses architectural thinking",
+      "risk_if_user_cannot_answer": "May indicate shallow architecture experience"
+    },
+    {
+      "question": "How do you handle database migrations in PostgreSQL for production systems?",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Database architecture with PostgreSQL"],
+      "related_jd_requirement": "PostgreSQL proficiency",
+      "why_this_question": "Validates production database management",
+      "risk_if_user_cannot_answer": "May indicate lack of production database experience"
+    },
+    {
+      "question": "Explain your Docker deployment strategy and CI/CD pipeline",
+      "type": "project_deep_dive",
+      "related_cv_evidence": ["Containerization of all services with Docker"],
+      "related_jd_requirement": "Docker proficiency",
+      "why_this_question": "Assesses deployment and DevOps knowledge",
+      "risk_if_user_cannot_answer": "May indicate deployment pipeline gaps"
+    },
+    {
+      "question": "Tell me about a time you had to optimize a slow database query",
+      "type": "behavioral",
+      "related_cv_evidence": ["PostgreSQL optimization experience"],
+      "related_jd_requirement": "Performance optimization skills",
+      "why_this_question": "Assesses problem-solving abilities",
+      "risk_if_user_cannot_answer": "May indicate limited optimization experience"
+    }
+  ],
+  "learning_roadmap": []
+}

@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe06-skill-001",
+      "item_type": "skill",
+      "title": "Docker",
+      "description": "Containerized applications with Docker. Created Dockerfiles, docker-compose files, and managed containerized deployments.",
+      "skills_json": ["Docker", "Containerization"],
+      "evidence_text": "Skilled in Docker containerization. Built multi-container applications with docker-compose. Experience with Dockerfile optimization and container networking.",
+      "source": "pe06-skill-001"
+    }
+  ]
+}

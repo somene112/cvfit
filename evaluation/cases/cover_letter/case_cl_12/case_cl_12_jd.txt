@@ -1,0 +1,31 @@
+Python Backend Developer
+Tech Solutions Company - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Python Backend Developer to build and maintain API services.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI framework
+- PostgreSQL database management
+- RESTful API development
+- Docker containerization
+
+Experience:
+- 2+ years of backend development experience
+- Experience with version control
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services
+- Build RESTful APIs
+- Manage database operations
+- Deploy applications using Docker

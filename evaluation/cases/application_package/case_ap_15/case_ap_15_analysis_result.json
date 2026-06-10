@@ -1,0 +1,50 @@
+{
+  "overall_fit_score": 67,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Backend development"
+    },
+    {
+      "skill": "Flask",
+      "evidence": "Web framework"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "FastAPI",
+      "action": "Learn FastAPI for better performance",
+      "priority": "high"
+    },
+    {
+      "skill": "PostgreSQL",
+      "action": "Learn PostgreSQL database management",
+      "priority": "high"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": [
+    {
+      "skill": "FastAPI",
+      "priority": "high",
+      "topics": ["REST API design", "Async programming", "Pydantic validation"],
+      "estimated_effort": "2-3 weeks"
+    },
+    {
+      "skill": "PostgreSQL",
+      "priority": "high",
+      "topics": ["Database design", "Query optimization", "Indexing"],
+      "estimated_effort": "2-3 weeks"
+    }
+  ]
+}

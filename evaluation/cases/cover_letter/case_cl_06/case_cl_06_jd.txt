@@ -1,0 +1,34 @@
+Backend Engineer
+Fintech Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Backend Engineer to join our financial services team.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI or similar web frameworks
+- PostgreSQL database design and optimization
+- RESTful API development
+- Experience with authentication and security
+
+Experience:
+- 2+ years of backend development experience
+- Experience working with financial data
+- Familiarity with API security best practices
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services
+- Build secure APIs for financial operations
+- Optimize database queries for performance
+- Implement authentication and authorization
+- Write clean, maintainable code
+- Collaborate with frontend and mobile teams

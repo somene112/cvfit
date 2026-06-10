@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "Microservices Platform",
+      "skills": ["FastAPI", "PostgreSQL", "Redis"],
+      "description": "Production microservices platform handling 100K+ daily requests"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Redis"],
+  "certifications": [],
+  "education": []
+}

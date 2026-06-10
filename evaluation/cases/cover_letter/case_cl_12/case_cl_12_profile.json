@@ -1,0 +1,26 @@
+{
+  "projects": [
+    {
+      "name": "API Service",
+      "skills": ["FastAPI", "PostgreSQL"],
+      "description": "Built an API service for internal data management with CRUD operations and authentication"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+  "experience": [
+    {
+      "title": "Junior Backend Developer",
+      "company": "StartupXYZ",
+      "years": "2023 - Present",
+      "description": "Developed backend services using Python and FastAPI"
+    }
+  ],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Information Technology",
+      "institution": "University of Technology",
+      "year": "2023"
+    }
+  ]
+}

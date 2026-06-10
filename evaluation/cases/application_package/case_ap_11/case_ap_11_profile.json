@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "name": "E-Commerce Platform",
+      "skills": ["FastAPI", "PostgreSQL", "Redis"],
+      "description": "High-traffic e-commerce API serving 50K+ daily users"
+    },
+    {
+      "name": "Data Analytics Dashboard",
+      "skills": ["Python", "PostgreSQL"],
+      "description": "Real-time analytics dashboard with PostgreSQL backend"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Redis"],
+  "certifications": [],
+  "education": []
+}

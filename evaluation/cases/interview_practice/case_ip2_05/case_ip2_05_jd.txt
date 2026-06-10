@@ -1,0 +1,16 @@
+DevOps Engineer
+
+Requirements:
+- 3+ years of DevOps experience
+- AWS cloud infrastructure experience
+- Docker and Kubernetes expertise
+- CI/CD pipeline development
+- Infrastructure as Code (Terraform) experience
+- Monitoring and logging implementation
+- Python scripting for automation
+
+Responsibilities:
+- Design and maintain cloud infrastructure
+- Build and manage container orchestration
+- Implement continuous integration and deployment
+- Ensure system reliability and performance

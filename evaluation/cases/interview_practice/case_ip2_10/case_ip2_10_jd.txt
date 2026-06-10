@@ -1,0 +1,14 @@
+Python Backend Engineer
+
+Requirements:
+- Python backend development experience
+- REST API development
+- Database design
+- Team collaboration skills
+- Problem-solving abilities
+
+Responsibilities:
+- Build and maintain backend services
+- Collaborate with cross-functional teams
+- Participate in code reviews
+- Contribute to technical documentation

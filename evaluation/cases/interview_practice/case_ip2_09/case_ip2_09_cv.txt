@@ -1,0 +1,40 @@
+Name: Ngo Thi Thanh Thao
+Email: thaongo@email.com
+Phone: 0901-123-456
+
+Summary
+Final year Information Technology student at FPT University. Expected graduation: 2026.
+
+Education
+Bachelor of Information Technology, FPT University
+GPA: 3.2/4.0
+Expected Graduation: June 2026
+
+Relevant Coursework
+- Web Programming: Built dynamic web applications using HTML, CSS, JavaScript
+- Database Management: Designed and implemented relational databases using SQL
+- Data Structures and Algorithms: Implemented sorting, searching, and graph algorithms
+- Software Engineering: Applied SDLC methodology for project development
+- Operating Systems: Understanding of process management and memory allocation
+
+Academic Projects
+
+Project 1: Library Management System (Course Project)
+- Developed desktop application for library operations
+- Used Python and SQLite for data storage
+- Implemented CRUD operations for books, members, and loans
+- Created report generation for overdue books
+
+Project 2: Online Quiz Application (Course Project)
+- Built web-based quiz platform using Flask framework
+- Designed database schema for questions and user responses
+- Implemented timer functionality and score calculation
+- Deployed on local server for classroom testing
+
+Project 3: Algorithm Competition Practice (Personal)
+- Solved 200+ algorithmic problems on LeetCode and HackerRank
+- Focused on dynamic programming, graph algorithms, and data structures
+- Achieved top 15% ranking in weekly contests
+
+Skills
+Python, Java, C, SQL, Flask, SQLite, Git, Data Structures, Algorithms, HTML, CSS, JavaScript

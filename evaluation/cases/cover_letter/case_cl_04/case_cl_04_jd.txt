@@ -1,0 +1,33 @@
+Backend Engineer
+Cloud Services Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Backend Engineer with cloud experience.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Proficiency in Python
+- Experience with Django web framework
+- AWS cloud platform experience
+- PostgreSQL database knowledge
+- Docker containerization
+
+Experience:
+- 2+ years of backend development
+- Experience with cloud deployments
+- Familiarity with RESTful API design
+
+========================================
+RESPONSIBILITIES
+========================================
+- Develop and maintain backend services
+- Design cloud architecture
+- Optimize database performance
+- Collaborate with DevOps on deployments
+- Write technical documentation

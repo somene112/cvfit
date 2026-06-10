@@ -1,0 +1,72 @@
+PHAM THI D
+Backend Developer
+
+Email: phamthid@email.com
+Phone: 0955 678 901
+Location: Can Tho, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Developer with 3+ years of experience in Python/Django development.
+AWS certified solutions architect with strong cloud infrastructure knowledge.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, HTML/CSS
+Frameworks: Django, Flask, FastAPI
+Databases: PostgreSQL, MySQL, SQLite
+Cloud: AWS (EC2, S3, RDS, Lambda, CloudFormation)
+Tools: Docker, Git, Jenkins, Linux
+
+========================================
+PROJECTS
+========================================
+
+Inventory Management System
+Role: Backend Developer
+Description: Django-based inventory management system
+Details:
+- Built with Django and PostgreSQL
+- AWS deployment with EC2 and RDS
+- RESTful API for frontend integration
+- User authentication and authorization
+- Automated deployment with CI/CD
+
+Content Management Platform
+Role: Full-Stack Developer
+Description: CMS platform for content creators
+- Django backend with template rendering
+- PostgreSQL database design
+- AWS S3 for media storage
+- Responsive frontend with JavaScript
+
+========================================
+EXPERIENCE
+========================================
+
+Backend Developer
+AgriTech Vietnam | 2021 - Present
+- Developed Django applications for agricultural management
+- Implemented AWS infrastructure for production deployments
+- Designed PostgreSQL schemas and optimized queries
+
+Junior Developer
+WebSolutions Co | 2019 - 2021
+- Built Flask and Django web applications
+- Maintained MySQL databases
+- Implemented REST APIs
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+Can Tho University | 2015 - 2019
+GPA: 3.2/4.0
+
+========================================
+CERTIFICATIONS
+========================================
+- AWS Solutions Architect - Associate Level (2023)
+- Django Fundamentals Badge

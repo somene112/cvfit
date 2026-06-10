@@ -1,0 +1,62 @@
+NGUYEN VAN A
+Backend Engineer
+
+Email: nguyenvana@email.com
+Phone: 0912 345 678
+Location: Ho Chi Minh City, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Engineer with 3+ years of experience building scalable web applications and APIs.
+Proficient in Python, FastAPI, PostgreSQL, and cloud-native deployment.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, SQL
+Frameworks: FastAPI, Flask, Django
+Databases: PostgreSQL, SQLite, Redis
+Tools: Docker, Git, Linux, Nginx
+
+========================================
+PROJECTS
+========================================
+
+E-Commerce Product API
+Role: Full-Stack Developer
+Description: Built API with 500+ endpoints for product management, user authentication, and order processing
+Details:
+- Implemented PostgreSQL indexing for product search optimization (search queries reduced from 800ms to 50ms)
+- Redis caching for session management and API response caching (40% faster response times)
+- Docker containerization with health checks and automated deployment
+- RESTful API design with OpenAPI documentation
+
+Task Management System
+Role: Backend Developer
+Description: Developed RESTful APIs for task tracking application
+- Built with FastAPI and PostgreSQL
+- JWT authentication implementation
+- Deployed on Docker containers
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Backend Developer
+TechCorp Vietnam | 2021 - Present
+- Developed and maintained backend APIs using Python and FastAPI
+- Optimized database queries reducing response time by 60%
+- Implemented CI/CD pipelines with Docker
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+University of Science, Ho Chi Minh City | 2017 - 2021
+GPA: 3.5/4.0
+
+========================================
+CERTIFICATIONS
+========================================
+- Docker Certified Associate (DCA)

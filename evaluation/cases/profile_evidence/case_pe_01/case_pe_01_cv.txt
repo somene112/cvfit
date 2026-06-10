@@ -1,0 +1,56 @@
+# Trần Minh Đức
+## Backend Developer
+
+**Email:** minhduc.dev@gmail.com
+**Phone:** 0901234567
+**Location:** Ho Chi Minh City, Vietnam
+**LinkedIn:** linkedin.com/in/minhduc-dev
+**GitHub:** github.com/minhduc-dev
+
+---
+
+## Summary
+
+Backend developer with 3 years of experience building scalable REST APIs with Python and FastAPI. Strong focus on clean code, API design, and database optimization.
+
+---
+
+## Skills
+
+- **Languages:** Python, JavaScript, SQL
+- **Frameworks:** FastAPI, Flask
+- **Databases:** PostgreSQL, MongoDB, Redis
+- **Tools:** Docker, Git, Linux
+
+---
+
+## Experience
+
+### Backend Developer
+TechCorp Vietnam | Jan 2022 – Present
+
+- Built REST APIs using FastAPI for e-commerce platform
+- Optimized PostgreSQL queries, reducing response time by 40%
+- Implemented authentication with JWT and OAuth2
+
+### Junior Developer
+StartupHub | Jun 2021 – Dec 2021
+
+- Developed Flask APIs for internal tools
+- Worked with PostgreSQL and Redis
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+University of Science, VNU-HCM | 2017 – 2021
+
+---
+
+## Projects
+
+### E-Commerce Product API
+- Built REST API with FastAPI, PostgreSQL
+- Implemented CRUD operations with pagination
+- Added Redis caching for product listings

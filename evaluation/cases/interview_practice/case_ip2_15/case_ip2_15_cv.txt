@@ -1,0 +1,15 @@
+Name: Le Van Sang
+Email: vansangle@email.com
+Phone: 0967-789-012
+
+Summary
+Python developer with some experience in backend development.
+
+Experience
+
+Junior Developer — Startup Inc (6 months)
+- Wrote Python code for data processing tasks
+- Did some backend work
+
+Skills
+Python

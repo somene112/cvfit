@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe09-achievement-001",
+      "item_type": "achievement",
+      "title": "Performance Optimization Award",
+      "description": "Reduced page load time by 50% by optimizing Django queries and implementing caching. Also improved API response time by 30% through database indexing.",
+      "skills_json": ["Performance", "Django", "PostgreSQL", "Optimization"],
+      "evidence_text": "Performance achievement: Reduced page load time by 50% through Django query optimization and caching implementation. Achieved 30% improvement in API response time via database indexing.",
+      "source": "pe09-achievement-001"
+    }
+  ]
+}

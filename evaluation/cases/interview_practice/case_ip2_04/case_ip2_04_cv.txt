@@ -1,0 +1,24 @@
+Name: Hoang Thi Lan
+Email: lan.hoang@email.com
+Phone: 0945-678-901
+
+Summary
+Backend Developer with 3 years of experience specializing in database design and query optimization. Strong expertise in Python and PostgreSQL.
+
+Experience
+
+Database Developer — DataFirst Corp (2023-Present)
+- Designed normalized database schemas for ERP system with 50+ tables
+- Implemented complex stored procedures and triggers in PostgreSQL
+- Optimized slow queries reducing execution time by 80%
+- Created indexing strategy improving search performance by 10x
+- Performed database migrations with zero downtime
+
+Backend Developer — TechViet Solutions (2021-2023)
+- Built data processing pipelines using Python and PostgreSQL
+- Implemented data warehouse ETL processes with 10M+ records daily
+- Designed database audit logging system
+- Developed backup and recovery procedures
+
+Skills
+Python, PostgreSQL, MySQL, SQL, Database Design, Query Optimization, Stored Procedures, ETL, Data Warehousing, Linux

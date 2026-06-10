@@ -1,0 +1,45 @@
+PHAM THI MAI
+Python Web Developer
+mai.web@email.com | 0903 456 789 | Hanoi, Vietnam
+
+========================================
+SUMMARY
+========================================
+Python Web Developer with 2 years of experience building web applications. Proficient in Flask framework and SQL databases.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, HTML, CSS
+Frameworks: Flask, Jinja2
+Databases: SQLite, MySQL
+Tools: Git, Docker
+
+========================================
+PROJECTS
+========================================
+
+Personal Portfolio Website
+Role: Full-Stack Developer
+Description: Built a personal portfolio website
+Details:
+- Created web pages using Flask and Jinja2 templates
+- Implemented contact form functionality
+- Deployed using basic Docker setup
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Web Developer
+WebDesign Corp | 2023 - Present
+- Developed web applications using Python and Flask
+- Created database-driven web pages
+- Maintained existing web projects
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+Hanoi University of Science and Technology | 2019 - 2023
+GPA: 3.2/4.0

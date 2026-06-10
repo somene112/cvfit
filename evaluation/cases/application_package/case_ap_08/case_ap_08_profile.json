@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "API Service",
+      "skills": ["FastAPI", "PostgreSQL", "Redis"],
+      "description": "High-performance API service built with FastAPI, PostgreSQL, and Redis caching"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Redis"],
+  "certifications": [],
+  "education": []
+}

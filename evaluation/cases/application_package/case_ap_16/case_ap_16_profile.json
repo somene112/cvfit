@@ -1,0 +1,22 @@
+{
+  "projects": [
+    {
+      "name": "Production API Platform",
+      "skills": ["FastAPI", "PostgreSQL", "Redis", "Docker"],
+      "description": "High-performance production API platform serving 100K+ daily requests"
+    },
+    {
+      "name": "Data Pipeline",
+      "skills": ["Python", "PostgreSQL"],
+      "description": "ETL pipeline processing 100GB data daily"
+    },
+    {
+      "name": "Microservices",
+      "skills": ["Python", "FastAPI", "Docker"],
+      "description": "Containerized microservices with Docker Compose"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Redis", "Docker", "Git"],
+  "certifications": [],
+  "education": []
+}

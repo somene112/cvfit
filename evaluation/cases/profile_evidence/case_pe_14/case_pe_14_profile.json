@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe14-skill-001",
+      "item_type": "skill",
+      "title": "Flask",
+      "description": "Flask web framework experience. Built web applications and REST APIs with Flask. Familiar with Jinja2 templates and Flask extensions.",
+      "skills_json": ["Flask", "Python", "REST API", "Jinja2"],
+      "evidence_text": "Flask framework experience. Built web applications and REST APIs with Flask framework.",
+      "source": "pe14-skill-001"
+    }
+  ]
+}

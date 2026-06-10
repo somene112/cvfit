@@ -1,0 +1,34 @@
+Python Backend Developer
+FastAPI Solutions - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Python Backend Developer with experience in caching and real-time data processing.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI framework
+- PostgreSQL database management
+- Redis for caching and session management
+- RESTful API development
+- Docker containerization
+
+Experience:
+- 2+ years of backend development experience
+- Experience with caching strategies
+- Familiarity with real-time data processing
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services using FastAPI
+- Implement Redis caching for performance optimization
+- Build RESTful APIs with real-time capabilities
+- Manage database operations with PostgreSQL
+- Deploy applications using Docker

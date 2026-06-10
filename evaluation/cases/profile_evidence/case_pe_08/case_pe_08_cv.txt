@@ -1,0 +1,47 @@
+# Hoàng Văn Minh
+## Backend Developer
+
+**Email:** vanminh.dev@email.com
+**Phone:** 0945567788
+**Location:** Ho Chi Minh City, Vietnam
+**GitHub:** github.com/vanminh-dev
+
+---
+
+## Summary
+
+Backend developer with 3 years of experience in Python and modern web frameworks. Focused on building scalable API services.
+
+---
+
+## Skills
+
+- **Languages:** Python, JavaScript, SQL
+- **Frameworks:** FastAPI, Django
+- **Databases:** PostgreSQL, MongoDB
+- **Tools:** Docker, Git, Redis
+
+---
+
+## Experience
+
+### Backend Developer
+TechHub Vietnam | Jan 2022 – Present
+
+- Built REST APIs with FastAPI for various projects
+- Designed database schemas for PostgreSQL
+- Implemented caching with Redis
+
+### Junior Backend Developer
+Startup Inc. | Mar 2020 – Dec 2021
+
+- Developed Flask applications
+- Worked on Django projects
+- Database design with PostgreSQL
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+UIT | 2016 – 2020

@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe12-certification-001",
+      "item_type": "certification",
+      "title": "AWS Solutions Architect Associate",
+      "description": "AWS certified Solutions Architect with knowledge of cloud architecture patterns, security best practices, and cost optimization. Valid certification from Amazon Web Services.",
+      "skills_json": ["AWS", "Cloud", "EC2", "S3", "IAM", "VPC", "RDS"],
+      "evidence_text": "AWS Solutions Architect Associate certification. Validated knowledge in designing distributed systems, implementing security, and optimizing costs on AWS.",
+      "source": "AWS Certification - Certificate ID: AWS-SAA-2024-12345"
+    }
+  ]
+}

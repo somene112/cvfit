@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "Backend API",
+      "skills": ["FastAPI", "PostgreSQL"],
+      "description": "RESTful API built with FastAPI and PostgreSQL"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL"],
+  "certifications": [],
+  "education": []
+}

@@ -1,0 +1,33 @@
+Python Backend Developer
+Tech Startup - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Python Backend Developer to join our team and build scalable web applications.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with Django framework
+- PostgreSQL database design and optimization
+- RESTful API development
+- Docker containerization
+
+Experience:
+- 2+ years of backend development experience
+- Experience with version control (Git)
+- Familiarity with web deployment
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services using Python and Django
+- Build and optimize database queries and schemas
+- Develop RESTful APIs
+- Deploy applications using containerization
+- Collaborate with frontend team

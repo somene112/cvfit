@@ -1,0 +1,44 @@
+TRAN VAN TUAN
+Python Backend Developer
+tuan.dev@email.com | 0932 123 456 | Ho Chi Minh City, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Developer with 2 years of experience in API development using Python. Proficient in FastAPI and database management.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript
+Frameworks: FastAPI, Flask
+Databases: PostgreSQL
+Tools: Docker, Git, Linux
+
+========================================
+PROJECTS
+========================================
+
+API Service
+Role: Backend Developer
+Description: Built an API service for internal data management
+Details:
+- Implemented RESTful endpoints for CRUD operations
+- Added authentication and authorization
+- Used PostgreSQL for data storage
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Backend Developer
+StartupXYZ | 2023 - Present
+- Developed backend services using Python and FastAPI
+- Implemented API endpoints for web applications
+- Maintained database operations
+
+========================================
+EDUCATION
+========================================
+Bachelor of Information Technology
+University of Technology, Ho Chi Minh City | 2019 - 2023

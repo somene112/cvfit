@@ -1,0 +1,26 @@
+{
+  "projects": [
+    {
+      "name": "Blog Platform",
+      "skills": ["Django", "PostgreSQL", "Docker"],
+      "description": "Built a blog platform with user authentication and content management system"
+    }
+  ],
+  "skills": ["Python", "Django", "PostgreSQL", "Docker"],
+  "experience": [
+    {
+      "title": "Backend Developer",
+      "company": "WebTech Vietnam",
+      "years": "2021 - Present",
+      "description": "Developed backend services using Python and Django"
+    }
+  ],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Software Engineering",
+      "institution": "University of Science",
+      "year": "2021"
+    }
+  ]
+}

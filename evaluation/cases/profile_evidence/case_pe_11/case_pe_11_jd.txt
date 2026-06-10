@@ -1,0 +1,31 @@
+# Junior Python Backend Developer
+
+## Requirements
+
+We are looking for a Junior Python Backend Developer to join our team.
+
+### Required Skills
+
+- **Python** — Programming proficiency
+- **Django** — Web framework basics
+- **SQL** — Database fundamentals
+- **Problem Solving** — Analytical thinking
+
+### Responsibilities
+
+- Develop backend features with Python and Django
+- Write database queries
+- Learn from senior developers
+- Contribute to code reviews
+
+### Nice to Have
+
+- Docker experience
+- API development knowledge
+- Testing experience
+
+### Compensation
+
+- Salary: 10-15 million VND/month
+- Training program
+- Mentorship

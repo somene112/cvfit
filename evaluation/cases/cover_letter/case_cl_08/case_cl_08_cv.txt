@@ -1,0 +1,66 @@
+BUI THI H
+Junior Backend Developer
+
+Email: buithih@email.com
+Phone: 0999 012 345
+Location: Nam Dinh, Vietnam
+
+========================================
+SUMMARY
+========================================
+Junior Backend Developer with 1+ years of experience in Python and Flask development.
+Eager to learn and expand backend development skills.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, HTML, CSS
+Frameworks: Flask, Django (learning)
+Databases: SQLite, MySQL (basic)
+Tools: Git, Linux, VS Code
+
+========================================
+PROJECTS
+========================================
+
+Personal Portfolio API
+Role: Developer
+Description: REST API for personal portfolio website
+Details:
+- Built with Flask framework
+- SQLite database for content storage
+- Basic CRUD operations for portfolio items
+- JSON API responses
+
+Blog API
+Role: Developer
+Description: Simple blog REST API
+- Flask-based backend
+- SQLite database
+- Basic authentication
+- Pagination implementation
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Developer
+Local Startup | 2023 - Present
+- Developed Flask applications
+- Built RESTful APIs
+- Worked with SQLite databases
+- Learning Python best practices
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+Nam Dinh University | 2019 - 2023
+GPA: 2.9/4.0
+
+========================================
+LEARNING GOALS
+========================================
+- Currently learning FastAPI
+- Exploring PostgreSQL database design
+- Studying API best practices

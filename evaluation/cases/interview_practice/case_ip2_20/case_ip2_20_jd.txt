@@ -1,0 +1,12 @@
+Python Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- REST API development
+- Database design
+- Docker deployment
+
+Responsibilities:
+- Build backend services
+- Design APIs
+- Deploy applications

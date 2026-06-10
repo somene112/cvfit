@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe07-skill-001",
+      "item_type": "skill",
+      "title": "FastAPI",
+      "description": "Built REST APIs with FastAPI framework. Familiar with Pydantic models, dependency injection, and FastAPI routing.",
+      "skills_json": ["FastAPI", "Python", "REST API"],
+      "evidence_text": "FastAPI skill with experience building REST APIs. Familiar with FastAPI features including Pydantic validation, dependency injection, and async routing.",
+      "source": "pe07-skill-001"
+    }
+  ]
+}

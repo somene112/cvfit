@@ -1,0 +1,46 @@
+# Phạm Thị Mai Linh
+## Python Developer
+
+**Email:** mailinh.dev@email.com
+**Phone:** 0922334455
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/mailinh-dev
+
+---
+
+## Summary
+
+Python developer with 2 years of experience in backend development. Skilled in building REST APIs and data processing systems.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, JavaScript
+- **Frameworks:** FastAPI, Django
+- **Databases:** PostgreSQL, Redis
+- **Tools:** Docker, Git, Linux
+
+---
+
+## Experience
+
+### Python Developer
+Backend Solutions | Apr 2022 – Present
+
+- Developed backend services with Python and FastAPI
+- Built REST APIs for web applications
+- Implemented data processing pipelines
+
+### Junior Developer
+Tech Startup | Jan 2021 – Mar 2022
+
+- Created Flask applications
+- Worked on Django projects
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+HUST | 2017 – 2021

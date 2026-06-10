@@ -1,0 +1,56 @@
+# Lê Hoàng Nam
+## Backend Developer
+
+**Email:** hoangnam.dev@email.com
+**Phone:** 0935123456
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/hoangnam-dev
+
+---
+
+## Summary
+
+Backend developer specializing in data pipelines and analytics systems. 4 years of experience with Python, focusing on ETL processes and database optimization.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, Bash
+- **Frameworks:** FastAPI, Django
+- **Databases:** PostgreSQL, MySQL, Redis
+- **Tools:** Docker, Airflow, Kafka
+
+---
+
+## Experience
+
+### Senior Backend Developer
+DataFlow Solutions | Mar 2021 – Present
+
+- Developed analytics data pipelines processing millions of records daily
+- Built REST APIs for data visualization dashboards
+- Optimized PostgreSQL queries for reporting systems
+
+### Backend Developer
+Analytics Pro | Jan 2019 – Feb 2021
+
+- Created ETL pipelines using Python and Apache Airflow
+- Maintained data warehouses with PostgreSQL
+- Developed APIs for internal analytics tools
+
+---
+
+## Education
+
+### Bachelor of Information Technology
+FPT University | 2015 – 2019
+
+---
+
+## Projects
+
+### Analytics Dashboard API
+- FastAPI service for real-time analytics
+- Connected to PostgreSQL data warehouse
+- Supported complex aggregation queries

@@ -1,0 +1,59 @@
+{
+  "overall_fit_score": 65,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Used in Flask web application"
+    },
+    {
+      "skill": "Flask",
+      "evidence": "Built web application with Flask"
+    },
+    {
+      "skill": "SQLite",
+      "evidence": "Database for Flask application"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    },
+    {
+      "skill": "Redis",
+      "evidence": null
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    },
+    {
+      "skill": "Docker",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "PostgreSQL",
+      "action": "Learn PostgreSQL and migrate from SQLite for production readiness",
+      "priority": "high"
+    },
+    {
+      "skill": "Redis",
+      "action": "Add Redis caching to improve application performance",
+      "priority": "medium"
+    },
+    {
+      "skill": "FastAPI",
+      "action": "Migrate Flask application to FastAPI for better performance",
+      "priority": "medium"
+    },
+    {
+      "skill": "Docker",
+      "action": "Containerize application for consistent deployment",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

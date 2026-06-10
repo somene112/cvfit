@@ -1,0 +1,20 @@
+Name: Dao Van Manh
+Email: manhdao@email.com
+Phone: 0978-901-234
+
+Summary
+Backend developer interested in Python development.
+
+Experience
+
+Junior Developer — Small Tech Firm (6 months)
+- Worked on a backend project
+- Did some coding tasks
+
+Projects
+Project: Backend Project (School Assignment)
+- Worked on a backend project
+- Used Python
+
+Skills
+Python, Basic SQL

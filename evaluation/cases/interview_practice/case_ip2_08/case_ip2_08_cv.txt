@@ -1,0 +1,29 @@
+Name: Bui Thi Hien
+Email: hien.bui@email.com
+Phone: 0989-012-345
+
+Summary
+Backend Developer with 2 years of experience building microservices and data pipelines.
+
+Projects
+
+Project 1: E-Commerce Product API (Personal Project)
+- Built FastAPI REST API with 200+ endpoints for product management
+- Implemented PostgreSQL database with proper schema design
+- Integrated Redis for product caching with 80% hit rate
+- Deployed with Docker on AWS EC2
+
+Project 2: Analytics Dashboard Backend (Freelance Project)
+- Created Flask API for data visualization platform
+- Built ETL pipeline processing 100K+ records daily using Python
+- Designed PostgreSQL data warehouse schema with fact and dimension tables
+- Implemented scheduled data refresh using APScheduler
+
+Project 3: Authentication Microservice (Open Source Contribution)
+- Developed standalone JWT authentication service using Python
+- Implemented OAuth2 provider for third-party integrations
+- Created rate limiting with Redis and token refresh mechanism
+- Published as open-source library with 200+ GitHub stars
+
+Skills
+Python, FastAPI, Flask, PostgreSQL, Redis, Docker, AWS EC2, JWT, OAuth2, ETL, Git

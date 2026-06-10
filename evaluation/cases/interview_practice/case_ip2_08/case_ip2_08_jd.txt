@@ -1,0 +1,15 @@
+Python Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- REST API development experience
+- PostgreSQL database experience
+- Redis caching experience
+- Docker deployment
+- Microservices architecture
+
+Responsibilities:
+- Build and maintain backend services
+- Design database schemas
+- Create RESTful APIs
+- Deploy microservices

@@ -1,0 +1,41 @@
+Backend Engineer
+Tech Startup - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Backend Engineer to join our growing team and help build scalable API services.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI or similar web frameworks
+- PostgreSQL database design and optimization
+- Redis for caching and session management
+- Docker containerization experience
+
+Experience:
+- 2+ years of backend development experience
+- Experience building RESTful APIs
+- Familiarity with cloud deployment
+
+========================================
+NICE TO HAVE
+========================================
+- Kubernetes experience
+- AWS or GCP cloud platform experience
+- Experience with CI/CD pipelines
+- GraphQL API experience
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement scalable backend services
+- Optimize database queries and API performance
+- Collaborate with frontend team on API integration
+- Write clean, maintainable, and well-tested code
+- Participate in code reviews and technical discussions

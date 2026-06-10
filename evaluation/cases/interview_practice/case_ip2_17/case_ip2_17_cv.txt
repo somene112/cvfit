@@ -1,0 +1,16 @@
+Name: Trinh Van Minh
+Email: vanminh@email.com
+Phone: 0989-901-234
+
+Summary
+Python Backend Developer with 2 years of experience using Flask framework.
+
+Experience
+
+Backend Developer — AppWorks Ltd (2023-Present)
+- Built web applications using Flask
+- Implemented SQL database operations
+- Created REST APIs for internal tools
+
+Skills
+Python, Flask, SQL, Git, Linux

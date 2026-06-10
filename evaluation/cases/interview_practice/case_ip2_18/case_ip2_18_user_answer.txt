@@ -1,0 +1,1 @@
+I'm learning AWS but haven't used it in production yet. I've completed some AWS training courses and understand the basic services like EC2, S3, and Lambda. I know there's a significant gap between course knowledge and production experience, and I'm actively seeking opportunities to gain real-world AWS experience.

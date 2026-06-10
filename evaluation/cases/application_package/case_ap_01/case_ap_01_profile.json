@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "name": "E-Commerce API",
+      "skills": ["FastAPI", "PostgreSQL", "Redis"],
+      "description": "Built RESTful API with 500+ endpoints for e-commerce platform, handling 10K+ requests/day"
+    },
+    {
+      "name": "Data Pipeline",
+      "skills": ["Python", "PostgreSQL", "Docker"],
+      "description": "ETL pipeline processing 50GB data daily with automated scheduling"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "Docker"],
+  "certifications": [],
+  "education": []
+}

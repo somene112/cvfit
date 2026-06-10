@@ -1,0 +1,31 @@
+# Junior Backend Developer
+
+## Requirements
+
+We are looking for a Junior Backend Developer to join our team.
+
+### Required Skills
+
+- **Python** — Basic proficiency
+- **Django** — Web framework experience
+- **PostgreSQL** — Database basics
+- **Problem Solving** — Analytical skills
+
+### Responsibilities
+
+- Develop web features with Django
+- Write clean, maintainable code
+- Collaborate with team members
+- Learn and improve skills
+
+### Nice to Have
+
+- Docker experience
+- Testing experience
+- API development experience
+
+### Compensation
+
+- Salary: 10-15 million VND/month
+- Training program
+- Career growth path

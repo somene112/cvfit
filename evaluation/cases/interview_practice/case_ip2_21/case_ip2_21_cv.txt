@@ -1,0 +1,23 @@
+Name: Hoang Quoc Viet
+Email: quocviet@email.com
+Phone: 0934-345-678
+
+Summary
+Backend Developer with 2 years of experience. Specialized in building scalable systems.
+
+Experience
+
+Backend Developer — ScaleTech Corp (2023-Present)
+- Built scalable microservices using Python and FastAPI
+- Designed database solutions for high-traffic applications
+- Implemented caching and optimization strategies
+
+Project: High-Traffic Data Service
+- Scaled service to handle 10,000 concurrent users
+- Implemented PostgreSQL query optimization and connection pooling
+- Designed caching strategy with Redis for frequently accessed data
+- Used async processing for non-blocking operations
+- Implemented rate limiting to protect backend services
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, AWS (EC2, RDS), Git, System Design, Scalability

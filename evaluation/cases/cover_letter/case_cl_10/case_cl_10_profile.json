@@ -1,0 +1,20 @@
+{
+  "projects": [],
+  "skills": [],
+  "experience": [
+    {
+      "title": "English Teacher",
+      "company": "Da Nang International School",
+      "years": "2021 - Present",
+      "description": "Delivered English literature lessons, created educational materials using PowerPoint, tracked student progress with Excel"
+    }
+  ],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Arts in English Literature",
+      "institution": "University of Danang",
+      "year": "2019"
+    }
+  ]
+}

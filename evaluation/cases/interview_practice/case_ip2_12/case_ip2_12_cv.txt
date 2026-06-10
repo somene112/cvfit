@@ -1,0 +1,24 @@
+Name: Hoang Van Duc
+Email: hoangduc@email.com
+Phone: 0934-456-789
+
+Summary
+Backend Developer with 1 year of experience. Known for strong problem-solving skills.
+
+Experience
+
+Junior Backend Developer — DataFlow Inc. (2024-Present)
+- Developed data processing services using Python
+- Maintained existing Flask applications
+- Fixed bugs and optimized performance
+
+Problem-Solving Achievement
+
+Critical Bug Resolution — DataFlow Inc. (2024)
+- Identified root cause of production outage affecting data sync
+- Root cause: Race condition in concurrent database connections
+- Implemented connection pooling with proper locking mechanism
+- Reduced similar incidents by 90% with new monitoring alerts
+
+Skills
+Python, Flask, PostgreSQL, Redis, Git, Debugging, Problem Solving, Linux

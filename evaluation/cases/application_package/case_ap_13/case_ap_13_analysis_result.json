@@ -1,0 +1,42 @@
+{
+  "overall_fit_score": 40,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": null
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    },
+    {
+      "skill": "Redis",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "FastAPI",
+      "action": "Learn FastAPI framework",
+      "priority": "high"
+    },
+    {
+      "skill": "PostgreSQL",
+      "action": "Master PostgreSQL database",
+      "priority": "high"
+    },
+    {
+      "skill": "Redis",
+      "action": "Add Redis caching",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

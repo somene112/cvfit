@@ -1,0 +1,45 @@
+{
+  "overall_fit_score": 82,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Primary programming language across all projects"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Built production APIs with FastAPI"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database design and optimization"
+    },
+    {
+      "skill": "Redis",
+      "evidence": "Caching implementation"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "Docker",
+      "evidence": null
+    },
+    {
+      "skill": "Kubernetes",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "Docker",
+      "action": "Add Docker containerization",
+      "priority": "medium"
+    },
+    {
+      "skill": "Kubernetes",
+      "action": "Learn Kubernetes orchestration",
+      "priority": "low"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

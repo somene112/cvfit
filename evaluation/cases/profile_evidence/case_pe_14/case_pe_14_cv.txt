@@ -1,0 +1,46 @@
+# Đỗ Văn Quang
+## Python Developer
+
+**Email:** vanquang.dev@email.com
+**Phone:** 0955667788
+**Location:** Ho Chi Minh City, Vietnam
+**GitHub:** github.com/vanquang-dev
+
+---
+
+## Summary
+
+Python developer with 2 years of experience. Experienced in Flask and backend development.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL
+- **Frameworks:** Flask, Django
+- **Databases:** PostgreSQL, MySQL
+- **Tools:** Git, Docker
+
+---
+
+## Experience
+
+### Python Developer
+Web Solutions | Mar 2022 – Present
+
+- Built web applications with Flask
+- Developed REST APIs
+- Maintained database systems
+
+### Junior Developer
+Tech House | Aug 2020 – Feb 2022
+
+- Created Flask applications
+- Worked on Django projects
+
+---
+
+## Education
+
+### Bachelor of IT
+University of Technology | 2016 – 2020

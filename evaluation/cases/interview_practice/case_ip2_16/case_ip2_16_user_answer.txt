@@ -1,0 +1,1 @@
+I have built several FastAPI services in my previous projects. I implemented complex async endpoints with background tasks, integrated FastAPI with Redis for caching, and designed PostgreSQL schemas for production applications. I also have experience with FastAPI dependency injection and WebSocket implementations.

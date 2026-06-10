@@ -1,0 +1,66 @@
+DAO VAN G
+Backend Developer
+
+Email: daovang@email.com
+Phone: 0988 901 234
+Location: Thai Nguyen, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Developer with 3+ years of experience in Python and Django development.
+Strong database design skills with PostgreSQL.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, SQL
+Frameworks: Django, Flask
+Databases: PostgreSQL, MySQL, SQLite
+Tools: Git, Linux, Nginx, Gunicorn
+
+========================================
+PROJECTS
+========================================
+
+School Management System
+Role: Backend Developer
+Description: Django-based school management platform
+Details:
+- Built with Django and PostgreSQL
+- Student information management
+- Grade tracking and reporting
+- User authentication and authorization
+- RESTful API for mobile app integration
+
+Library Management System
+Role: Full-Stack Developer
+Description: Library management web application
+- Django backend with template rendering
+- PostgreSQL database for book catalog
+- Search and filtering functionality
+- Book borrowing and return tracking
+
+========================================
+EXPERIENCE
+========================================
+
+Backend Developer
+EduTech Vietnam | 2021 - Present
+- Developed Django applications for educational platforms
+- Designed PostgreSQL database schemas
+- Implemented REST APIs for mobile applications
+- Maintained production servers on Linux
+
+Junior Developer
+TechSchool | 2019 - 2021
+- Built Flask web applications
+- Worked with MySQL databases
+- Developed REST APIs
+
+========================================
+EDUCATION
+========================================
+Bachelor of Information Systems
+Thai Nguyen University | 2015 - 2019
+GPA: 3.1/4.0

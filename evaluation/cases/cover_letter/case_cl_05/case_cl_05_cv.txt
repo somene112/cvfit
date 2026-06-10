@@ -1,0 +1,56 @@
+HOANG VAN E
+Junior Backend Developer
+
+Email: hoangvane@email.com
+Phone: 0966 789 012
+Location: Hue, Vietnam
+
+========================================
+SUMMARY
+========================================
+Junior Backend Developer with 1 year of experience in Python development.
+Familiar with Flask web framework and basic web development concepts.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript, HTML/CSS
+Frameworks: Flask, Django (basic)
+Databases: SQLite
+Tools: Git, Linux
+
+========================================
+PROJECTS
+========================================
+
+Web App
+Role: Developer
+Description: Web App
+Details:
+- Built with Flask framework
+- Basic functionality implementation
+- Simple database integration with SQLite
+
+Personal Blog
+Role: Developer
+Description: Personal blog website
+- Flask-based blog application
+- Basic HTML/CSS frontend
+- SQLite database
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Developer
+Local Tech Startup | 2023 - Present
+- Assisted in Flask application development
+- Basic Python programming tasks
+- Learning backend development concepts
+
+========================================
+EDUCATION
+========================================
+Bachelor of Information Technology
+Hue University of Sciences | 2019 - 2023
+GPA: 2.8/4.0

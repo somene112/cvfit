@@ -1,0 +1,13 @@
+Python Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- FastAPI or Django framework
+- PostgreSQL database
+- REST API development
+- Docker deployment
+
+Responsibilities:
+- Build backend services
+- Design APIs
+- Deploy applications

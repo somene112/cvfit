@@ -1,0 +1,1 @@
+I don't have FastAPI experience yet. I'm currently working with Flask but I'm aware that FastAPI is required for this role. I have started learning FastAPI basics on my own and understand it uses async/await for better performance.

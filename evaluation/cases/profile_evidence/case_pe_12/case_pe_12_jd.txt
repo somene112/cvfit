@@ -1,0 +1,31 @@
+# Senior DevOps Engineer
+
+## Requirements
+
+We are seeking a Senior DevOps Engineer to lead our infrastructure team.
+
+### Required Skills
+
+- **AWS** — Cloud platform experience
+- **Docker** — Containerization
+- **Kubernetes** — Container orchestration
+- **CI/CD** — Pipeline development
+
+### Responsibilities
+
+- Design and manage AWS infrastructure
+- Build and maintain Kubernetes clusters
+- Implement CI/CD pipelines
+- Mentor junior team members
+
+### Nice to Have
+
+- Terraform experience
+- Monitoring experience
+- Security experience
+
+### Compensation
+
+- Salary: 35-55 million VND/month
+- Stock options
+- Remote work

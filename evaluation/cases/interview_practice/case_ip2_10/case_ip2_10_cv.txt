@@ -1,0 +1,30 @@
+Name: Dang Quang Huy
+Email: quanghuy@email.com
+Phone: 0912-234-567
+
+Summary
+Backend Developer with 1.5 years of experience. Strong communication and teamwork skills.
+
+Experience
+
+Junior Backend Developer — TechStart Vietnam (2023-Present)
+- Developed REST APIs using Python and Flask
+- Collaborated with frontend team for API integration
+- Participated in daily standups and sprint planning
+- Conducted code reviews for team members
+
+Team Leadership Experience
+
+Student Organization President — University IT Club (2021-2023)
+- Led a team of 15 members organizing technical events
+- Coordinated hackathon for 50+ participants
+- Delegated tasks and managed project timelines
+- Mentored 5 junior members in programming
+
+Organizational Skills
+- Led weekly team meetings and presentations
+- Managed budget of 5 million VND for club activities
+- Organized 3 major tech workshops with industry speakers
+
+Skills
+Python, Flask, PostgreSQL, Git, REST API, Team Collaboration, Agile/Scrum, Technical Writing

@@ -1,0 +1,15 @@
+Python Backend Engineer — Database Focus
+
+Requirements:
+- 3+ years of Python backend development
+- Strong PostgreSQL database design skills
+- Experience with query optimization and indexing
+- Knowledge of database best practices (normalization, transactions)
+- ETL pipeline experience is a plus
+- Understanding of ACID properties and transaction management
+
+Responsibilities:
+- Design and optimize database schemas
+- Build efficient data processing pipelines
+- Ensure data integrity and performance
+- Write complex SQL queries and stored procedures

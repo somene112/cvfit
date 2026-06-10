@@ -1,0 +1,48 @@
+# Lý Thị Lan
+## Python Developer
+
+**Email:** thilan.dev@email.com
+**Phone:** 0966889900
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/thilan-dev
+
+---
+
+## Summary
+
+Python developer with 3 years of experience building backend systems. Strong in REST API development and database design.
+
+---
+
+## Skills
+
+- **Languages:** Python, JavaScript, SQL
+- **Frameworks:** FastAPI, Django, Flask
+- **Databases:** PostgreSQL, Redis, MongoDB
+- **Tools:** Docker, Git, Linux
+
+---
+
+## Experience
+
+### Senior Python Developer
+Tech Solutions Corp | Feb 2021 – Present
+
+- Led backend development team
+- Built REST APIs with FastAPI
+- Designed PostgreSQL schemas
+- Implemented Redis caching
+
+### Python Developer
+Web Services Inc. | Mar 2019 – Jan 2021
+
+- Developed APIs with FastAPI and Flask
+- Maintained PostgreSQL databases
+- Deployed with Docker
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+VNU University | 2015 – 2019

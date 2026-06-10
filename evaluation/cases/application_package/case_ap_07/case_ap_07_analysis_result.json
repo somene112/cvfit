@@ -1,0 +1,65 @@
+{
+  "overall_fit_score": 68,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Used in Flask web application"
+    },
+    {
+      "skill": "Flask",
+      "evidence": "Built web application with Flask"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    },
+    {
+      "skill": "Docker",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "FastAPI",
+      "action": "Learn FastAPI for better API performance",
+      "priority": "high"
+    },
+    {
+      "skill": "PostgreSQL",
+      "action": "Master PostgreSQL database design",
+      "priority": "high"
+    },
+    {
+      "skill": "Docker",
+      "action": "Learn Docker containerization",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": [
+    {
+      "skill": "FastAPI",
+      "priority": "high",
+      "topics": ["REST API design", "Pydantic validation", "Async programming", "Middleware"],
+      "estimated_effort": "2-3 weeks"
+    },
+    {
+      "skill": "PostgreSQL",
+      "priority": "high",
+      "topics": ["Database design", "Query optimization", "Indexes", "Transactions"],
+      "estimated_effort": "2-3 weeks"
+    },
+    {
+      "skill": "Docker",
+      "priority": "medium",
+      "topics": ["Container basics", "Dockerfile", "docker-compose", "Networking"],
+      "estimated_effort": "1-2 weeks"
+    }
+  ]
+}

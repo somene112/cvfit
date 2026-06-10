@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe10-achievement-001",
+      "item_type": "achievement",
+      "title": "Business Impact Achievement",
+      "description": "Made the company successful through various contributions. Increased revenue by 300% through implementing business solutions.",
+      "skills_json": ["Business", "Problem Solving"],
+      "evidence_text": "Business achievement with claimed 300% revenue increase. Description is vague and lacks specific technical details.",
+      "source": "pe10-achievement-001"
+    }
+  ]
+}

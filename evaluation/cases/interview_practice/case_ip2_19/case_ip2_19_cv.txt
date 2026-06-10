@@ -1,0 +1,23 @@
+Name: Pham Van Khoa
+Email: vankhoa@email.com
+Phone: 0912-123-456
+
+Summary
+Backend Developer with 2 years of experience. Strong focus on API development and performance optimization.
+
+Experience
+
+Backend Developer — SpeedAPI Inc (2023-Present)
+- Built high-performance APIs using FastAPI
+- Implemented PostgreSQL database solutions
+- Integrated Redis for caching
+
+Project: E-Commerce Product Service
+- Built FastAPI REST API for product catalog with 200+ endpoints
+- Used PostgreSQL with optimized indexing and query design
+- Integrated Redis caching achieving 40% reduction in response time
+- Implemented async data processing with background tasks
+- Deployed with Docker and monitored with custom metrics
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, pytest, Git, REST API Design

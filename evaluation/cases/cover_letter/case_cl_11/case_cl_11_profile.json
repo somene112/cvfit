@@ -1,0 +1,26 @@
+{
+  "projects": [
+    {
+      "name": "E-Commerce API",
+      "skills": ["FastAPI", "PostgreSQL"],
+      "description": "Built a RESTful API for e-commerce product management with JWT authentication and Docker deployment. This project was developed for a startup client."
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+  "experience": [
+    {
+      "title": "Junior Backend Developer",
+      "company": "TechHub Vietnam",
+      "years": "2022 - Present",
+      "description": "Developed backend services using Python and FastAPI"
+    }
+  ],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Computer Science",
+      "institution": "FPT University",
+      "year": "2022"
+    }
+  ]
+}

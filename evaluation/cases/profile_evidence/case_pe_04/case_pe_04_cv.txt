@@ -1,0 +1,57 @@
+# Phạm Quốc Việt
+## Web Developer
+
+**Email:** quocviet.web@email.com
+**Phone:** 0987654321
+**Location:** Ho Chi Minh City, Vietnam
+**Portfolio:** portfolio.vietdev.com
+**GitHub:** github.com/quocviet-dev
+
+---
+
+## Summary
+
+Frontend developer with 3 years of experience building responsive web applications. Strong in JavaScript and React ecosystem.
+
+---
+
+## Skills
+
+- **Languages:** JavaScript, TypeScript, HTML5, CSS3
+- **Frameworks:** React, Next.js, Vue.js
+- **Tools:** Git, Webpack, npm
+- **Backend:** Node.js, Express
+
+---
+
+## Experience
+
+### Frontend Developer
+Digital Agency VN | Apr 2021 – Present
+
+- Built React applications for various clients
+- Implemented responsive designs with CSS Grid and Flexbox
+- Integrated REST APIs from backend services
+
+### Junior Web Developer
+Startup Studio | Jan 2020 – Mar 2021
+
+- Developed Vue.js applications
+- Created interactive UI components
+- Worked with REST APIs
+
+---
+
+## Education
+
+### Bachelor of Information Technology
+HUTECH University | 2016 – 2020
+
+---
+
+## Projects
+
+### Portfolio Website
+- Personal portfolio showcasing web development projects
+- Built with React and modern CSS
+- Hosted on GitHub Pages

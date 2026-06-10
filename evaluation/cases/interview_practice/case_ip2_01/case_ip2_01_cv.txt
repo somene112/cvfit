@@ -1,0 +1,32 @@
+Name: Tran Minh Duc
+Email: minhduc@email.com
+Phone: 0912-345-678
+
+Summary
+Final year Computer Science student at University of Science, Ho Chi Minh City. Strong foundation in algorithms, data structures, and Python programming. Looking for entry-level Python backend developer position.
+
+Education
+Bachelor of Computer Science, University of Science, Ho Chi Minh City
+Expected Graduation: June 2026
+GPA: 3.5/4.0
+Relevant Coursework: Data Structures & Algorithms, Database Systems, Operating Systems, Software Engineering
+
+Projects
+
+Project 1: Algorithm Visualizer (Academic Project)
+- Implemented sorting algorithms (QuickSort, MergeSort, HeapSort) with step-by-step visualization
+- Built interactive UI using Pygame library
+- Optimized algorithm performance analysis with O(n log n) complexity verification
+
+Project 2: Student Management System (Academic Project)
+- Designed relational database schema for student records
+- Implemented CRUD operations using Python and SQLite
+- Created REST API endpoints for data access
+
+Project 3: E-Commerce Backend Prototype (Personal Project)
+- Built RESTful API with Flask framework
+- Implemented JWT authentication and role-based access control
+- Created product catalog with category filtering
+
+Skills
+Python, C, Java, SQL, Git, Data Structures, Algorithms, Flask, SQLite

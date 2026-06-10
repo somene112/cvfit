@@ -1,0 +1,45 @@
+HOANG VAN DUC
+Python Developer
+duc.python@email.com | 0945 678 123 | Hanoi, Vietnam
+
+========================================
+SUMMARY
+========================================
+Python Developer with 1 year of experience building web applications. Proficient in Flask framework and basic Python development.
+
+========================================
+SKILLS
+========================================
+Languages: Python
+Frameworks: Flask
+Databases: SQLite
+Tools: Git, basic Linux
+
+========================================
+PROJECTS
+========================================
+
+Personal Blog
+Role: Developer
+Description: Built a personal blog website using Flask
+Details:
+- Created web pages with Flask routes
+- Used SQLite for basic data storage
+- Deployed on local server
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Python Developer
+Local Tech Company | 2024 - Present
+- Developed web applications using Python and Flask
+- Created basic database-driven pages
+- Fixed bugs and maintained existing code
+
+========================================
+EDUCATION
+========================================
+Bachelor of Computer Science
+Hanoi National University | 2020 - 2024
+GPA: 3.0/4.0

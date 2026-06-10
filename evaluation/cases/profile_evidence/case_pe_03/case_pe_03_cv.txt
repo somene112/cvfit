@@ -1,0 +1,55 @@
+# Nguyễn Thị Mai Anh
+## Python Developer
+
+**Email:** maianh.py@email.com
+**Phone:** 0912345678
+**Location:** Da Nang, Vietnam
+**GitHub:** github.com/maianh-python
+
+---
+
+## Summary
+
+Python developer with 2 years of experience building web applications and REST APIs. Passionate about clean code and system design.
+
+---
+
+## Skills
+
+- **Languages:** Python, JavaScript, HTML/CSS
+- **Frameworks:** FastAPI, Django, React
+- **Databases:** PostgreSQL, Redis, MongoDB
+- **Tools:** Docker, Git, Linux
+
+---
+
+## Experience
+
+### Python Developer
+Web Solutions Co. | Jun 2022 – Present
+
+- Developed REST APIs using FastAPI for various client projects
+- Built backend services with PostgreSQL and Redis
+- Implemented authentication and authorization systems
+
+### Junior Python Developer
+Tech Startup Inc. | Aug 2021 – May 2022
+
+- Created Flask applications for internal tools
+- Worked with MongoDB for document storage
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+Danang University | 2017 – 2021
+
+---
+
+## Projects
+
+### API Service
+- FastAPI REST service for client management
+- Connected to PostgreSQL database
+- Redis caching for frequently accessed data

@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe16-link-001",
+      "item_type": "link",
+      "title": "GitHub Profile",
+      "description": "Portfolio GitHub account with 10 public projects. Includes React applications, JavaScript utilities, and TypeScript libraries. Regularly updated with personal projects.",
+      "skills_json": [],
+      "evidence_text": "GitHub portfolio with 10 public projects showcasing frontend development skills.",
+      "source": "https://github.com/minhchau-dev"
+    }
+  ]
+}

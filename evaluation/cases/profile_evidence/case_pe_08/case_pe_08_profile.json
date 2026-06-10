@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "id": "pe08-skill-001",
+      "item_type": "skill",
+      "title": "FastAPI",
+      "description": "Strong FastAPI skills with production experience. Built REST APIs with Pydantic models, async views, and dependency injection. Used with PostgreSQL and Redis.",
+      "skills_json": ["FastAPI", "Python", "PostgreSQL", "Redis"],
+      "evidence_text": "FastAPI skill with production experience. Built REST APIs with proper validation, async support, and database integration.",
+      "source": "pe08-skill-001"
+    },
+    {
+      "id": "pe08-project-001",
+      "item_type": "project",
+      "title": "API Service",
+      "description": "REST API service built with FastAPI. Features include user authentication, data validation with Pydantic, and PostgreSQL database integration. Added Redis caching for performance.",
+      "skills_json": ["FastAPI", "PostgreSQL", "Redis", "Python"],
+      "evidence_text": "API Service project built with FastAPI, PostgreSQL, and Redis. Implemented authentication, data validation, and caching.",
+      "source": "pe08-project-001"
+    }
+  ]
+}

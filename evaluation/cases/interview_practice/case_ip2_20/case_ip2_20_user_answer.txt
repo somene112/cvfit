@@ -1,0 +1,1 @@
+I built an API with Python and database. It handles requests and returns responses. The API was built using Python and connects to a database.

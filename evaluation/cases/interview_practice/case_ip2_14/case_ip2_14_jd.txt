@@ -1,0 +1,15 @@
+FastAPI Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- Expert FastAPI framework experience
+- PostgreSQL database design
+- Redis caching
+- Docker deployment
+- REST API best practices
+
+Responsibilities:
+- Build FastAPI microservices
+- Design database schemas
+- Implement caching strategies
+- Deploy services with Docker

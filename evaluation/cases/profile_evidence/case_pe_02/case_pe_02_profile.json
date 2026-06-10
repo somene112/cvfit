@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe02-project-001",
+      "item_type": "project",
+      "title": "Analytics Pipeline",
+      "description": "Built data pipeline processing 10GB of data daily. Implemented batch processing with Python and PostgreSQL. Optimized pipeline reducing processing time by 40%.",
+      "skills_json": ["Python", "PostgreSQL", "Docker", "Redis"],
+      "evidence_text": "Analytics Pipeline processing 10GB data daily with 40% reduction in processing time. Implemented using Python and PostgreSQL with Docker containerization. Handles batch processing for overnight reports.",
+      "source": "pe02-project-001"
+    }
+  ]
+}

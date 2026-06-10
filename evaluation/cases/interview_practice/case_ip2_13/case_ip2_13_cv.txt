@@ -1,0 +1,13 @@
+Name: Ly Thi Mai
+Email: maithily@email.com
+Phone: 0945-567-890
+
+Summary
+Computer Science graduate looking for entry-level backend developer position.
+
+Education
+Bachelor of Computer Science, Danang University
+GPA: 3.0/4.0
+
+Skills
+Python, C, SQL basics, Git

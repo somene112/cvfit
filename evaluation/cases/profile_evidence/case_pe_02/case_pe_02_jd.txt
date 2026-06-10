@@ -1,0 +1,31 @@
+# Data Pipeline Engineer
+
+## Requirements
+
+We are seeking a Data Pipeline Engineer to build and maintain our analytics infrastructure.
+
+### Required Skills
+
+- **Python** — 3+ years of experience with data processing
+- **FastAPI** — Building data service APIs
+- **PostgreSQL** — Database design and query optimization
+- **Data Pipelines** — ETL/ELT experience
+
+### Responsibilities
+
+- Design and implement scalable data pipelines
+- Build APIs for data access and visualization
+- Optimize database queries for analytics workloads
+- Ensure data quality and reliability
+
+### Nice to Have
+
+- Experience with Apache Airflow
+- Knowledge of Redis for caching
+- Streaming data experience
+
+### Compensation
+
+- Salary: 25-40 million VND/month
+- Performance bonus
+- Training budget

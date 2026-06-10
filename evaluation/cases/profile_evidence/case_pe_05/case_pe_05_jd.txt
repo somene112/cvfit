@@ -1,0 +1,31 @@
+# Backend Engineer
+
+## Requirements
+
+We are looking for a Backend Engineer to join our team.
+
+### Required Skills
+
+- **Python** — 2+ years of experience
+- **FastAPI** — Building modern REST APIs
+- **PostgreSQL** — Database design and optimization
+- **API Design** — RESTful API best practices
+
+### Responsibilities
+
+- Design and implement REST APIs with FastAPI
+- Optimize database queries and schemas
+- Write clean, testable code
+- Collaborate with frontend team
+
+### Nice to Have
+
+- Docker experience
+- Redis experience
+- Cloud deployment experience
+
+### Compensation
+
+- Salary: 18-28 million VND/month
+- Performance bonus
+- Remote work options

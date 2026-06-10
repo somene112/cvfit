@@ -1,0 +1,32 @@
+Python Backend Engineer
+Software Development Team - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Python Backend Engineer to develop and maintain server-side applications.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI or similar web frameworks
+- PostgreSQL database design and optimization
+- RESTful API development
+- Docker containerization
+
+Experience:
+- 2+ years of backend development experience
+- Experience with version control (Git)
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services using Python
+- Build and optimize database queries and schemas
+- Develop RESTful APIs for frontend integration
+- Deploy applications using containerization
+- Collaborate with cross-functional teams

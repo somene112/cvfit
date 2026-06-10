@@ -1,0 +1,34 @@
+Backend Engineer
+SaaS Platform Company
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Backend Engineer to join our platform team.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Proficiency in Python programming
+- Experience with Flask or Django web frameworks
+- PostgreSQL database design and management
+- Redis for caching and session management
+- Docker containerization experience
+
+Experience:
+- 2+ years of backend development experience
+- Experience building scalable APIs
+- Familiarity with cloud deployment
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement backend services
+- Build scalable RESTful APIs
+- Manage PostgreSQL databases
+- Implement caching strategies with Redis
+- Containerize applications with Docker
+- Collaborate with frontend team

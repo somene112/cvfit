@@ -1,0 +1,37 @@
+# Lê Thị Hương Giang
+## Junior Developer
+
+**Email:** huonggiang.dev@email.com
+**Phone:** 0933881122
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/huonggiang-dev
+
+---
+
+## Summary
+
+Computer Science graduate looking to start a career in backend development. Strong foundation in programming and algorithms.
+
+---
+
+## Skills
+
+- **Languages:** Python, Java, C++
+- **Databases:** SQL basics
+- **Tools:** Git, Linux
+
+---
+
+## Experience
+
+### No professional experience yet — recent graduate
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+VNU University of Science | 2020 – 2024
+
+- Coursework: Data Structures, Algorithms, Database Systems, Software Engineering
+- GPA: 3.5/4.0

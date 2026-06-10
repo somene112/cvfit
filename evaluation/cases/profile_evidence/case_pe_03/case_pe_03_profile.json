@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe03-project-001",
+      "item_type": "project",
+      "title": "API Service",
+      "description": "FastAPI REST service with PostgreSQL and Redis. Built comprehensive CRUD endpoints with pagination and filtering.",
+      "skills_json": ["FastAPI", "Redis", "PostgreSQL", "Python"],
+      "evidence_text": "API Service built with FastAPI, PostgreSQL, and Redis. Implemented RESTful endpoints with proper error handling, pagination, and request validation.",
+      "source": "pe03-project-001"
+    }
+  ]
+}

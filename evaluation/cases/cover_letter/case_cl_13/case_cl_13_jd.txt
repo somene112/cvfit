@@ -1,0 +1,35 @@
+Senior Python Backend Engineer
+CloudScale Solutions - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are seeking a Senior Python Backend Engineer to build cloud-native microservices at scale.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with FastAPI framework (NOT Flask)
+- Docker and Kubernetes container orchestration
+- AWS cloud services (EC2, S3, Lambda, EKS)
+- PostgreSQL or similar relational databases
+- Experience with microservices architecture
+
+Experience:
+- 3+ years of backend development experience
+- Experience with container orchestration (Kubernetes)
+- Experience with AWS cloud platform
+- Understanding of CI/CD pipelines
+
+========================================
+RESPONSIBILITIES
+========================================
+- Design and implement microservices using FastAPI
+- Deploy and manage containerized applications on Kubernetes
+- Build AWS-based cloud infrastructure
+- Optimize application performance for high-scale scenarios
+- Lead technical architecture decisions

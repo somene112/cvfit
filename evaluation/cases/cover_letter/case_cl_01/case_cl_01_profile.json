@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "E-Commerce API",
+      "skills": ["FastAPI", "PostgreSQL", "Redis"],
+      "description": "Built API with 500+ endpoints"
+    }
+  ],
+  "skills": [],
+  "certifications": [],
+  "education": []
+}

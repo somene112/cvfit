@@ -1,0 +1,26 @@
+{
+  "projects": [
+    {
+      "name": "Personal Blog",
+      "skills": ["Flask", "SQLite"],
+      "description": "Built a personal blog website using Flask with basic database functionality"
+    }
+  ],
+  "skills": ["Python"],
+  "experience": [
+    {
+      "title": "Junior Python Developer",
+      "company": "Local Tech Company",
+      "years": "2024 - Present",
+      "description": "Developed web applications using Python and Flask"
+    }
+  ],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Computer Science",
+      "institution": "Hanoi National University",
+      "year": "2024"
+    }
+  ]
+}

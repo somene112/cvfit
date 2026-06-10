@@ -1,0 +1,46 @@
+{
+  "overall_fit_score": 72,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": null
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": null
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "PostgreSQL",
+      "evidence": null
+    },
+    {
+      "skill": "Redis",
+      "evidence": null
+    },
+    {
+      "skill": "Docker",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "PostgreSQL",
+      "action": "Learn PostgreSQL database management",
+      "priority": "high"
+    },
+    {
+      "skill": "Redis",
+      "action": "Add Redis caching to applications",
+      "priority": "medium"
+    },
+    {
+      "skill": "Docker",
+      "action": "Learn containerization with Docker",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

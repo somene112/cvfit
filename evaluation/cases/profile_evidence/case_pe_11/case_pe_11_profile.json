@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "id": "pe11-education-001",
+      "item_type": "education",
+      "title": "Bachelor of Computer Science",
+      "description": "Computer Science degree with coursework in Python programming, Data Structures, Algorithms, Database Systems, and Software Engineering. Graduated 2024.",
+      "skills_json": ["Python", "Data Structures", "Algorithms", "SQL", "Database"],
+      "evidence_text": "Computer Science education with Python coursework. Completed courses in Data Structures, Algorithms, and Database Systems. Strong academic background in programming fundamentals.",
+      "source": "pe11-education-001"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+Name: Nguyen Quoc Viet
+Email: viet.nguyen@email.com
+Phone: 0956-789-012
+
+Summary
+DevOps Engineer with 4 years of experience in cloud infrastructure, containerization, and CI/CD pipeline development. Strong Python scripting skills for automation.
+
+Experience
+
+DevOps Engineer — CloudFirst Tech (2022-Present)
+- Designed and maintained AWS infrastructure using Terraform (VPC, ECS, RDS, S3)
+- Built Kubernetes clusters on AWS EKS for microservice deployments
+- Implemented CI/CD pipelines with GitHub Actions reducing deployment time by 70%
+- Created Docker images for 15+ microservices
+- Implemented monitoring with CloudWatch and Prometheus/Grafana
+- Automated infrastructure provisioning and configuration management
+
+Platform Engineer — TechOps Vietnam (2020-2022)
+- Built CI/CD pipelines using Jenkins and Docker
+- Developed Python scripts for deployment automation
+- Managed Docker container orchestration with Docker Swarm
+- Implemented logging and monitoring solutions
+
+Skills
+AWS (EC2, ECS, EKS, RDS, S3, Lambda, CloudWatch), Docker, Kubernetes, Terraform, Python, Bash, GitHub Actions, Jenkins, Prometheus, Grafana, Linux, CI/CD

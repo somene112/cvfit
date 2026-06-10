@@ -1,0 +1,14 @@
+Senior Backend Engineer
+
+Requirements:
+- 3+ years of Python backend development
+- FastAPI experience
+- PostgreSQL database design
+- Scalability and performance expertise
+- System design experience
+- Caching strategies
+
+Responsibilities:
+- Design and implement scalable systems
+- Optimize database and application performance
+- Lead technical architecture decisions

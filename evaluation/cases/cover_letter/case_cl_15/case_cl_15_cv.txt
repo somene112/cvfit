@@ -1,0 +1,45 @@
+VO VAN NAM
+Backend Developer
+nam.dev@email.com | 0965 432 789 | Ho Chi Minh City, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Developer with 2+ years of experience building API services. Proficient in Python, FastAPI, and database management.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript
+Frameworks: FastAPI
+Databases: PostgreSQL, SQLite
+Tools: Docker, Git, Linux
+
+========================================
+PROJECTS
+========================================
+
+API Service
+Role: Backend Developer
+Description: Built RESTful APIs for internal data management
+Details:
+- Implemented CRUD endpoints with FastAPI
+- Used PostgreSQL for data storage
+- Added JWT authentication
+
+========================================
+EXPERIENCE
+========================================
+
+Junior Backend Developer
+TechCo Vietnam | 2023 - Present
+- Developed backend services using Python and FastAPI
+- Implemented API endpoints for web applications
+- Maintained database operations
+
+========================================
+EDUCATION
+========================================
+Bachelor of Information Technology
+University of Technology, Ho Chi Minh City | 2019 - 2023
+GPA: 3.3/4.0

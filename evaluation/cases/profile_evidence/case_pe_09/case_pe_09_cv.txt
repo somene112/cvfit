@@ -1,0 +1,46 @@
+# Trần Thị Lan Anh
+## Junior Python Developer
+
+**Email:** lananh.dev@email.com
+**Phone:** 0966554433
+**Location:** Hanoi, Vietnam
+**GitHub:** github.com/lananh-dev
+
+---
+
+## Summary
+
+Junior Python developer with 1 year of experience. Eager to learn and contribute to backend development projects.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, JavaScript
+- **Frameworks:** Django, Flask
+- **Databases:** PostgreSQL, SQLite
+- **Tools:** Git, Docker
+
+---
+
+## Experience
+
+### Junior Python Developer
+Tech Startup Co. | Jul 2023 – Present
+
+- Developed web applications with Django
+- Fixed bugs and wrote unit tests
+- Participated in code reviews
+
+### Intern Developer
+IT Company | Jan 2023 – Jun 2023
+
+- Assisted with Django projects
+- Wrote Python scripts for automation
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+VNU University | 2019 – 2023

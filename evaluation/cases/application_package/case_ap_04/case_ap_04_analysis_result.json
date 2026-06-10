@@ -1,0 +1,26 @@
+{
+  "readiness_summary": {
+    "readiness_level": "not_started",
+    "fit_score": null,
+    "summary": "No analysis job has been attached to this application. Please attach a job analysis to generate the application package.",
+    "next_actions": [
+      "Attach an analysis job to get started",
+      "Upload CV and job description to begin matching"
+    ]
+  },
+  "best_cv_analysis": {
+    "job_id": null,
+    "fit_score": null,
+    "matched_skills": [],
+    "missing_skills": [],
+    "strengths": [],
+    "improvement_actions": []
+  },
+  "cover_letter_draft": null,
+  "interview_prep_pack": {
+    "questions": []
+  },
+  "learning_roadmap": [],
+  "evidence_checklist": [],
+  "disclaimer": "This application package is AI-generated and must be reviewed by the user before submission. Do not include unverified information in your application."
+}

@@ -1,0 +1,31 @@
+{
+  "overall_fit_score": 80,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Primary language for API Service project"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Framework used in API Service project"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database in API Service project"
+    },
+    {
+      "skill": "Redis",
+      "evidence": "Caching in API Service project"
+    }
+  ],
+  "missing_skills": [],
+  "improvement_actions": [
+    {
+      "skill": "Python",
+      "action": "Add Python best practices documentation",
+      "priority": "low"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

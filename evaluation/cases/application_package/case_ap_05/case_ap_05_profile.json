@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "Backend API Service",
+      "skills": ["FastAPI", "PostgreSQL"],
+      "description": "REST API service for internal operations with FastAPI and PostgreSQL"
+    }
+  ],
+  "skills": ["Python", "FastAPI", "PostgreSQL"],
+  "certifications": [],
+  "education": []
+}

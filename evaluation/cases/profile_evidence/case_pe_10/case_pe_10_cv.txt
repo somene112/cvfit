@@ -1,0 +1,46 @@
+# Nguyễn Văn Hùng
+## Python Developer
+
+**Email:** vanhung.dev@email.com
+**Phone:** 0911223344
+**Location:** Ho Chi Minh City, Vietnam
+**GitHub:** github.com/vanhung-dev
+
+---
+
+## Summary
+
+Python developer with 2 years of experience building web applications. Focused on backend development with modern Python frameworks.
+
+---
+
+## Skills
+
+- **Languages:** Python, SQL, JavaScript
+- **Frameworks:** Flask, FastAPI
+- **Databases:** PostgreSQL, MySQL
+- **Tools:** Git, Docker, Linux
+
+---
+
+## Experience
+
+### Python Developer
+Software House VN | May 2021 – Present
+
+- Developed backend services with Python
+- Built REST APIs for web applications
+- Maintained database systems
+
+### Junior Developer
+Tech Solutions | Jan 2020 – Apr 2021
+
+- Created Flask applications
+- Worked on web backend projects
+
+---
+
+## Education
+
+### Bachelor of Information Technology
+HUTECH | 2016 – 2020

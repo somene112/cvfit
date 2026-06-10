@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "Portfolio Website",
+      "skills": ["Python"],
+      "description": "Personal portfolio website with Python backend"
+    }
+  ],
+  "skills": ["Python"],
+  "certifications": [],
+  "education": []
+}

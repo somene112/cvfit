@@ -1,0 +1,49 @@
+# Vũ Thị Minh Châu
+## Frontend Developer
+
+**Email:** minhchau.dev@email.com
+**Phone:** 0977001122
+**Location:** Ho Chi Minh City, Vietnam
+**Portfolio:** minhchau.dev
+**GitHub:** github.com/minhchau-dev
+
+---
+
+## Summary
+
+Frontend developer with 3 years of experience building responsive web applications. Strong in React ecosystem and modern JavaScript.
+
+---
+
+## Skills
+
+- **Languages:** JavaScript, TypeScript, HTML5, CSS3
+- **Frameworks:** React, Next.js, Vue.js
+- **Tools:** Git, Webpack, npm
+- **Backend:** Node.js basics
+
+---
+
+## Experience
+
+### Frontend Developer
+Digital Creative Agency | May 2021 – Present
+
+- Built React applications for various clients
+- Implemented responsive designs with modern CSS
+- Integrated REST APIs from backend services
+- TypeScript migration for legacy codebase
+
+### Junior Frontend Developer
+Web Studio | Aug 2019 – Apr 2021
+
+- Developed Vue.js applications
+- Created UI components
+- Worked with REST APIs
+
+---
+
+## Education
+
+### Bachelor of Computer Science
+UIT | 2015 – 2019

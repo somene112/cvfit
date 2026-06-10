@@ -1,0 +1,33 @@
+Data Scientist
+DataDriven Corp - Ho Chi Minh City
+
+========================================
+JOB DESCRIPTION
+========================================
+
+We are looking for a Data Scientist to join our analytics team and build machine learning models.
+
+========================================
+REQUIREMENTS
+========================================
+
+Technical Skills:
+- Strong proficiency in Python
+- Experience with TensorFlow or PyTorch for deep learning
+- SQL and database management
+- Statistical analysis and data visualization
+- Experience with machine learning model development
+
+Experience:
+- 2+ years of data science experience
+- Experience with data preprocessing and feature engineering
+- Familiarity with cloud ML platforms (AWS SageMaker, GCP AI Platform)
+
+========================================
+RESPONSIBILITIES
+========================================
+- Develop and deploy machine learning models
+- Perform data analysis and feature engineering
+- Build predictive models using TensorFlow/PyTorch
+- Collaborate with engineering and product teams
+- Present findings to stakeholders

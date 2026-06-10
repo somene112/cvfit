@@ -1,0 +1,25 @@
+# Senior Backend Engineer
+
+## Requirements
+
+We are looking for a Senior Backend Engineer to lead our team.
+
+### Required Skills
+
+- **Python** — 3+ years experience
+- **FastAPI** — Production API experience
+- **PostgreSQL** — Database design
+- **Docker** — Containerization
+
+### Responsibilities
+
+- Design and implement backend services
+- Lead technical decisions
+- Mentor junior developers
+- Build scalable systems
+
+### Compensation
+
+- Salary: 30-45 million VND/month
+- Stock options
+- Remote work

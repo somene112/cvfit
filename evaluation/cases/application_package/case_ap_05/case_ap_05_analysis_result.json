@@ -1,0 +1,41 @@
+{
+  "overall_fit_score": 75,
+  "matched_skills": [
+    {
+      "skill": "Python",
+      "evidence": "Used in backend development projects"
+    },
+    {
+      "skill": "FastAPI",
+      "evidence": "Built REST API with FastAPI"
+    },
+    {
+      "skill": "PostgreSQL",
+      "evidence": "Database design and implementation with PostgreSQL"
+    }
+  ],
+  "missing_skills": [
+    {
+      "skill": "Redis",
+      "evidence": null
+    },
+    {
+      "skill": "Docker",
+      "evidence": null
+    }
+  ],
+  "improvement_actions": [
+    {
+      "skill": "Redis",
+      "action": "Add Redis caching to improve API performance",
+      "priority": "medium"
+    },
+    {
+      "skill": "Docker",
+      "action": "Containerize FastAPI application for deployment",
+      "priority": "medium"
+    }
+  ],
+  "interview_prep": [],
+  "learning_roadmap": []
+}

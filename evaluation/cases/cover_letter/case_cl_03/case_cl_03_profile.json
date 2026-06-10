@@ -1,0 +1,17 @@
+{
+  "projects": [
+    {
+      "name": "Product API",
+      "skills": ["FastAPI", "PostgreSQL"],
+      "description": "E-commerce product management API with FastAPI and PostgreSQL"
+    },
+    {
+      "name": "Auth Service",
+      "skills": ["Python", "AWS"],
+      "description": "AWS-based authentication and authorization service"
+    }
+  ],
+  "skills": [],
+  "certifications": [],
+  "education": []
+}

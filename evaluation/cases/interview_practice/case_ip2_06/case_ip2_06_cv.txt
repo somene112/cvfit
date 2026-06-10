@@ -1,0 +1,21 @@
+Name: Vo Thi Kim Yen
+Email: kimen@email.com
+Phone: 0967-890-123
+
+Summary
+Full Stack Developer with 2 years of experience, focusing on backend development with FastAPI and PostgreSQL.
+
+Projects
+
+Project: E-Commerce API System (Personal Project)
+- Built comprehensive REST API for e-commerce platform using FastAPI
+- Implemented 500+ endpoints covering products, orders, users, payments, inventory
+- Used PostgreSQL with proper indexing and query optimization
+- Integrated Redis for session management and product caching
+- Reduced API response time by 40% through caching and database optimization
+- Implemented JWT authentication with refresh token rotation
+- Deployed with Docker on cloud VPS with Nginx reverse proxy
+- Wrote pytest tests achieving 85% code coverage
+
+Skills
+Python, FastAPI, PostgreSQL, Redis, Docker, Nginx, JWT, pytest, Git, REST API Design

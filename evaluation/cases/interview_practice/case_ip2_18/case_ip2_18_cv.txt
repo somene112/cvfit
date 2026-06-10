@@ -1,0 +1,16 @@
+Name: Do Thi Lan
+Email: landothi@email.com
+Phone: 0901-012-345
+
+Summary
+Python Backend Developer with 2 years of experience in API development.
+
+Experience
+
+Backend Developer — DataFlow Systems (2023-Present)
+- Built REST APIs using Python and Flask
+- Implemented database operations with SQL
+- Developed data processing scripts
+
+Skills
+Python, Flask, SQL, Git, Docker (basic)

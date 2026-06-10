@@ -1,0 +1,13 @@
+Cloud Backend Engineer
+
+Requirements:
+- 2+ years of Python backend development
+- AWS cloud infrastructure experience (required)
+- PostgreSQL database
+- Docker and Kubernetes
+- CI/CD pipeline experience
+
+Responsibilities:
+- Build cloud-native backend services
+- Manage AWS infrastructure
+- Implement CI/CD pipelines

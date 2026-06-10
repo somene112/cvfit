@@ -1,0 +1,54 @@
+NGUYEN THI LAN
+Backend Developer
+lan.dev@email.com | 0978 234 567 | Ho Chi Minh City, Vietnam
+
+========================================
+SUMMARY
+========================================
+Backend Developer with 3+ years of experience building web applications using Python and Django. Proficient in database design and API development.
+
+========================================
+SKILLS
+========================================
+Languages: Python, JavaScript
+Frameworks: Django, Flask
+Databases: PostgreSQL, SQLite, MySQL
+Tools: Docker, Git, Linux, Nginx
+
+========================================
+PROJECTS
+========================================
+
+Blog Platform
+Role: Full-Stack Developer
+Description: Built a blog platform with user authentication and content management
+Details:
+- Implemented user registration and authentication
+- Created content management system with Django admin
+- Designed database schema for posts, categories, and comments
+- Deployed using Docker and Nginx
+
+Task Tracker
+Role: Backend Developer
+Description: Developed task management RESTful APIs
+- Built with Django REST Framework
+- PostgreSQL database with optimized queries
+- JWT authentication implementation
+
+========================================
+EXPERIENCE
+========================================
+
+Backend Developer
+WebTech Vietnam | 2021 - Present
+- Developed backend services using Python and Django
+- Designed and maintained PostgreSQL databases
+- Implemented RESTful APIs for web applications
+- Deployed applications using Docker
+
+========================================
+EDUCATION
+========================================
+Bachelor of Software Engineering
+University of Science, Ho Chi Minh City | 2017 - 2021
+GPA: 3.6/4.0

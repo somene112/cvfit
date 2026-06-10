@@ -1,0 +1,1 @@
+I worked on a backend project where I used Python and some SQL for database operations. The project involved creating endpoints for user data.

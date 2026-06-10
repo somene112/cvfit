@@ -1,0 +1,19 @@
+{
+  "projects": [
+    {
+      "name": "Brand Identity Package",
+      "skills": ["Adobe Photoshop", "Adobe Illustrator", "Figma"],
+      "description": "Complete brand identity design for a local cafe including logo, color palette, and marketing materials"
+    }
+  ],
+  "skills": ["Adobe Photoshop", "Adobe Illustrator", "Figma"],
+  "experience": [],
+  "certifications": [],
+  "education": [
+    {
+      "degree": "Bachelor of Fine Arts - Graphic Design",
+      "institution": "Hanoi University of Fine Arts",
+      "year": "2023"
+    }
+  ]
+}
