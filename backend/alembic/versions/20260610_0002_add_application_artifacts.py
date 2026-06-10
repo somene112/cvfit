@@ -28,10 +28,10 @@ _ARTIFACT_TYPE_VALUES = (
 def upgrade() -> None:
     artifact_type = postgresql.ENUM(
         *_ARTIFACT_TYPE_VALUES,
-        name="artifact_type",
+        name="application_artifact_type",
         create_type=False,
     )
-    postgresql.ENUM(*_ARTIFACT_TYPE_VALUES, name="artifact_type").create(op.get_bind(), checkfirst=True)
+    postgresql.ENUM(*_ARTIFACT_TYPE_VALUES, name="application_artifact_type").create(op.get_bind(), checkfirst=True)
 
     op.create_table(
         "application_artifacts",
@@ -56,4 +56,4 @@ def downgrade() -> None:
     op.drop_index("ix_application_artifacts_application_id", table_name="application_artifacts")
     op.drop_index("ix_application_artifacts_user_id", table_name="application_artifacts")
     op.drop_table("application_artifacts")
-    sa.Enum(name="artifact_type").drop(op.get_bind(), checkfirst=True)
+    sa.Enum(name="application_artifact_type").drop(op.get_bind(), checkfirst=True)

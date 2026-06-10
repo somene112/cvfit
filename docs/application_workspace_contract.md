@@ -257,14 +257,17 @@ Get the readiness summary for an application. Derived from the attached analysis
 
 Trigger application package generation. Stores result as `application_package` artifact.
 
+> **PR5A implementation note:** Generation is synchronous and deterministic (no LLM queue). Response status code is `201 Created` with `status: "generated"` rather than `202 Accepted / status: "generating"`. Future async generation may use `202` when a background queue is introduced. Frontend should handle both `201` and `202` from this endpoint, and treat `status: "generated"` as ready to fetch.
+
 - **Auth:** JWT Bearer required
 - **Request body:** empty (uses attached analysis job + career profile items)
-- **Response `202`:**
+- **Response `201`:**
   ```json
   {
     "application_id": "uuid",
     "artifact_id": "uuid",
-    "status": "generating"
+    "status": "generated",
+    "artifact_type": "application_package"
   }
   ```
 - **Errors:** 401, 403, 404, 422 (no analysis attached)
@@ -313,15 +316,18 @@ Download stub. Returns the payload as a JSON download in Phase 5 v1. DOCX/PDF ex
 
 Trigger cover letter draft generation. Uses attached analysis job, career profile items, and application workspace metadata. Stores result as `cover_letter_draft` artifact.
 
+> **PR5A implementation note:** Same as package/generate — synchronous, returns `201 Created` with `status: "generated"`. Frontend should treat `status: "generated"` as ready to fetch via GET.
+
 - **Auth:** JWT Bearer required
 - **Request body:** empty (all inputs sourced from attached analysis + profile)
 - **Ownership rule:** application must belong to the authenticated user; attached analysis job must belong to the same user.
-- **Response `202`:**
+- **Response `201`:**
   ```json
   {
     "application_id": "uuid",
     "artifact_id": "uuid",
-    "status": "generating"
+    "status": "generated",
+    "artifact_type": "cover_letter_draft"
   }
   ```
 - **Errors:** 401, 403, 404, 422 (no analysis attached — cannot generate without CV evidence)

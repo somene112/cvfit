@@ -173,7 +173,7 @@ class ApplicationArtifact(Base):
     user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
     application_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=False, index=True)
     artifact_type: Mapped[str] = mapped_column(
-        Enum(*ARTIFACT_TYPE, name="artifact_type"),
+        Enum(*ARTIFACT_TYPE, name="application_artifact_type"),
         nullable=False,
         index=True,
     )
