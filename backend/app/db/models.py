@@ -185,6 +185,24 @@ class ApplicationArtifact(Base):
     application = relationship("Application", foreign_keys=[application_id])
 
 
+class InterviewAnswer(Base):
+    __tablename__ = "interview_answers"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    application_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=False, index=True)
+    job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("analysis_jobs.id"), nullable=True, index=True)
+    question: Mapped[str] = mapped_column(Text, nullable=False)
+    answer_text: Mapped[str] = mapped_column(Text, nullable=False)
+    rubric_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    feedback_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", foreign_keys=[user_id])
+    application = relationship("Application", foreign_keys=[application_id])
+    job = relationship("AnalysisJob", foreign_keys=[job_id])
+
+
 class TextEmbedding(Base):
     __tablename__ = "text_embeddings"
 
