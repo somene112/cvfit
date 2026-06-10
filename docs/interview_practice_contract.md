@@ -80,7 +80,7 @@ Generate interview questions for the application. Uses the attached analysis job
     "disclaimer": "Questions are generated from your CV, JD, and analysis result. They are practice aids only — real interviewers may ask different questions."
   }
   ```
-- **Errors:** 401, 403, 404 (application not found or no analysis attached)
+- **Errors:** 401, 404 (application not found, belongs to another user, or cross-user attached job)
 
 ---
 
@@ -139,7 +139,7 @@ Submit a typed answer to a single question. Returns rubric scores and feedback i
     "created_at": "2026-06-10T10:00:00Z"
   }
   ```
-- **Errors:** 401, 403, 404, 422
+- **Errors:** 401, 404, 422
 
 ---
 
@@ -170,7 +170,7 @@ List all submitted answers for an application.
     "total": 1
   }
   ```
-- **Errors:** 401, 403, 404
+- **Errors:** 401, 404
 
 ---
 
@@ -263,8 +263,7 @@ Scoring must be deterministic for v1: use rule-based heuristics (keyword matchin
 Same rules as the Application Workspace contract:
 
 - **401** if JWT is missing or invalid.
-- **403** if the authenticated user is not the owner of the application.
-- **404** if the application does not exist, belongs to another user, or has no analysis attached (for the questions endpoint).
+- **404** if the application does not exist or belongs to another user. Phase 5 backend uses the non-leak convention: cross-user resource access returns 404, not 403, to avoid revealing resource existence.
 
 > PR6A implementation note: `GET /questions` returns **200** (not 404) when no analysis job is attached. The endpoint falls back to generic behavioral questions derived from the application's job title and career profile items. **404 is still returned** if an attached `best_analysis_job_id` resolves to a job owned by a different user (non-leak convention). This deviation from the contract was approved during the PR6A audit.
 - **422** for missing required fields or invalid values.
@@ -283,6 +282,6 @@ Cases Đạt should be able to test in the evaluation skeleton (PR2):
 | **Strong answer** | High rubric scores; non-empty `strengths`; at least one polish suggestion |
 | **Missing evidence** | Answer references a skill not in CV → `missing_evidence` mentions the gap; `suggested_improvements` asks user to provide real evidence |
 | **Unrelated evidence** | Answer references something not in CV or JD → `risk_notes` warns of unverifiable claim; no fabricated confirmation |
-| **Another user's application** | `GET /questions` and `POST /answers` return 403 for a different user's application_id |
+| **Another user's application** | `GET /questions`, `POST /answers`, and `GET /answers` return **404** for a different user's application_id (non-leak convention) |
 | **Empty profile** | Questions are generated from JD/analysis only; no fabricated evidence; `gap_probe` questions used for CV gaps |
 | **Application without attached analysis** | `GET /questions` returns 200 with generic behavioral questions; disclaimer included. (PR6A: 404 was relaxed — see Section H note.) |
