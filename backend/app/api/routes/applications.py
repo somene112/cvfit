@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
-from app.db.models import AnalysisJob, Application, ApplicationArtifact, CareerProfileItem, User
+from app.db.models import AnalysisJob, Application, ApplicationArtifact, CareerProfileItem, InterviewAnswer, User
 from app.db.session import get_db
 from app.schemas.phase5 import (
     ApplicationCreate,
@@ -20,10 +20,20 @@ from app.schemas.phase5 import (
     ArtifactResponse,
     AttachAnalysisResponse,
     CoverLetterPatch,
+    InterviewAnswerCreate,
+    InterviewAnswerListResponse,
+    InterviewAnswerResponse,
+    InterviewAnswerSummary,
+    InterviewQuestionsResponse,
     ReadinessResponse,
 )
 from app.services.application_package import build_package_payload
 from app.services.cover_letter import build_cover_letter_payload
+from app.services.interview_practice import (
+    QUESTIONS_DISCLAIMER,
+    generate_interview_questions,
+    score_answer,
+)
 
 router = APIRouter(prefix="/v1/applications", tags=["applications"])
 
@@ -462,3 +472,118 @@ def patch_cover_letter(
     db.refresh(artifact)
 
     return _artifact_to_response(artifact)
+
+
+# ---------------------------------------------------------------------------
+# Interview practice endpoints
+# ---------------------------------------------------------------------------
+
+@router.get("/{application_id}/interview/questions", response_model=InterviewQuestionsResponse)
+def get_interview_questions(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> InterviewQuestionsResponse:
+    app = _get_owned_application(application_id, current_user, db)
+
+    if app.best_analysis_job_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No analysis job attached to this application",
+        )
+
+    job = db.get(AnalysisJob, app.best_analysis_job_id)
+    if job is None or job.user_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
+
+    profile_items = _get_profile_items(db, current_user.id)
+    questions = generate_interview_questions(app, job, profile_items)
+
+    return InterviewQuestionsResponse(
+        application_id=str(app.id),
+        questions=questions,
+        disclaimer=QUESTIONS_DISCLAIMER,
+    )
+
+
+@router.post(
+    "/{application_id}/interview/answers",
+    status_code=status.HTTP_201_CREATED,
+    response_model=InterviewAnswerResponse,
+)
+def submit_interview_answer(
+    application_id: uuid.UUID,
+    body: InterviewAnswerCreate,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> InterviewAnswerResponse:
+    app = _get_owned_application(application_id, current_user, db)
+
+    job: Optional[AnalysisJob] = None
+    if app.best_analysis_job_id is not None:
+        job = db.get(AnalysisJob, app.best_analysis_job_id)
+        if job is not None and job.user_id != current_user.id:
+            job = None
+
+    profile_items = _get_profile_items(db, current_user.id)
+    rubric, feedback = score_answer(body.question, body.answer_text, app, job, profile_items)
+
+    answer = InterviewAnswer(
+        id=uuid.uuid4(),
+        user_id=current_user.id,
+        application_id=app.id,
+        job_id=job.id if job else None,
+        question=body.question,
+        answer_text=body.answer_text,
+        rubric_json=rubric,
+        feedback_json=feedback,
+        created_at=datetime.utcnow(),
+    )
+    db.add(answer)
+    db.commit()
+    db.refresh(answer)
+
+    return InterviewAnswerResponse(
+        answer_id=str(answer.id),
+        application_id=str(answer.application_id),
+        question=answer.question,
+        answer_text=answer.answer_text,
+        rubric=answer.rubric_json,
+        feedback=answer.feedback_json,
+        created_at=answer.created_at,
+    )
+
+
+@router.get("/{application_id}/interview/answers", response_model=InterviewAnswerListResponse)
+def list_interview_answers(
+    application_id: uuid.UUID,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+) -> InterviewAnswerListResponse:
+    app = _get_owned_application(application_id, current_user, db)
+
+    answers = (
+        db.query(InterviewAnswer)
+        .filter(
+            InterviewAnswer.application_id == app.id,
+            InterviewAnswer.user_id == current_user.id,
+        )
+        .order_by(InterviewAnswer.created_at.desc())
+        .all()
+    )
+
+    summaries = [
+        InterviewAnswerSummary(
+            answer_id=str(a.id),
+            question=a.question,
+            rubric=a.rubric_json,
+            created_at=a.created_at,
+        )
+        for a in answers
+    ]
+
+    return InterviewAnswerListResponse(
+        application_id=str(app.id),
+        answers=summaries,
+        total=len(summaries),
+    )

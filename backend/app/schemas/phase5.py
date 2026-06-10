@@ -164,3 +164,51 @@ class CoverLetterPatch(BaseModel):
     contribution_fit: Optional[str] = None
     closing: Optional[str] = None
     review_notes: Optional[List[str]] = None
+
+
+# ---------------------------------------------------------------------------
+# Interview practice schemas
+# ---------------------------------------------------------------------------
+
+class InterviewQuestionItem(BaseModel):
+    question_id: str
+    question: str
+    type: str
+    related_jd_requirement: str
+    related_cv_evidence: List[str]
+    why_this_question: str
+
+
+class InterviewQuestionsResponse(BaseModel):
+    application_id: str
+    questions: List[InterviewQuestionItem]
+    disclaimer: str
+
+
+class InterviewAnswerCreate(BaseModel):
+    question_id: str
+    question: str
+    answer_text: str
+
+
+class InterviewAnswerResponse(BaseModel):
+    answer_id: str
+    application_id: str
+    question: str
+    answer_text: str
+    rubric: Any
+    feedback: Any
+    created_at: datetime
+
+
+class InterviewAnswerSummary(BaseModel):
+    answer_id: str
+    question: str
+    rubric: Any
+    created_at: datetime
+
+
+class InterviewAnswerListResponse(BaseModel):
+    application_id: str
+    answers: List[InterviewAnswerSummary]
+    total: int
