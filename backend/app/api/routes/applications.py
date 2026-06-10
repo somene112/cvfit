@@ -192,11 +192,19 @@ def get_readiness(
         )
 
     result = job.result_json
-    fit_score: Optional[float] = (
-        result.get("overall_fit_score")
-        or result.get("result", {}).get("fit_score")
-        or result.get("scores", {}).get("fit_score")
-    )
+    # Use explicit is-not-None checks so a score of 0.0 is not skipped.
+    fit_score: Optional[float] = None
+    for candidate in (
+        result.get("overall_fit_score"),
+        (result.get("result") or {}).get("fit_score"),
+        (result.get("scores") or {}).get("fit_score"),
+    ):
+        if candidate is not None:
+            try:
+                fit_score = float(candidate)
+            except (TypeError, ValueError):
+                pass
+            break
 
     if fit_score is None:
         readiness_level = "not_started"
