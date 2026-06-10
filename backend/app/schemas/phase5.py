@@ -186,9 +186,9 @@ class InterviewQuestionsResponse(BaseModel):
 
 
 class InterviewAnswerCreate(BaseModel):
-    question_id: str
-    question: str
-    answer_text: str
+    question_id: str = Field(min_length=1, max_length=100)
+    question: str = Field(min_length=1, max_length=1000)
+    answer_text: str = Field(min_length=1, max_length=8000)
 
 
 class InterviewAnswerResponse(BaseModel):

@@ -486,15 +486,13 @@ def get_interview_questions(
 ) -> InterviewQuestionsResponse:
     app = _get_owned_application(application_id, current_user, db)
 
-    if app.best_analysis_job_id is None:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="No analysis job attached to this application",
-        )
-
-    job = db.get(AnalysisJob, app.best_analysis_job_id)
-    if job is None or job.user_id != current_user.id:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
+    job: Optional[AnalysisJob] = None
+    if app.best_analysis_job_id is not None:
+        candidate = db.get(AnalysisJob, app.best_analysis_job_id)
+        # Non-leak: return 404 if the attached job belongs to another user or is missing.
+        if candidate is None or candidate.user_id != current_user.id:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
+        job = candidate
 
     profile_items = _get_profile_items(db, current_user.id)
     questions = generate_interview_questions(app, job, profile_items)

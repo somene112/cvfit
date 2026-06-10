@@ -340,7 +340,7 @@ class TestInterviewOwnership:
 # ---------------------------------------------------------------------------
 
 class TestInterviewQuestions:
-    def test_get_questions_without_analysis_returns_404(self):
+    def test_get_questions_without_analysis_returns_200_with_generic_questions(self):
         user = make_user()
         db = FakeDb()
         app = make_application(user.id)
@@ -349,8 +349,66 @@ class TestInterviewQuestions:
 
         resp = client.get(f"/v1/applications/{app.id}/interview/questions")
 
+        assert resp.status_code == 200
+        body = resp.json()
+        assert body["application_id"] == str(app.id)
+        assert len(body["questions"]) > 0
+
+    def test_get_questions_without_analysis_response_includes_disclaimer(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.get(f"/v1/applications/{app.id}/interview/questions")
+
+        assert resp.status_code == 200
+        assert "disclaimer" in resp.json()
+        assert len(resp.json()["disclaimer"]) > 0
+
+    def test_get_questions_without_analysis_contains_behavioral_question(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.get(f"/v1/applications/{app.id}/interview/questions")
+
+        assert resp.status_code == 200
+        types = [q["type"] for q in resp.json()["questions"]]
+        assert "behavioral" in types
+
+    def test_get_questions_without_analysis_does_not_claim_user_skills(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.get(f"/v1/applications/{app.id}/interview/questions")
+
+        assert resp.status_code == 200
+        for q in resp.json()["questions"]:
+            # Should not assert user owns any specific skill
+            assert "you are proficient in" not in q["question"].lower()
+            assert "you have expertise in" not in q["question"].lower()
+
+    def test_get_questions_with_corrupted_cross_user_job_returns_404(self):
+        user_a = make_user("a@example.com")
+        user_b = make_user("b@example.com")
+        db = FakeDb()
+        job_b = make_job(user_b.id)
+        # App belonging to user_a but pointing to user_b's job (corrupted state)
+        app_a = make_application(user_a.id, best_analysis_job_id=job_b.id)
+        db.add(app_a)
+        db.add(job_b)
+        client = build_app_client(db, user_a)
+
+        resp = client.get(f"/v1/applications/{app_a.id}/interview/questions")
+
         assert resp.status_code == 404
-        assert "analysis" in resp.json()["detail"].lower()
 
     def test_get_questions_returns_200_with_analysis(self):
         user = make_user()
@@ -660,24 +718,30 @@ class TestInterviewAnswerSubmit:
         job = make_job(
             user.id,
             matched_skills=[{"skill": "FastAPI", "requirement_type": "must_have"}],
+            missing_skills=[{"skill": "Kubernetes", "requirement_type": "must_have"}],
         )
         app = make_application(user.id, best_analysis_job_id=job.id)
         db.add(app)
         db.add(job)
         client = build_app_client(db, user)
 
-        # Very weak, short answer
+        # Very weak, short answer referencing a missing skill topic
         resp = client.post(
             f"/v1/applications/{app.id}/interview/answers",
             json={
-                "question_id": "q_1",
-                "question": "Describe your FastAPI experience.",
+                "question_id": "q_2",
+                "question": "The JD requires Kubernetes. How would you approach it?",
                 "answer_text": "ok",
             },
         )
 
-        feedback = resp.json()["feedback"]
+        body = resp.json()
+        feedback = body["feedback"]
+        rubric = body["rubric"]
+        # Contract Section I: weak answer must have non-empty missing_evidence,
+        # non-empty suggested_improvements, and risk_gap >= 3
         assert len(feedback["suggested_improvements"]) > 0
+        assert rubric["risk_gap"] >= 3
 
     def test_strong_answer_produces_non_empty_strengths(self):
         user = make_user()
@@ -791,6 +855,66 @@ class TestInterviewAnswerSubmit:
             json={
                 "question_id": "q_1",
                 # Missing "question" and "answer_text"
+            },
+        )
+
+        assert resp.status_code == 422
+
+    def test_empty_question_returns_422(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.post(
+            f"/v1/applications/{app.id}/interview/answers",
+            json={"question_id": "q_1", "question": "", "answer_text": "Some answer."},
+        )
+
+        assert resp.status_code == 422
+
+    def test_empty_answer_text_returns_422(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.post(
+            f"/v1/applications/{app.id}/interview/answers",
+            json={"question_id": "q_1", "question": "Describe your experience.", "answer_text": ""},
+        )
+
+        assert resp.status_code == 422
+
+    def test_empty_question_id_returns_422(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.post(
+            f"/v1/applications/{app.id}/interview/answers",
+            json={"question_id": "", "question": "Describe your experience.", "answer_text": "Answer."},
+        )
+
+        assert resp.status_code == 422
+
+    def test_overlong_answer_text_returns_422(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        client = build_app_client(db, user)
+
+        resp = client.post(
+            f"/v1/applications/{app.id}/interview/answers",
+            json={
+                "question_id": "q_1",
+                "question": "Describe your experience.",
+                "answer_text": "x" * 8001,
             },
         )
 

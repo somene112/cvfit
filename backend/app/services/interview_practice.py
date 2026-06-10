@@ -145,6 +145,44 @@ def generate_interview_questions(
                     ),
                 })
 
+    # 6. Fallback: generic behavioral questions when no analysis produced any questions
+    if not questions:
+        job_title = getattr(application, "job_title", "this role") or "this role"
+        questions.extend([
+            {
+                "question_id": "q_1",
+                "question": (
+                    f"Why are you interested in the {job_title} role? "
+                    "What about this opportunity aligns with your professional goals?"
+                ),
+                "type": "behavioral",
+                "related_jd_requirement": job_title,
+                "related_cv_evidence": [],
+                "why_this_question": (
+                    "No analysis result is attached yet. "
+                    "This is a general readiness question to help you prepare."
+                ),
+            },
+            {
+                "question_id": "q_2",
+                "question": (
+                    "Describe a challenging project you have worked on. "
+                    "What was your role and what did you learn from the experience?"
+                ),
+                "type": "behavioral",
+                "related_jd_requirement": job_title,
+                "related_cv_evidence": [
+                    getattr(item, "title", "")
+                    for item in profile_items
+                    if getattr(item, "item_type", "") in ("project", "experience")
+                ][:2],
+                "why_this_question": (
+                    "This behavioral question helps assess relevant background "
+                    "regardless of a specific JD analysis."
+                ),
+            },
+        ])
+
     return questions[:MAX_QUESTIONS]
 
 
@@ -181,7 +219,8 @@ def score_answer(
     # --- structure: STAR / logical flow ---
     structure = _score_structure(answer_text)
 
-    # --- risk_gap: gap-related keywords detected in question but not addressed in answer ---
+    # --- risk_gap: inverse scale — 0 = no gap risk (good), 5 = high gap risk (bad) ---
+    # Per contract Section D: "Lower = better. 0 means no gap risk, 5 means high gap risk."
     risk_gap = _score_risk_gap(question_lower, answer_lower, missing_skills)
 
     # overall: weighted average, rounded to nearest int, capped at 5

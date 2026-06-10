@@ -265,6 +265,8 @@ Same rules as the Application Workspace contract:
 - **401** if JWT is missing or invalid.
 - **403** if the authenticated user is not the owner of the application.
 - **404** if the application does not exist, belongs to another user, or has no analysis attached (for the questions endpoint).
+
+> PR6A implementation note: `GET /questions` returns **200** (not 404) when no analysis job is attached. The endpoint falls back to generic behavioral questions derived from the application's job title and career profile items. **404 is still returned** if an attached `best_analysis_job_id` resolves to a job owned by a different user (non-leak convention). This deviation from the contract was approved during the PR6A audit.
 - **422** for missing required fields or invalid values.
 
 Additional rule: the user cannot read or submit interview answers for another user's application. `application_id` in the path is always validated against the authenticated `user_id`.
@@ -283,4 +285,4 @@ Cases Đạt should be able to test in the evaluation skeleton (PR2):
 | **Unrelated evidence** | Answer references something not in CV or JD → `risk_notes` warns of unverifiable claim; no fabricated confirmation |
 | **Another user's application** | `GET /questions` and `POST /answers` return 403 for a different user's application_id |
 | **Empty profile** | Questions are generated from JD/analysis only; no fabricated evidence; `gap_probe` questions used for CV gaps |
-| **Application without attached analysis** | `GET /questions` returns 404 with message "No analysis job attached to this application" |
+| **Application without attached analysis** | `GET /questions` returns 200 with generic behavioral questions; disclaimer included. (PR6A: 404 was relaxed — see Section H note.) |
