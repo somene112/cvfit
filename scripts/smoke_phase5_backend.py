@@ -153,7 +153,7 @@ def run_smoke(
     if code == 200:
         _pass("GET /health")
     else:
-        _fail(f"GET /health → {code}")
+        _fail(f"GET /health -> {code}")
         ok = False
 
     # ------------------------------------------------------------------
@@ -168,9 +168,9 @@ def run_smoke(
         "password": synthetic_password,
     })
     if code in (200, 201):
-        _pass(f"POST /v1/auth/register → {synthetic_email}")
+        _pass(f"POST /v1/auth/register -> {synthetic_email}")
     else:
-        _fail(f"POST /v1/auth/register → {code}: {body}")
+        _fail(f"POST /v1/auth/register -> {code}: {body}")
         print("Cannot continue without auth.", file=sys.stderr)
         return False
 
@@ -180,9 +180,9 @@ def run_smoke(
     })
     if code == 200 and isinstance(body.get("access_token"), str):
         token = body["access_token"]
-        _pass(f"POST /v1/auth/login → token {redact_token(token)}")
+        _pass(f"POST /v1/auth/login -> token {redact_token(token)}")
     else:
-        _fail(f"POST /v1/auth/login → {code}: {body}")
+        _fail(f"POST /v1/auth/login -> {code}: {body}")
         print("Cannot continue without JWT token.", file=sys.stderr)
         return False
 
@@ -199,7 +199,7 @@ def run_smoke(
         else:
             _pass(f"GET /v1/profile/items (empty list, read-only)")
     else:
-        _fail(f"GET /v1/profile/items → {code}: {body}")
+        _fail(f"GET /v1/profile/items -> {code}: {body}")
         ok = False
 
     # Read-only: list empty applications
@@ -213,7 +213,7 @@ def run_smoke(
         else:
             _pass(f"GET /v1/applications (empty list, read-only)")
     else:
-        _fail(f"GET /v1/applications → {code}: {body}")
+        _fail(f"GET /v1/applications -> {code}: {body}")
         ok = False
 
     # ------------------------------------------------------------------
@@ -244,9 +244,9 @@ def run_smoke(
             _fail(str(exc))
             ok = False
         else:
-            _pass(f"POST /v1/profile/items → {profile_item_id}")
+            _pass(f"POST /v1/profile/items -> {profile_item_id}")
     else:
-        _fail(f"POST /v1/profile/items → {code}: {body}")
+        _fail(f"POST /v1/profile/items -> {code}: {body}")
         ok = False
 
     if profile_item_id:
@@ -261,7 +261,7 @@ def run_smoke(
             else:
                 _pass(f"GET /v1/profile/items/{profile_item_id}")
         else:
-            _fail(f"GET /v1/profile/items/{profile_item_id} → {code}: {body}")
+            _fail(f"GET /v1/profile/items/{profile_item_id} -> {code}: {body}")
             ok = False
 
         # Career Profile — patch
@@ -272,7 +272,7 @@ def run_smoke(
         if code == 200 and body.get("title") == "Smoke Test Project (updated)":
             _pass(f"PATCH /v1/profile/items/{profile_item_id}")
         else:
-            _fail(f"PATCH /v1/profile/items/{profile_item_id} → {code}: {body}")
+            _fail(f"PATCH /v1/profile/items/{profile_item_id} -> {code}: {body}")
             ok = False
 
         # Career Profile — list with item_type filter
@@ -280,7 +280,7 @@ def run_smoke(
         if code == 200 and body.get("total", 0) >= 1:
             _pass("GET /v1/profile/items?item_type=project (filter works)")
         else:
-            _fail(f"GET /v1/profile/items?item_type=project → {code}: {body}")
+            _fail(f"GET /v1/profile/items?item_type=project -> {code}: {body}")
             ok = False
 
     # ------------------------------------------------------------------
@@ -303,9 +303,9 @@ def run_smoke(
             _fail(str(exc))
             ok = False
         else:
-            _pass(f"POST /v1/applications → {application_id}")
+            _pass(f"POST /v1/applications -> {application_id}")
     else:
-        _fail(f"POST /v1/applications → {code}: {body}")
+        _fail(f"POST /v1/applications -> {code}: {body}")
         ok = False
 
     if application_id:
@@ -320,7 +320,7 @@ def run_smoke(
             else:
                 _pass(f"GET /v1/applications/{application_id}")
         else:
-            _fail(f"GET /v1/applications/{application_id} → {code}: {body}")
+            _fail(f"GET /v1/applications/{application_id} -> {code}: {body}")
             ok = False
 
         # Applications — patch status
@@ -329,9 +329,9 @@ def run_smoke(
             body={"status": "interview_prep"},
         )
         if code == 200 and body.get("status") == "interview_prep":
-            _pass(f"PATCH /v1/applications/{application_id} → status=interview_prep")
+            _pass(f"PATCH /v1/applications/{application_id} -> status=interview_prep")
         else:
-            _fail(f"PATCH /v1/applications/{application_id} → {code}: {body}")
+            _fail(f"PATCH /v1/applications/{application_id} -> {code}: {body}")
             ok = False
 
         # Readiness — no analysis attached
@@ -343,9 +343,9 @@ def run_smoke(
                 _fail(str(exc))
                 ok = False
             else:
-                _pass(f"GET .../readiness (no analysis → readiness_level=not_started)")
+                _pass(f"GET .../readiness (no analysis -> readiness_level=not_started)")
         else:
-            _fail(f"GET .../readiness → {code}: {body}")
+            _fail(f"GET .../readiness -> {code}: {body}")
             ok = False
 
         # Interview questions — no analysis (generic behavioral fallback, must be 200)
@@ -370,7 +370,7 @@ def run_smoke(
                         f"GET .../interview/questions (no analysis, {len(body['questions'])} behavioral fallback)"
                     )
         else:
-            _fail(f"GET .../interview/questions → {code}: {body}")
+            _fail(f"GET .../interview/questions -> {code}: {body}")
             ok = False
 
         # Interview — submit answer
@@ -411,9 +411,9 @@ def run_smoke(
                     _fail(str(exc))
                     ok = False
                 else:
-                    _pass(f"POST .../interview/answers → {body['answer_id']} (rubric={rubric})")
+                    _pass(f"POST .../interview/answers -> {body['answer_id']} (rubric={rubric})")
         else:
-            _fail(f"POST .../interview/answers → {code}: {body}")
+            _fail(f"POST .../interview/answers -> {code}: {body}")
             ok = False
 
         # Interview — list answers
@@ -427,9 +427,9 @@ def run_smoke(
                 _fail(str(exc))
                 ok = False
             else:
-                _pass(f"GET .../interview/answers → {body['total']} answer(s)")
+                _pass(f"GET .../interview/answers -> {body['total']} answer(s)")
         else:
-            _fail(f"GET .../interview/answers → {code}: {body}")
+            _fail(f"GET .../interview/answers -> {code}: {body}")
             ok = False
 
         # --------------------------------------------------------------
@@ -445,7 +445,7 @@ def run_smoke(
             if code == 200 and body.get("best_analysis_job_id") == job_id_env:
                 _pass(f"POST .../attach-analysis/{job_id_env[:8]}...")
             else:
-                _fail(f"POST .../attach-analysis → {code}: {body}")
+                _fail(f"POST .../attach-analysis -> {code}: {body}")
                 ok = False
 
             # Readiness with analysis attached
@@ -461,11 +461,11 @@ def run_smoke(
                     ok = False
                 else:
                     _pass(
-                        f"GET .../readiness (with analysis) → "
+                        f"GET .../readiness (with analysis) -> "
                         f"level={body['readiness_level']}, fit_score={body.get('fit_score')}"
                     )
             else:
-                _fail(f"GET .../readiness (with analysis) → {code}: {body}")
+                _fail(f"GET .../readiness (with analysis) -> {code}: {body}")
                 ok = False
 
             # Package — generate
@@ -479,9 +479,9 @@ def run_smoke(
                     _fail(str(exc))
                     ok = False
                 else:
-                    _pass(f"POST .../package/generate → {body['artifact_id']}")
+                    _pass(f"POST .../package/generate -> {body['artifact_id']}")
             else:
-                _fail(f"POST .../package/generate → {code}: {body}")
+                _fail(f"POST .../package/generate -> {code}: {body}")
                 ok = False
 
             # Package — get
@@ -497,7 +497,7 @@ def run_smoke(
                 else:
                     _pass("GET .../package")
             else:
-                _fail(f"GET .../package → {code}: {body}")
+                _fail(f"GET .../package -> {code}: {body}")
                 ok = False
 
             # Package — download (JSON stub)
@@ -513,7 +513,7 @@ def run_smoke(
                 else:
                     _pass("GET .../package/download")
             else:
-                _fail(f"GET .../package/download → {code}: {body}")
+                _fail(f"GET .../package/download -> {code}: {body}")
                 ok = False
 
             # Cover letter — generate
@@ -527,9 +527,9 @@ def run_smoke(
                     _fail(str(exc))
                     ok = False
                 else:
-                    _pass(f"POST .../cover-letter/generate → {body['artifact_id']}")
+                    _pass(f"POST .../cover-letter/generate -> {body['artifact_id']}")
             else:
-                _fail(f"POST .../cover-letter/generate → {code}: {body}")
+                _fail(f"POST .../cover-letter/generate -> {code}: {body}")
                 ok = False
 
             # Cover letter — get (verify disclaimer in payload_json)
@@ -550,7 +550,7 @@ def run_smoke(
                     else:
                         _pass("GET .../cover-letter (disclaimer present)")
             else:
-                _fail(f"GET .../cover-letter → {code}: {body}")
+                _fail(f"GET .../cover-letter -> {code}: {body}")
                 ok = False
 
             # Cover letter — patch (disclaimer must survive)
@@ -570,7 +570,7 @@ def run_smoke(
                 else:
                     _pass("PATCH .../cover-letter (opening updated, disclaimer preserved)")
             else:
-                _fail(f"PATCH .../cover-letter → {code}: {body}")
+                _fail(f"PATCH .../cover-letter -> {code}: {body}")
                 ok = False
 
             # Interview questions — analysis-backed
@@ -588,7 +588,7 @@ def run_smoke(
                         f"GET .../interview/questions (with analysis, {len(body['questions'])} questions)"
                     )
             else:
-                _fail(f"GET .../interview/questions (with analysis) → {code}: {body}")
+                _fail(f"GET .../interview/questions (with analysis) -> {code}: {body}")
                 ok = False
 
         else:
@@ -603,17 +603,17 @@ def run_smoke(
         fake_id = str(uuid.uuid4())
         code, _ = request_json(base_url, "GET", f"/v1/applications/{fake_id}", token=token)
         if code == 404:
-            _pass(f"GET /v1/applications/<unknown-uuid> → 404 (non-leak ownership)")
+            _pass(f"GET /v1/applications/<unknown-uuid> -> 404 (non-leak ownership)")
         else:
-            _fail(f"Ownership non-leak check → expected 404, got {code}")
+            _fail(f"Ownership non-leak check -> expected 404, got {code}")
             ok = False
 
         fake_item_id = str(uuid.uuid4())
         code, _ = request_json(base_url, "GET", f"/v1/profile/items/{fake_item_id}", token=token)
         if code == 404:
-            _pass(f"GET /v1/profile/items/<unknown-uuid> → 404 (non-leak ownership)")
+            _pass(f"GET /v1/profile/items/<unknown-uuid> -> 404 (non-leak ownership)")
         else:
-            _fail(f"Profile ownership non-leak check → expected 404, got {code}")
+            _fail(f"Profile ownership non-leak check -> expected 404, got {code}")
             ok = False
 
         # --------------------------------------------------------------
@@ -624,7 +624,7 @@ def run_smoke(
             if code == 204:
                 _pass(f"DELETE /v1/applications/{application_id} (cleanup)")
             else:
-                _fail(f"DELETE /v1/applications/{application_id} → {code}")
+                _fail(f"DELETE /v1/applications/{application_id} -> {code}")
                 ok = False
         else:
             _skip(f"Application cleanup skipped (PHASE5_SMOKE_CLEANUP=0), id={application_id}")
@@ -635,7 +635,7 @@ def run_smoke(
             if code == 204:
                 _pass(f"DELETE /v1/profile/items/{profile_item_id} (cleanup)")
             else:
-                _fail(f"DELETE /v1/profile/items/{profile_item_id} → {code}")
+                _fail(f"DELETE /v1/profile/items/{profile_item_id} -> {code}")
                 ok = False
         else:
             _skip(f"Profile item cleanup skipped (PHASE5_SMOKE_CLEANUP=0), id={profile_item_id}")
