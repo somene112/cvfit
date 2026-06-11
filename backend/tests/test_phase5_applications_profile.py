@@ -18,7 +18,7 @@ import pytest
 from app.api.routes.applications import router as applications_router
 from app.api.routes.profile import router as profile_router
 from app.core.security import create_access_token
-from app.db.models import AnalysisJob, Application, CareerProfileItem, User
+from app.db.models import AnalysisJob, Application, ApplicationArtifact, CareerProfileItem, InterviewAnswer, User
 from app.db.session import get_db
 from app.api.deps import get_current_user
 
@@ -61,13 +61,14 @@ class FakeDb:
         pass
 
     def query(self, model):
-        return FakeQuery(self._query_results.get(model, []), model)
+        return FakeQuery(self._query_results.get(model, []), model, db=self)
 
 
 class FakeQuery:
-    def __init__(self, rows, model):
+    def __init__(self, rows, model, db=None):
         self._rows = list(rows)
         self._model = model
+        self._db = db
 
     def filter(self, *args):
         # Apply simple equality filters by inspecting SQLAlchemy BinaryExpression
@@ -79,8 +80,14 @@ class FakeQuery:
                 new_rows = [r for r in new_rows if getattr(r, col_key, None) == col_val]
             except AttributeError:
                 pass
-        q = FakeQuery(new_rows, self._model)
+        q = FakeQuery(new_rows, self._model, db=self._db)
         return q
+
+    def delete(self):
+        for row in list(self._rows):
+            if self._db is not None:
+                self._db.delete(row)
+        return len(self._rows)
 
     def order_by(self, *args):
         try:
@@ -319,6 +326,53 @@ class TestApplicationCRUD:
         resp = client.delete(f"/v1/applications/{app_b.id}")
 
         assert resp.status_code == 404
+
+    def test_delete_application_with_interview_answer_returns_204(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        answer = InterviewAnswer(
+            id=uuid.uuid4(),
+            user_id=user.id,
+            application_id=app.id,
+            job_id=None,
+            question="Tell me about yourself.",
+            answer_text="I am a developer.",
+            rubric_json={"overall": 2},
+            feedback_json={"strengths": []},
+            created_at=datetime.utcnow(),
+        )
+        db.add(answer)
+        client = build_app_client(db, user)
+
+        resp = client.delete(f"/v1/applications/{app.id}")
+
+        assert resp.status_code == 204
+        assert db.get(Application, app.id) is None
+        assert db.get(InterviewAnswer, answer.id) is None
+
+    def test_delete_application_with_artifact_returns_204(self):
+        user = make_user()
+        db = FakeDb()
+        app = make_application(user.id)
+        db.add(app)
+        artifact = ApplicationArtifact(
+            id=uuid.uuid4(),
+            user_id=user.id,
+            application_id=app.id,
+            artifact_type="application_package",
+            payload_json={"disclaimer": "draft only"},
+            created_at=datetime.utcnow(),
+        )
+        db.add(artifact)
+        client = build_app_client(db, user)
+
+        resp = client.delete(f"/v1/applications/{app.id}")
+
+        assert resp.status_code == 204
+        assert db.get(Application, app.id) is None
+        assert db.get(ApplicationArtifact, artifact.id) is None
 
     def test_create_application_missing_required_fields_returns_422(self):
         user = make_user()
