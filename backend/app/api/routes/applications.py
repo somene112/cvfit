@@ -145,6 +145,9 @@ def delete_application(
     db: Session = Depends(get_db),
 ) -> None:
     app = _get_owned_application(application_id, current_user, db)
+    # Delete child rows first to avoid FK constraint violations (no DB-level CASCADE).
+    db.query(InterviewAnswer).filter(InterviewAnswer.application_id == app.id).delete()
+    db.query(ApplicationArtifact).filter(ApplicationArtifact.application_id == app.id).delete()
     db.delete(app)
     db.commit()
 
