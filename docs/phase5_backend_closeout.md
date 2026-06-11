@@ -2,9 +2,8 @@
 
 ## Status
 
-Phase 5 backend scope owned by Phúc is implementation-complete and unit-test-passed.
-Deployed smoke run is pending; this document will be updated with smoke evidence
-after the first successful deployed run.
+Phase 5 backend scope owned by Phúc is implementation-complete, unit-test-passed,
+and deployed smoke-passed as of 2026-06-11.
 
 This note contains sanitized handoff evidence only. It does not include access
 tokens, database URLs, storage paths, S3 keys, or other secrets.
@@ -78,6 +77,7 @@ All Phase 5 backend work was delivered through these pull requests merged into `
 | [#48](https://github.com/somene112/cvfit/pull/48) | feat(phase5): Application Package and Cover Letter APIs | Pillars 2 + 3: package generation, cover letter generation/patch |
 | [#49](https://github.com/somene112/cvfit/pull/49) | feat(phase5): Interview Practice APIs | Pillar 4: interview questions, answer submit, rubric scoring |
 | [#50](https://github.com/somene112/cvfit/pull/50) | docs(phase5): Backend Integration Smoke + Backend Closeout Draft | Pillar 7: smoke script, API summary, this closeout doc |
+| [#53](https://github.com/somene112/cvfit/pull/53) | fix(phase5): delete application child rows before application cleanup | Hotfix: delete InterviewAnswer and ApplicationArtifact before parent delete |
 
 ---
 
@@ -101,10 +101,10 @@ Run migrations on Render using `scripts/run_alembic.py` as documented in
 
 ## Smoke Evidence
 
-> Deployed smoke run is blocked pending Render redeployment to Phase 5 main.
-> This section will be updated after a successful deployed run.
+Initial deployed smoke was blocked before migration. After running Alembic through
+`20260610_0003` and merging PR #53, deployed Phase 5 backend smoke passed.
 
-### Smoke Attempt — 2026-06-10 (BLOCKED: Phase 5 not deployed on Render)
+### Smoke Attempt — 2026-06-10 (BLOCKED, RESOLVED: Phase 5 not deployed on Render)
 
 - **Target:** https://cvfit.onrender.com
 - **Script:** `scripts/smoke_phase5_backend.py`
@@ -120,31 +120,128 @@ Run migrations on Render using `scripts/run_alembic.py` as documented in
 - `GET /v1/applications` → 404 — Phase 5 route not found.
 - OpenAPI spec on Render shows 15 routes (Phase 4 only); no Phase 5 routes present.
 
-**Root cause:** Render has not been redeployed since Phase 5 PRs (#47–#50) were
-merged into `main`. The deployed instance is running a Phase 4-only build.
+**Root cause:** Render had not been redeployed since Phase 5 PRs (#47–#50) were
+merged into `main`. The deployed instance was running a Phase 4-only build.
 
 **Smoke script bug fixed:** `→` (U+2192) characters in output messages caused
 `UnicodeEncodeError` on Windows CP1252 console. Fixed by replacing all occurrences
 with `->` (commit `c6f9428`). No behavior change.
 
-**Required action:** Redeploy Render to `main` (`c6f9428` or later) and run
-Alembic migrations (`20260610_0001` through `20260610_0003`) before re-running
-smoke. See Operational Commands section.
+**Resolution:** Render was redeployed to Phase 5 main. Subsequent verification
+confirmed 28 OpenAPI routes and all required Phase 5 routes present.
+
+---
+
+### Smoke Attempt — 2026-06-11 (BLOCKED, RESOLVED: Phase 5 deployed but DB not migrated)
+
+- **Target:** https://cvfit.onrender.com
+- **Script:** `scripts/smoke_phase5_backend.py`
+- **Local main commit at time of run:** `5cbc20c`
+- **PHASE5_SMOKE_JOB_ID:** not provided
+- **Outcome:** Smoke failed at startup — Phase 5 service crashed on `init_db()`.
+
+**Root cause:** Phase 5 code (commit `5cbc20c`) was built and deployed, but the
+production database was still at Alembic head `20260606_0001` (Phase 4). The
+`check_runtime_schema()` guard blocked startup because the four Phase 5 tables
+were absent. Render kept the old Phase 4 instance alive, so health returned 200
+but Phase 5 routes returned 404.
+
+**Resolution:** Alembic migrations were run from Render Shell against the
+production database:
 
 ```text
-(placeholder — update after successful deployed smoke run)
-
-API base URL: https://cvfit.onrender.com
-phase5 backend smoke passed
+Running upgrade 20260606_0001 -> 20260610_0001, Add applications and career_profile_items tables.
+Running upgrade 20260610_0001 -> 20260610_0002, Add application_artifacts table.
+Running upgrade 20260610_0002 -> 20260610_0003, add interview_answers table
 ```
 
-Sanitized smoke observations to record after run:
-- Read-only smoke: health ok, empty list responses ok, no internal fields leaked.
-- Mutating smoke: application created, profile item created, interview answer
-  submitted, rubric shape verified, cleanup ok.
-- With PHASE5_SMOKE_JOB_ID: attach-analysis ok, readiness level returned,
-  package generated, cover-letter generated and patched with disclaimer
-  preserved, analysis-backed questions returned.
+Post-migration verification confirmed all four Phase 5 tables present:
+
+```text
+alembic_version: [('20260610_0003',)]
+applications: applications
+career_profile_items: career_profile_items
+application_artifacts: application_artifacts
+interview_answers: interview_answers
+```
+
+---
+
+### Smoke Attempt — 2026-06-11 (PARTIAL PASS, RESOLVED: cleanup bug found)
+
+- **Target:** https://cvfit.onrender.com
+- **Script:** `scripts/smoke_phase5_backend.py`
+- **Local main commit at time of run:** `5cbc20c`
+- **PHASE5_SMOKE_JOB_ID:** not provided
+- **Outcome:** 19 steps passed; 1 step failed at cleanup.
+
+**Failure:** `DELETE /v1/applications/{id}` returned 500.
+
+**Root cause:** `delete_application` issued `db.delete(app)` without first
+removing child rows in `interview_answers` and `application_artifacts`. Both
+tables have a FK reference to `applications.id` without `ON DELETE CASCADE`.
+PostgreSQL rejected the parent delete while child rows existed.
+
+**Fix:** PR #53 — delete `InterviewAnswer` and `ApplicationArtifact` rows scoped
+to `app.id` before issuing `db.delete(app)`. Regression tests added. CI passed.
+
+---
+
+### Smoke Run — 2026-06-11 (PASSED)
+
+- **Date/time:** 2026-06-11
+- **Target:** https://cvfit.onrender.com
+- **Script:** `scripts/smoke_phase5_backend.py`
+- **Local main commit:** `2b565d6` (PR #53 squash merge)
+- **PHASE5_SMOKE_JOB_ID:** not provided
+- **Smoke mode:** mutating, without analysis attachment
+
+**Migration status (production DB):**
+
+- Alembic upgraded through `20260610_0003`.
+- Tables verified:
+  - `applications`
+  - `career_profile_items`
+  - `application_artifacts`
+  - `interview_answers`
+
+**Production health:** `GET /health` → 200 `{"status":"ok"}`
+
+**Phase 5 OpenAPI routes:** all required routes present, route count = 28.
+
+**Passed groups:**
+
+| Step | Result |
+|---|---|
+| GET /health | PASS |
+| POST /v1/auth/register (synthetic user) | PASS |
+| POST /v1/auth/login | PASS |
+| GET /v1/profile/items (read-only, empty list) | PASS |
+| GET /v1/applications (read-only, empty list) | PASS |
+| POST /v1/profile/items | PASS |
+| GET /v1/profile/items/{id} | PASS |
+| PATCH /v1/profile/items/{id} | PASS |
+| GET /v1/profile/items?item_type=project (filter) | PASS |
+| POST /v1/applications | PASS |
+| GET /v1/applications/{id} | PASS |
+| PATCH /v1/applications/{id} → status=interview_prep | PASS |
+| GET .../readiness (no analysis → not_started) | PASS |
+| GET .../interview/questions (2 behavioral fallback) | PASS |
+| POST .../interview/answers (rubric shape verified) | PASS |
+| GET .../interview/answers (1 answer) | PASS |
+| GET /v1/applications/<unknown-uuid> → 404 (non-leak) | PASS |
+| GET /v1/profile/items/<unknown-uuid> → 404 (non-leak) | PASS |
+| DELETE /v1/applications/{id} (cleanup, post-PR #53) | PASS |
+| DELETE /v1/profile/items/{id} (cleanup) | PASS |
+
+**Skipped groups:**
+
+- attach-analysis / package / cover-letter / analysis-backed questions
+  (PHASE5_SMOKE_JOB_ID not provided — acceptable)
+
+**Failed groups:** none.
+
+**No tokens, DB URLs, passwords, S3 keys, storage paths, or raw CV data logged.**
 
 ---
 
