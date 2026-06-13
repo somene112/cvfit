@@ -1,0 +1,244 @@
+/* ========================================
+   PageShell + Shared Component Styles
+   ======================================== */
+
+/* ─── Page Shell ─── */
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.main {
+  margin: 0 auto;
+  padding: var(--space-8);
+}
+
+/* ─── Spinner ─── */
+.spinnerPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.spinnerRing {
+  border-radius: 50%;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner--sm .spinnerRing  { width: 20px; height: 20px; }
+.spinner--md .spinnerRing  { width: 36px; height: 36px; }
+.spinner--lg .spinnerRing  { width: 56px; height: 56px; border-width: 4px; }
+
+.spinnerLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Error Banner ─── */
+.errorBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-danger-light);
+  border: 1px solid #FECACA;
+  border-radius: var(--radius-md);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.errorBannerWarning {
+  background: var(--color-warning-light);
+  border-color: #FCD34D;
+}
+
+.errorBannerWarning .errorBannerIcon { color: #D97706; }
+
+.errorBannerIcon {
+  flex-shrink: 0;
+  color: var(--color-danger);
+  margin-top: 2px;
+}
+
+.errorBannerIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.errorBannerContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.errorBannerMessage {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+.errorBannerHint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
+  line-height: 1.5;
+}
+
+.errorBannerDismiss {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.errorBannerDismiss:hover {
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ─── Disclaimer ─── */
+.disclaimer {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: #F0F9FF;
+  border: 1px solid #BAE6FD;
+  border-left: 4px solid #0EA5E9;
+  border-radius: var(--radius-md);
+}
+
+.disclaimerIcon {
+  flex-shrink: 0;
+  color: #0EA5E9;
+  margin-top: 1px;
+}
+
+.disclaimerIcon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.disclaimerBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.disclaimerTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: #0369A1;
+  margin-bottom: var(--space-1);
+}
+
+.disclaimerText {
+  font-size: var(--font-size-sm);
+  color: #0C4A6E;
+  line-height: 1.6;
+}
+
+/* ─── Risk Badge ─── */
+.riskBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.riskScore {
+  opacity: 0.7;
+  font-weight: var(--font-weight-normal);
+}
+
+.riskBadge--low {
+  background: var(--color-success-light);
+  color: #065F46;
+}
+
+.riskBadge--medium {
+  background: var(--color-warning-light);
+  color: #92400E;
+}
+
+.riskBadge--high {
+  background: var(--color-danger-light);
+  color: #991B1B;
+}
+
+.riskBadge--unknown {
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Empty State ─── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-8);
+  text-align: center;
+  gap: var(--space-4);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.emptyStateIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-xl);
+  background: var(--color-primary-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.emptyStateIcon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.emptyStateTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.emptyStateDesc {
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  max-width: 420px;
+  line-height: 1.6;
+}
+
+.emptyStateAction {
+  margin-top: var(--space-2);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .main {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: var(--space-3);
+  }
+}

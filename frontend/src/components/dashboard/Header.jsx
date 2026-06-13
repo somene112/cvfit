@@ -63,6 +63,12 @@ export default function Header() {
           <Link href="/history" className={styles.navLink}>
             History
           </Link>
+          <Link href="/applications" className={styles.navLink}>
+            Applications
+          </Link>
+          <Link href="/profile" className={styles.navLink}>
+            Profile
+          </Link>
         </nav>
         <LanguageSwitcher />
         <div className={styles.userInfo}>
