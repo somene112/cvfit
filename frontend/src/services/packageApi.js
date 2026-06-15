@@ -12,7 +12,7 @@ import apiClient from './apiClient';
  * @returns {Promise<Object>}
  */
 export async function generatePackage(appId) {
-  const response = await apiClient.post(`/v1/applications/${appId}/package`);
+  const response = await apiClient.post(`/v1/applications/${appId}/package/generate`);
   return response.data;
 }
 

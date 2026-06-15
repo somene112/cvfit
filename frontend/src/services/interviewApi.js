@@ -22,6 +22,16 @@ export async function getInterviewQuestions(appId) {
  * @returns {Promise<Object>} feedback object
  */
 export async function submitAnswer(appId, payload) {
-  const response = await apiClient.post(`/v1/applications/${appId}/interview/answer`, payload);
+  const response = await apiClient.post(`/v1/applications/${appId}/interview/answers`, payload);
+  return response.data;
+}
+
+/**
+ * Get all submitted answers (history) for an application's interview.
+ * @param {string} appId
+ * @returns {Promise<{ items: Array }>}
+ */
+export async function getAnswers(appId) {
+  const response = await apiClient.get(`/v1/applications/${appId}/interview/answers`);
   return response.data;
 }

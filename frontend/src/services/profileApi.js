@@ -19,7 +19,7 @@ export async function getProfile() {
  * @returns {Promise<{ items: Array }>}
  */
 export async function getEvidence() {
-  const response = await apiClient.get('/v1/profile/evidence');
+  const response = await apiClient.get('/v1/profile/items');
   return response.data;
 }
 
@@ -29,7 +29,7 @@ export async function getEvidence() {
  * @returns {Promise<Object>}
  */
 export async function createEvidence(payload) {
-  const response = await apiClient.post('/v1/profile/evidence', payload);
+  const response = await apiClient.post('/v1/profile/items', payload);
   return response.data;
 }
 
@@ -40,7 +40,7 @@ export async function createEvidence(payload) {
  * @returns {Promise<Object>}
  */
 export async function updateEvidence(id, payload) {
-  const response = await apiClient.patch(`/v1/profile/evidence/${id}`, payload);
+  const response = await apiClient.patch(`/v1/profile/items/${id}`, payload);
   return response.data;
 }
 
@@ -50,5 +50,5 @@ export async function updateEvidence(id, payload) {
  * @returns {Promise<void>}
  */
 export async function deleteEvidence(id) {
-  await apiClient.delete(`/v1/profile/evidence/${id}`);
+  await apiClient.delete(`/v1/profile/items/${id}`);
 }

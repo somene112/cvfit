@@ -12,7 +12,7 @@ import apiClient from './apiClient';
  * @returns {Promise<Object>}
  */
 export async function generateCoverLetter(appId) {
-  const response = await apiClient.post(`/v1/applications/${appId}/cover-letter`);
+  const response = await apiClient.post(`/v1/applications/${appId}/cover-letter/generate`);
   return response.data;
 }
 

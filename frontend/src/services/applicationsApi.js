@@ -61,8 +61,6 @@ export async function deleteApplication(id) {
  * @returns {Promise<Object>}
  */
 export async function attachAnalysis(appId, jobId) {
-  const response = await apiClient.post(`/v1/applications/${appId}/attach-analysis`, {
-    job_id: jobId,
-  });
+  const response = await apiClient.post(`/v1/applications/${appId}/attach-analysis/${jobId}`);
   return response.data;
 }
