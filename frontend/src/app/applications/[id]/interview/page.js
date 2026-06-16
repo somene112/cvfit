@@ -254,7 +254,7 @@ export default function InterviewPage() {
       }
 
       if (aData.status === 'fulfilled') {
-        setAnswers(Array.isArray(aData.value?.items) ? aData.value.items : []);
+        setAnswers(Array.isArray(aData.value?.answers) ? aData.value.answers : []);
       }
       // silently ignore answer history errors — not critical
     } finally {
@@ -267,9 +267,9 @@ export default function InterviewPage() {
     loadData();
   }, [isAuthChecking, loadData]);
 
-  /** Map question_id → latest answer object */
+  /** Map question text → latest answer object (InterviewAnswerSummary has no question_id) */
   const answerMap = answers.reduce((acc, a) => {
-    const key = a.question_id || a.id;
+    const key = a.question;
     if (key) acc[key] = a;
     return acc;
   }, {});
@@ -329,14 +329,15 @@ export default function InterviewPage() {
         <>
           <div className={styles.questionsList}>
             {questions.map((q, i) => {
-              const qKey = q.id || q.question_id || String(i);
+              const qKey = q.question_id || q.id || String(i);
+              const answerKey = q.question || q.text || '';
               return (
                 <QuestionItem
                   key={qKey}
                   question={q}
                   index={i}
                   appId={id}
-                  pastAnswer={answerMap[qKey] || null}
+                  pastAnswer={answerMap[answerKey] || null}
                 />
               );
             })}

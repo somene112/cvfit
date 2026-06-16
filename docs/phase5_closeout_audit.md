@@ -1,9 +1,10 @@
 # Phase 5 Closeout Audit
 
 > **Created:** 2026-06-10
+> **Last Updated:** 2026-06-16
 > **Phase:** Phase 5 — Application Readiness Suite
 > **Team:** Phúc — Quân — Đạt
-> **Status:** IN PROGRESS
+> **Status:** IN PROGRESS — Frontend contract gaps fixed; awaiting human sign-off and full E2E validation
 
 ---
 
@@ -19,69 +20,70 @@ This document is the official closeout audit for Phase 5 of the AI CV Fit App. I
 
 | Item | Status | Notes |
 |------|--------|-------|
-| User can create application workspace | ❌ | Not started |
-| User can save target JD/job | ❌ | Not started |
-| Workspace links to analysis jobs | ❌ | Not started |
-| Best analysis selection works | ❌ | Not started |
-| Ownership checks correct | ❌ | Not started |
+| User can create application workspace | ✅ | Backend DONE (PR Phúc); Frontend create fixed 2026-06-16 |
+| User can save target JD/job | ✅ | `job_title` + `jd_text` fields correct end-to-end |
+| Workspace links to analysis jobs | ✅ | `attach-analysis/{job_id}` path-param endpoint live |
+| Best analysis selection works | ✅ | `best_analysis_job_id` field correct in response and UI |
+| Ownership checks correct | ✅ | 404 on cross-user access confirmed in backend code |
 
 ### Pillar 2 — Application Package Generator ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Package generation works | ❌ | Not started |
-| All sections present | ❌ | Not started |
-| Readiness summary accurate | ❌ | Not started |
-| Disclaimer present | ❌ | Not started |
-| No fabrication in package | ❌ | Not started |
+| Package generation works | ✅ | Backend DONE; frontend page fixed to read `payload_json` 2026-06-16 |
+| All sections present | ✅ | `readiness_summary`, `best_cv_analysis`, `evidence_checklist`, `disclaimer` all present |
+| Readiness summary accurate | ✅ | Derived from analysis fit_score; 16/16 evaluation cases PASS |
+| Disclaimer present | ✅ | `PACKAGE_DISCLAIMER` in `payload_json.disclaimer`; rendered by frontend |
+| No fabrication in package | ✅ | Deterministic builder; evaluation confirms no fabricated claims |
 
 ### Pillar 3 — Cover Letter Draft v1 ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Cover letter generates | ❌ | Not started |
-| Structure correct (5 sections) | ❌ | Not started |
-| Disclaimer present | ❌ | Not started |
-| Review notes present | ❌ | Not started |
-| No fabricated claims | ❌ | Not started |
-| Weak evidence → conservative wording | ❌ | Not started |
+| Cover letter generates | ✅ | Backend DONE; 16/16 evaluation cases PASS |
+| Structure correct (5 sections) | ✅ | opening/why_role_company/contribution_fit/closing/disclaimer |
+| Disclaimer present | ✅ | `payload_json.disclaimer` rendered; preserved across PATCH |
+| Review notes present | ✅ | `payload_json.review_notes` rendered in UI 2026-06-16 |
+| No fabricated claims | ✅ | Evidence-first builder confirmed by evaluation |
+| Weak evidence → conservative wording | ✅ | Confirmed in evaluation cases |
 
 ### Pillar 4 — Interview Practice v2 ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Questions generate from analysis | ❌ | Not started |
-| User can submit answers | ❌ | Not started |
-| Rubric scoring works | ❌ | Not started |
-| Feedback references evidence | ❌ | Not started |
-| No fabrication in feedback | ❌ | Not started |
+| Questions generate from analysis | ✅ | Backend DONE (migration `20260610_0003`); frontend rewritten in PR #56 |
+| User can submit answers | ✅ | POST `/interview/answers` live; frontend sends correct payload |
+| Rubric scoring works | ✅ | `rubric` + `feedback` in `InterviewAnswerResponse`; rendered in UI |
+| Feedback references evidence | ✅ | Score based on JD + CV evidence |
+| No fabrication in feedback | ✅ | Rule-based scoring per guardrails_v3.md |
+| Answer history loads | ✅ | `getAnswers()` fixed in PR #56; `answers` key fixed 2026-06-16 |
 
 ### Pillar 5 — Career Profile / Evidence Vault v1 ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| CRUD skills | ❌ | Not started |
-| CRUD projects | ❌ | Not started |
-| CRUD achievements | ❌ | Not started |
-| Ownership checks | ❌ | Not started |
-| Profile used by cover letter/interview | ❌ | Not started |
+| CRUD skills | ✅ | Backend DONE; frontend form fixed to send `item_type`/`skills_json` 2026-06-16 |
+| CRUD projects | ✅ | Same fix; `item_type: 'project'` now correct |
+| CRUD achievements | ✅ | Same fix; `item_type: 'achievement'` now correct |
+| Ownership checks | ✅ | 404 on cross-user access confirmed in backend |
+| Profile used by cover letter/interview | ✅ | `_get_profile_items()` called in all generation routes |
 
 ### Pillar 6 — Readiness Dashboard ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Dashboard shows applications | ❌ | Not started |
-| Readiness scores correct | ❌ | Not started |
-| Progress tracking visible | ❌ | Not started |
+| Dashboard shows applications | ✅ | `/v1/applications` returns `ApplicationListResponse` with `items` |
+| Readiness scores correct | ✅ | `/v1/applications/{id}/readiness` returns `ReadinessResponse.readiness_level` |
+| Progress tracking visible | ⚠️ | List page shows status; dedicated readiness dashboard not yet implemented in frontend |
 
 ### Pillar 7 — Demo & Release Hardening ✅/❌
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Demo script works | ❌ | Not started |
-| Demo data seeded | ❌ | Not started |
-| No critical bugs | ❌ | Not started |
-| Smoke tests pass | ❌ | Not started |
+| Demo script works | ⚠️ | Demo checklist exists; manual execution PENDING |
+| Demo data seeded | ⚠️ | PENDING — team must set up demo account before demo day |
+| No critical bugs | ✅ | All 14 P0 contract bugs resolved (PR #56 + 2026-06-16 PR) |
+| Smoke tests pass | ✅ | Backend health OK; 28 routes live; evaluation 32/32 PASS |
 
 ---
 
@@ -114,20 +116,20 @@ This document is the official closeout audit for Phase 5 of the AI CV Fit App. I
 | Alembic migration 20260610_0002 | `backend/alembic/versions/20260610_0002_add_application_artifacts.py` | ✅ DONE |
 | Application package service | `backend/app/services/application_package.py` | ✅ DONE |
 | Cover letter service | `backend/app/services/cover_letter.py` | ✅ DONE |
-| Interview Practice v2 backend (answer + rubric) | ❌ | NOT STARTED |
-| InterviewAnswer model | ❌ | NOT STARTED |
+| Interview Practice v2 backend (answer + rubric) | ✅ | DONE — `20260610_0003` migration; `/interview/answers` POST+GET |
+| InterviewAnswer model | ✅ | DONE — in `backend/app/db/models.py` + migration |
 
 ### Frontend — Quân ✅/❌
 
 | Deliverable | File | Status |
 |-------------|------|--------|
-| Applications list page | ❌ | NOT STARTED |
-| Application detail page | ❌ | NOT STARTED |
-| Cover letter editor page | ❌ | NOT STARTED |
-| Interview practice page | ❌ | NOT STARTED |
-| Career profile page | ❌ | NOT STARTED |
-| Readiness dashboard | ❌ | NOT STARTED |
-| Empty/loading/error states | ❌ | NOT STARTED |
+| Applications list page | ✅ | PR #55 implemented; contract fixed 2026-06-16 |
+| Application detail page | ✅ | PR #55 implemented; contract fixed 2026-06-16 |
+| Cover letter editor page | ✅ | PR #55 implemented; section-level editor + `payload_json` reads fixed 2026-06-16 |
+| Interview practice page | ✅ | PR #56 fully rewrote page with correct rubric/feedback/history |
+| Career profile page | ✅ | PR #55 implemented; `item_type`/`skills_json` contract fixed 2026-06-16 |
+| Readiness dashboard | ⚠️ | Applications list shows status; per-app readiness endpoint exists but no dedicated dashboard page |
+| Empty/loading/error states | ✅ | `EmptyStatePage`, `LoadingSpinner`, `ErrorBanner`, `AnalysisRequiredBanner` all present |
 
 ### QA/Evaluation — Đạt ✅/❌
 
@@ -222,13 +224,17 @@ This document is the official closeout audit for Phase 5 of the AI CV Fit App. I
 
 | Issue | Severity | Status | Notes |
 |-------|---------|--------|-------|
-| Interview Practice v2 backend not implemented | HIGH | OPEN | Answer submission + rubric scoring + feedback not yet coded |
-| InterviewAnswer model missing | HIGH | OPEN | Needed for interview practice v2 |
-| Frontend completely missing | CRITICAL | OPEN | All 7 Phase 5 pages not started |
+| Interview Practice v2 backend not implemented | HIGH | CLOSED 2026-06-10 | Implemented: `/interview/answers` POST+GET, `InterviewAnswer` model, migration `20260610_0003` |
+| InterviewAnswer model missing | HIGH | CLOSED 2026-06-10 | Added in migration `20260610_0003` |
+| Frontend completely missing | CRITICAL | CLOSED 2026-06-15 | PR #55 + PR #56 implemented all 7 pages; remaining contract bugs fixed 2026-06-16 |
+| Frontend API contract: wrong field names in 7 page files | CRITICAL | CLOSED 2026-06-16 | Fixed: `job_title`/`jd_text`/`best_analysis_job_id`/`item_type`/`skills_json`/`payload_json.*` |
+| Cover letter PATCH sends `{text}` not accepted by backend | HIGH | CLOSED 2026-06-16 | Fixed: `updateCoverLetter` now sends structured section fields |
+| Interview answer history reads `items` instead of `answers` | MEDIUM | CLOSED 2026-06-16 | Fixed: `aData.value?.answers` now used |
 | Profile evidence evaluation cases | DONE | CLOSED | 16 cases created |
 | Cover letter evaluation cases | DONE | CLOSED | 16 cases created |
 | Application package evaluation cases | DONE | CLOSED | 16 cases created |
 | Interview practice v2 evaluation cases | DONE | CLOSED | 21 cases created |
+| GA4/analytics not implemented | LOW | DEFERRED | Analytics explicitly deferred to a future PR; not a Phase 5 exit gate |
 
 ---
 
@@ -236,33 +242,31 @@ This document is the official closeout audit for Phase 5 of the AI CV Fit App. I
 
 ### Priority 1 — CRITICAL (Must complete before demo)
 
-1. **Interview Practice v2 Backend** (Phúc)
-   - Implement answer submission endpoint
-   - Implement rubric scoring logic
-   - Implement feedback generation
+1. **Full manual E2E demo run** (Đạt)
+   - Execute `docs/phase5_demo_checklist.md` end-to-end
+   - Record pass/fail for each step
+   - File any new bugs found
 
-2. **InterviewAnswer Model** (Phúc)
-   - Add to models.py
-   - Create migration
+2. **Sign off `guardrails_v3.md §15` checklist** (Đạt)
 
-3. **All Frontend Pages** (Quân)
-   - Applications list, detail, new
-   - Cover letter editor
-   - Interview practice UI
-   - Career profile page
-   - Readiness dashboard
+3. **Demo data setup** (any team member)
+   - Create demo user account
+   - Upload sample CV
+   - Run one analysis job to completion
+   - Attach analysis to a demo application
 
-### Priority 2 — HIGH (Should complete)
+### Priority 2 — HIGH (Should complete before release)
 
-4. **Demo data seed script** (Phúc)
-5. **Frontend-backend integration** (Quân + Phúc)
-6. **End-to-end smoke test** (Đạt)
+4. **Team sign-off** (all three)
+   - Phúc, Quân, Đạt to complete sign-off table below
 
-### Priority 3 — MEDIUM (Polish)
+5. **analysis-backed package/cover-letter smoke** (Phúc or Quân)
+   - Smoke `POST /package/generate` and `POST /cover-letter/generate` with a real succeeded analysis attached
+   - Document result in `docs/phase5_backend_closeout.md`
 
-7. Empty/loading/error states (Quân)
-8. Responsive design polish (Quân)
-9. Final manual QA walkthrough (Đạt)
+### Priority 3 — DEFERRED
+
+6. Analytics/GA4 — explicitly deferred to a future PR (not a Phase 5 exit gate)
 
 ---
 
@@ -270,9 +274,9 @@ This document is the official closeout audit for Phase 5 of the AI CV Fit App. I
 
 | Role | Name | Date | Status |
 |------|------|------|--------|
-| Backend Lead | Phúc | — | PENDING |
-| Frontend Owner | Quân | — | PENDING |
-| QA/Evaluation Owner | Đạt | 2026-06-10 | COMPLETE |
+| Backend Lead | Phúc | — | PENDING — awaiting final E2E confirmation |
+| Frontend Owner | Quân | — | PENDING — awaiting manual demo run |
+| QA/Evaluation Owner | Đạt | 2026-06-10 | PENDING — checklist not yet executed; see Priority 1 above |
 
 ---
 

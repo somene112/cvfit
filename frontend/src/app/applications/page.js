@@ -130,7 +130,7 @@ export default function ApplicationsPage() {
               <div className={styles.cardHeader}>
                 <div>
                   <div className={styles.cardCompany}>{app.company_name || '—'}</div>
-                  <div className={styles.cardRole}>{app.role_title || 'Untitled Role'}</div>
+                  <div className={styles.cardRole}>{app.job_title || 'Untitled Role'}</div>
                 </div>
                 <StatusBadge status={app.status} />
               </div>
@@ -139,16 +139,10 @@ export default function ApplicationsPage() {
                   <span className={styles.metaLabel}>Applied</span>
                   <span className={styles.metaValue}>{formatDate(app.created_at)}</span>
                 </div>
-                {app.overall_fit_score != null && (
-                  <div className={styles.metaItem}>
-                    <span className={styles.metaLabel}>Fit Score</span>
-                    <span className={styles.scoreChip}>{app.overall_fit_score}%</span>
-                  </div>
-                )}
                 <div className={styles.metaItem}>
                   <span className={styles.metaLabel}>Analysis</span>
                   <span className={styles.metaValue}>
-                    {app.analysis_attached ? '✓ Attached' : 'Not attached'}
+                    {app.best_analysis_job_id ? '✓ Attached' : 'Not attached'}
                   </span>
                 </div>
               </div>

@@ -23,7 +23,7 @@ const EMPTY_FORM = { title: '', description: '', tags: '' };
 /** Single evidence card with edit + delete actions */
 function EvidenceCard({ item, onEdit, onDelete, isDeleting }) {
   const tags = deduplicateByKey(
-    (item.tags || []).map((t) => ({ t })),
+    (item.skills_json || []).map((t) => ({ t })),
     't'
   ).map((x) => x.t);
 
@@ -75,7 +75,7 @@ function EvidenceCard({ item, onEdit, onDelete, isDeleting }) {
 function EvidenceForm({ activeTab, editingItem, onSave, onCancel, isSaving }) {
   const [form, setForm] = useState(
     editingItem
-      ? { title: editingItem.title || '', description: editingItem.description || '', tags: (editingItem.tags || []).join(', ') }
+      ? { title: editingItem.title || '', description: editingItem.description || '', tags: (editingItem.skills_json || []).join(', ') }
       : EMPTY_FORM
   );
 
@@ -87,10 +87,10 @@ function EvidenceForm({ activeTab, editingItem, onSave, onCancel, isSaving }) {
   function handleSubmit(e) {
     e.preventDefault();
     const payload = {
-      type: activeTab,
+      item_type: activeTab,
       title: form.title.trim(),
       description: form.description.trim() || undefined,
-      tags: form.tags
+      skills_json: form.tags
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean),
@@ -210,7 +210,7 @@ export default function EvidencePage() {
 
   // Filter and deduplicate items for active tab
   const tabItems = deduplicateByKey(
-    allItems.filter((item) => item.type === activeTab),
+    allItems.filter((item) => item.item_type === activeTab),
     'title'
   );
 
@@ -296,9 +296,9 @@ export default function EvidencePage() {
             id={`tab-${tab.id}`}
           >
             {tab.label}
-            {allItems.filter((i) => i.type === tab.id).length > 0 && (
+            {allItems.filter((i) => i.item_type === tab.id).length > 0 && (
               <span style={{ marginLeft: '4px', background: 'var(--color-primary-light)', color: 'var(--color-primary)', borderRadius: '999px', padding: '0 6px', fontSize: '0.6875rem', fontWeight: 700 }}>
-                {allItems.filter((i) => i.type === tab.id).length}
+                {allItems.filter((i) => i.item_type === tab.id).length}
               </span>
             )}
           </button>

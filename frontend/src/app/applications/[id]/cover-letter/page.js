@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
@@ -12,12 +12,22 @@ import { generateCoverLetter, getCoverLetter, updateCoverLetter } from '@/servic
 import { extractApiError, isAnalysisRequiredError } from '@/utils/errorHelpers';
 import styles from '@/styles/CoverLetter.module.css';
 
+function extractSections(letter) {
+  const p = letter?.payload_json ?? {};
+  return {
+    opening: p.opening ?? '',
+    why_role_company: p.why_role_company ?? '',
+    contribution_fit: p.contribution_fit ?? '',
+    closing: p.closing ?? '',
+  };
+}
+
 export default function CoverLetterPage() {
   const { isAuthChecking } = useRequireAuth();
   const { id } = useParams();
 
   const [letter, setLetter] = useState(null);
-  const [editedText, setEditedText] = useState('');
+  const [sections, setSections] = useState({ opening: '', why_role_company: '', contribution_fit: '', closing: '' });
   const [isLoading, setIsLoading] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -32,7 +42,7 @@ export default function CoverLetterPage() {
     try {
       const data = await getCoverLetter(id);
       setLetter(data);
-      setEditedText(data?.text || '');
+      setSections(extractSections(data));
     } catch (err) {
       if (err?.response?.status === 404) {
         setLetter(null);
@@ -57,9 +67,8 @@ export default function CoverLetterPage() {
     setError(null);
     setAnalysisRequired(false);
     try {
-      const data = await generateCoverLetter(id);
-      setLetter(data);
-      setEditedText(data?.text || '');
+      await generateCoverLetter(id);
+      await loadLetter();
       setSaved(false);
     } catch (err) {
       if (isAnalysisRequiredError(err)) {
@@ -73,12 +82,23 @@ export default function CoverLetterPage() {
     }
   };
 
+  const original = useMemo(() => extractSections(letter), [letter]);
+
+  const isDirty = letter && JSON.stringify(sections) !== JSON.stringify(original);
+
   const handleSave = async () => {
     setIsSaving(true);
     setError(null);
     try {
-      const data = await updateCoverLetter(id, editedText);
+      const patch = {};
+      if (sections.opening !== original.opening) patch.opening = sections.opening;
+      if (sections.why_role_company !== original.why_role_company) patch.why_role_company = sections.why_role_company;
+      if (sections.contribution_fit !== original.contribution_fit) patch.contribution_fit = sections.contribution_fit;
+      if (sections.closing !== original.closing) patch.closing = sections.closing;
+      if (Object.keys(patch).length === 0) return;
+      const data = await updateCoverLetter(id, patch);
       setLetter(data);
+      setSections(extractSections(data));
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
@@ -89,7 +109,17 @@ export default function CoverLetterPage() {
     }
   };
 
-  const isDirty = letter && editedText !== (letter.text || '');
+  const payload = letter?.payload_json ?? {};
+  const disclaimer = payload.disclaimer ?? null;
+  const missingEvidence = Array.isArray(payload.missing_evidence) ? payload.missing_evidence : [];
+  const reviewNotes = Array.isArray(payload.review_notes) ? payload.review_notes : [];
+
+  const sectionFields = [
+    { key: 'opening', label: 'Opening' },
+    { key: 'why_role_company', label: 'Why This Role & Company' },
+    { key: 'contribution_fit', label: 'Contribution & Fit' },
+    { key: 'closing', label: 'Closing' },
+  ];
 
   return (
     <PageShell isAuthChecking={isAuthChecking}>
@@ -145,17 +175,29 @@ export default function CoverLetterPage() {
         <>
           <div className={styles.editorCard}>
             <div className={styles.editorToolbar}>
-              <span className={styles.editorLabel}>Edit your cover letter below</span>
-              <span className={styles.charCount}>{editedText.length} characters</span>
+              <span className={styles.editorLabel}>Edit each section below</span>
             </div>
-            <textarea
-              className={styles.textarea}
-              value={editedText}
-              onChange={(e) => { setEditedText(e.target.value); setSaved(false); }}
-              disabled={isSaving}
-              id="cover-letter-editor"
-              aria-label="Cover letter text"
-            />
+
+            {sectionFields.map(({ key, label }) => (
+              <div key={key} style={{ marginBottom: '1.25rem' }}>
+                <label
+                  htmlFor={`cl-section-${key}`}
+                  style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.375rem' }}
+                >
+                  {label}
+                </label>
+                <textarea
+                  id={`cl-section-${key}`}
+                  className={styles.textarea}
+                  value={sections[key]}
+                  onChange={(e) => { setSections((prev) => ({ ...prev, [key]: e.target.value })); setSaved(false); }}
+                  disabled={isSaving}
+                  style={{ minHeight: '100px' }}
+                  aria-label={label}
+                />
+              </div>
+            ))}
+
             <div className={styles.editorFooter}>
               {saved && (
                 <span className={styles.savedIndicator}>
@@ -190,9 +232,31 @@ export default function CoverLetterPage() {
             </div>
           </div>
 
+          {missingEvidence.length > 0 && (
+            <div style={{ marginTop: '1.5rem', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+                Missing Evidence
+              </p>
+              <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.7 }}>
+                {missingEvidence.map((item, i) => <li key={i}>{typeof item === 'string' ? item : JSON.stringify(item)}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {reviewNotes.length > 0 && (
+            <div style={{ marginTop: '1rem', background: 'var(--color-bg)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '1.25rem' }}>
+              <p style={{ fontSize: '0.8125rem', fontWeight: 700, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem' }}>
+                Review Notes
+              </p>
+              <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.7 }}>
+                {reviewNotes.map((note, i) => <li key={i}>{typeof note === 'string' ? note : JSON.stringify(note)}</li>)}
+              </ul>
+            </div>
+          )}
+
           {/* Disclaimer — always visible */}
           <div className={styles.disclaimer}>
-            <Disclaimer text={letter.disclaimer} />
+            <Disclaimer text={disclaimer} />
           </div>
         </>
       )}

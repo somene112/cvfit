@@ -1,6 +1,7 @@
 # Phase 5 Demo Checklist
 
 > **Created:** 2026-06-10
+> **Last Updated:** 2026-06-16
 > **Phase:** Phase 5 — Application Readiness Suite
 > **Owner:** Đạt (QA/Evaluation/Guardrails)
 
@@ -16,7 +17,7 @@ This checklist covers everything needed to run a successful Phase 5 demo. Comple
 
 ### Environment Setup
 - [ ] Backend smoke test passes locally
-- [ ] Frontend builds successfully (`cd frontend && npm run build`)
+- [x] Frontend builds successfully (`cd frontend && npm run build`) — confirmed PASS 2026-06-16
 - [ ] All Phase 5 API endpoints respond correctly (test with curl or Postman)
 - [ ] Database migrations applied (`alembic upgrade head`)
 - [ ] No errors in backend logs on startup
@@ -236,7 +237,10 @@ Sample JD:
 
 | Issue | Severity | Workaround |
 |-------|---------|-----------|
-| (none yet) | — | — |
+| Analysis-backed package/cover-letter smoke not yet recorded | MEDIUM | Requires succeeded analysis job; do before demo |
+| `evaluate_interview_practice.py` blocked locally (sentence_transformers) | LOW | CI evidence required; does not block demo |
+| GA4 analytics not implemented | INFO | Explicitly deferred; not required for Phase 5 |
+| Demo checklist not yet executed | HIGH | Team must execute this checklist before demo day |
 
 ---
 

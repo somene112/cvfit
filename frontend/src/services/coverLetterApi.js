@@ -27,14 +27,12 @@ export async function getCoverLetter(appId) {
 }
 
 /**
- * Update (save) the cover letter text.
+ * Update cover letter sections.
  * @param {string} appId
- * @param {string} text - The edited cover letter text
+ * @param {{ opening?: string, why_role_company?: string, contribution_fit?: string, closing?: string, review_notes?: string[] }} fields
  * @returns {Promise<Object>}
  */
-export async function updateCoverLetter(appId, text) {
-  const response = await apiClient.patch(`/v1/applications/${appId}/cover-letter`, {
-    text,
-  });
+export async function updateCoverLetter(appId, fields) {
+  const response = await apiClient.patch(`/v1/applications/${appId}/cover-letter`, fields);
   return response.data;
 }

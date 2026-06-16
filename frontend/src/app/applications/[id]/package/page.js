@@ -57,8 +57,8 @@ export default function PackagePage() {
     setError(null);
     setAnalysisRequired(false);
     try {
-      const data = await generatePackage(id);
-      setPkg(data);
+      await generatePackage(id);
+      await loadPackage();
     } catch (err) {
       if (isAnalysisRequiredError(err)) {
         setAnalysisRequired(true);
@@ -71,11 +71,12 @@ export default function PackagePage() {
     }
   };
 
-  // Deduplicate skill arrays from package data
-  const skills = deduplicateStrings(pkg?.skills || pkg?.matched_skills || []);
-  const gaps = deduplicateStrings(pkg?.gaps || pkg?.missing_skills || []);
-  const rubric = Array.isArray(pkg?.rubric) ? pkg.rubric : [];
-  const readiness = pkg?.readiness_summary || pkg?.readiness || null;
+  const payload = pkg?.payload_json ?? {};
+  const bestCv = payload.best_cv_analysis ?? {};
+  const skills = deduplicateStrings(Array.isArray(bestCv.matched_skills) ? bestCv.matched_skills : []);
+  const gaps = deduplicateStrings(Array.isArray(bestCv.missing_skills) ? bestCv.missing_skills : []);
+  const rubric = [];
+  const readiness = payload.readiness_summary ?? null;
 
   return (
     <PageShell isAuthChecking={isAuthChecking}>
@@ -226,18 +227,18 @@ export default function PackagePage() {
           )}
 
           {/* Summary text */}
-          {pkg.summary && (
+          {readiness?.summary && (
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>💬 Summary</h2>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
-                {pkg.summary}
+                {readiness.summary}
               </p>
             </div>
           )}
 
           {/* Disclaimer — always visible */}
           <div className={styles.disclaimer}>
-            <Disclaimer text={pkg.disclaimer} />
+            <Disclaimer text={payload.disclaimer} />
           </div>
         </>
       )}

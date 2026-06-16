@@ -84,7 +84,7 @@ export default function ApplicationDetailPage() {
       <nav className={styles.breadcrumb} aria-label="Breadcrumb">
         <Link href="/applications">Applications</Link>
         <span className={styles.breadcrumbSep}>›</span>
-        <span>{app ? `${app.company_name} — ${app.role_title}` : 'Loading…'}</span>
+        <span>{app ? `${app.company_name} — ${app.job_title}` : 'Loading…'}</span>
       </nav>
 
       {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
@@ -101,7 +101,7 @@ export default function ApplicationDetailPage() {
               </div>
               <div className={styles.heroInfo}>
                 <h1 className={styles.heroCompany}>{app.company_name || 'Unknown Company'}</h1>
-                <p className={styles.heroRole}>{app.role_title || 'Untitled Role'}</p>
+                <p className={styles.heroRole}>{app.job_title || 'Untitled Role'}</p>
               </div>
               <div className={styles.heroActions}>
                 <Link
@@ -147,17 +147,9 @@ export default function ApplicationDetailPage() {
                 <label>Created</label>
                 <span>{formatDate(app.created_at)}</span>
               </div>
-              {app.overall_fit_score != null && (
-                <div className={styles.infoItem}>
-                  <label>Fit Score</label>
-                  <span style={{ color: 'var(--color-primary)', fontWeight: 700 }}>
-                    {app.overall_fit_score}%
-                  </span>
-                </div>
-              )}
               <div className={styles.infoItem}>
                 <label>Analysis</label>
-                <span>{app.analysis_attached ? '✓ Attached' : 'Not attached'}</span>
+                <span>{app.best_analysis_job_id ? '✓ Attached' : 'Not attached'}</span>
               </div>
             </div>
           </div>
@@ -199,22 +191,20 @@ export default function ApplicationDetailPage() {
               <h2 className={styles.analysisTitle}>
                 🔗 Attached Analysis
               </h2>
-              {app.analysis_attached && (
+              {app.best_analysis_job_id && (
                 <span className={styles.attachedBadge}>
                   ✓ Analysis attached
                 </span>
               )}
             </div>
 
-            {app.analysis_attached ? (
+            {app.best_analysis_job_id ? (
               <>
                 <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
                   Phân tích đã được đính kèm. Bạn có thể tạo package, cover letter và luyện tập phỏng vấn ngay bây giờ.
-                  {app.attached_job_id && (
-                    <span style={{ display: 'block', marginTop: '0.5rem', color: 'var(--color-text-muted)' }}>
-                      Job ID: <code style={{ background: 'var(--color-bg)', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{app.attached_job_id}</code>
-                    </span>
-                  )}
+                  <span style={{ display: 'block', marginTop: '0.5rem', color: 'var(--color-text-muted)' }}>
+                    Job ID: <code style={{ background: 'var(--color-bg)', padding: '2px 6px', borderRadius: 4, fontSize: '0.8125rem' }}>{app.best_analysis_job_id}</code>
+                  </span>
                 </p>
 
                 {/* Feature Links */}
@@ -358,21 +348,11 @@ export default function ApplicationDetailPage() {
           </div>
 
           {/* Job description preview */}
-          {app.job_description && (
+          {app.jd_text && (
             <div className={styles.analysisCard} style={{ marginTop: '1.5rem' }}>
               <h2 className={styles.analysisTitle} style={{ marginBottom: '1rem' }}>📄 Job Description</h2>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-wrap', maxHeight: '300px', overflow: 'auto' }}>
-                {app.job_description}
-              </p>
-            </div>
-          )}
-
-          {/* Notes */}
-          {app.notes && (
-            <div className={styles.analysisCard} style={{ marginTop: '1.5rem' }}>
-              <h2 className={styles.analysisTitle} style={{ marginBottom: '1rem' }}>📝 Notes</h2>
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>
-                {app.notes}
+                {app.jd_text}
               </p>
             </div>
           )}
