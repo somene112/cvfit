@@ -57,6 +57,10 @@ const dictionary = {
     // Dashboard Header
     'header.badge': 'AI',
     'header.logout': 'Logout',
+    'nav.dashboard': 'CV Analysis',
+    'nav.history': 'History',
+    'nav.applications': 'Applications',
+    'nav.profile': 'Profile',
 
     // Dashboard Page
     'dashboard.title': 'CV Analysis',
@@ -322,6 +326,10 @@ const dictionary = {
     // Dashboard Header
     'header.badge': 'AI',
     'header.logout': 'Đăng xuất',
+    'nav.dashboard': 'Phân tích CV',
+    'nav.history': 'Lịch sử',
+    'nav.applications': 'Hồ sơ ứng tuyển',
+    'nav.profile': 'Hồ sơ năng lực',
 
     // Dashboard Page
     'dashboard.title': 'Phân tích CV',

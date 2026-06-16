@@ -77,6 +77,10 @@ export default function NewApplicationPage() {
 
       {error && <ErrorBanner message={error} onDismiss={() => setError(null)} />}
 
+      <div style={{ background: 'var(--color-primary-light)', border: '1px solid var(--color-border)', borderRadius: 'var(--radius-md)', padding: '0.875rem 1rem', marginBottom: '1.75rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.6 }}>
+        💡 After creating the application, go to the <strong>Overview</strong> tab to attach a CV fit analysis. This unlocks interview questions, a personalised cover letter, and a readiness package.
+      </div>
+
       <form
         onSubmit={handleSubmit}
         style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}

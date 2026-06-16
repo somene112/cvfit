@@ -76,7 +76,12 @@ export default function PackagePage() {
   const skills = deduplicateStrings(Array.isArray(bestCv.matched_skills) ? bestCv.matched_skills : []);
   const gaps = deduplicateStrings(Array.isArray(bestCv.missing_skills) ? bestCv.missing_skills : []);
   const rubric = [];
-  const readiness = payload.readiness_summary ?? null;
+  // Backend sends readiness fields directly in payload_json (not nested under readiness_summary)
+  const fitScore = payload.fit_score ?? null;
+  const readinessLevel = payload.readiness_level ?? null;
+  const packageSummary = payload.summary ?? null;
+  const nextActions = Array.isArray(payload.next_actions) ? payload.next_actions : [];
+  const hasReadiness = fitScore !== null || readinessLevel !== null;
 
   return (
     <PageShell isAuthChecking={isAuthChecking}>
@@ -133,36 +138,24 @@ export default function PackagePage() {
       {!isLoading && pkg && (
         <>
           {/* Readiness summary */}
-          {readiness && (
+          {hasReadiness && (
             <div className={styles.readinessCard}>
               <h2 className={styles.readinessTitle}>
                 📊 Readiness Summary
               </h2>
               <div className={styles.readinessGrid}>
-                {readiness.overall_score != null && (
+                {fitScore != null && (
                   <div className={styles.readinessStat}>
-                    <div className={styles.readinessStatValue}>{readiness.overall_score}%</div>
-                    <div className={styles.readinessStatLabel}>Overall Fit</div>
+                    <div className={styles.readinessStatValue}>{Math.round(fitScore * 100)}%</div>
+                    <div className={styles.readinessStatLabel}>Fit Score</div>
                   </div>
                 )}
-                {readiness.skill_match != null && (
+                {readinessLevel != null && (
                   <div className={styles.readinessStat}>
-                    <div className={styles.readinessStatValue}>{readiness.skill_match}%</div>
-                    <div className={styles.readinessStatLabel}>Skill Match</div>
-                  </div>
-                )}
-                {readiness.experience_match != null && (
-                  <div className={styles.readinessStat}>
-                    <div className={styles.readinessStatValue}>{readiness.experience_match}%</div>
-                    <div className={styles.readinessStatLabel}>Experience</div>
-                  </div>
-                )}
-                {readiness.risk_level != null && (
-                  <div className={styles.readinessStat}>
-                    <div style={{ marginBottom: '0.375rem' }}>
-                      <RiskBadge score={readiness.risk_level} />
+                    <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 700, color: 'var(--color-primary)', marginBottom: '0.25rem', lineHeight: 1.2 }}>
+                      {readinessLevel}
                     </div>
-                    <div className={styles.readinessStatLabel}>Risk Level</div>
+                    <div className={styles.readinessStatLabel}>Readiness Level</div>
                   </div>
                 )}
               </div>
@@ -227,12 +220,24 @@ export default function PackagePage() {
           )}
 
           {/* Summary text */}
-          {readiness?.summary && (
+          {packageSummary && (
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>💬 Summary</h2>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
-                {readiness.summary}
+                {packageSummary}
               </p>
+            </div>
+          )}
+
+          {/* Next actions */}
+          {nextActions.length > 0 && (
+            <div className={styles.section}>
+              <h2 className={styles.sectionTitle}>📋 Recommended Next Actions</h2>
+              <ul style={{ margin: 0, paddingLeft: '1.25rem', fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', lineHeight: 1.8 }}>
+                {nextActions.map((action, i) => (
+                  <li key={i}>{typeof action === 'string' ? action : JSON.stringify(action)}</li>
+                ))}
+              </ul>
             </div>
           )}
 

@@ -79,8 +79,8 @@ export default function ApplicationsPage() {
     <PageShell isAuthChecking={isAuthChecking}>
       <div className={styles.topRow}>
         <div>
-          <h1 className={styles.pageTitle}>Applications</h1>
-          <p className={styles.pageSubtitle}>Track your job applications and AI-generated materials.</p>
+          <h1 className={styles.pageTitle}>My Applications</h1>
+          <p className={styles.pageSubtitle}>Track jobs you&apos;re applying for. Each application unlocks interview practice, a cover letter, and an AI readiness package.</p>
         </div>
         <Link href="/applications/new" className={styles.newBtn} id="new-application-btn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -108,7 +108,7 @@ export default function ApplicationsPage() {
         <EmptyStatePage
           icon={folderIcon}
           title="No applications yet"
-          description="Start tracking your job applications and generate AI-powered packages, cover letters, and interview prep."
+          description="Create an application to practice interviews, generate a cover letter, and build a job-specific AI package. Attach a CV analysis to personalise everything."
           action={
             <Link href="/applications/new" className={styles.newBtn}>
               Create your first application

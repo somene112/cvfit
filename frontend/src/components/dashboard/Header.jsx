@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import LanguageSwitcher from '@/components/common/LanguageSwitcher';
@@ -11,6 +11,7 @@ import styles from '@/styles/Header.module.css';
 
 export default function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { t } = useLanguage();
   const [userName, setUserName] = useState('');
   const [userInitial, setUserInitial] = useState('U');
@@ -57,17 +58,17 @@ export default function Header() {
 
       <div className={styles.right}>
         <nav className={styles.navLinks} aria-label="Dashboard navigation">
-          <Link href="/dashboard" className={styles.navLink}>
-            Dashboard
+          <Link href="/dashboard" className={`${styles.navLink} ${pathname === '/dashboard' ? styles['navLink--active'] : ''}`}>
+            {t('nav.dashboard')}
           </Link>
-          <Link href="/history" className={styles.navLink}>
-            History
+          <Link href="/history" className={`${styles.navLink} ${pathname === '/history' ? styles['navLink--active'] : ''}`}>
+            {t('nav.history')}
           </Link>
-          <Link href="/applications" className={styles.navLink}>
-            Applications
+          <Link href="/applications" className={`${styles.navLink} ${pathname?.startsWith('/applications') ? styles['navLink--active'] : ''}`}>
+            {t('nav.applications')}
           </Link>
-          <Link href="/profile" className={styles.navLink}>
-            Profile
+          <Link href="/profile" className={`${styles.navLink} ${pathname?.startsWith('/profile') ? styles['navLink--active'] : ''}`}>
+            {t('nav.profile')}
           </Link>
         </nav>
         <LanguageSwitcher />

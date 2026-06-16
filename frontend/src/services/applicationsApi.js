@@ -16,7 +16,7 @@ export async function listApplications() {
 
 /**
  * Create a new application.
- * @param {{ company_name: string, role_title: string, job_description: string, notes?: string }} payload
+ * @param {{ company_name: string, job_title: string, jd_text: string }} payload
  * @returns {Promise<Object>}
  */
 export async function createApplication(payload) {

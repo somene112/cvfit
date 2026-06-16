@@ -87,6 +87,12 @@
   background: var(--color-primary-light);
 }
 
+.navLink--active {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  font-weight: var(--font-weight-semibold);
+}
+
 .userInfo {
   display: flex;
   align-items: center;
