@@ -7,7 +7,7 @@ from app.db import models as _models  # noqa: F401
 
 # Runtime images currently install only app code, not the Alembic script
 # directory. Update this constant whenever a new migration head is added.
-EXPECTED_ALEMBIC_HEAD = "20260610_0003"
+EXPECTED_ALEMBIC_HEAD = "20260618_0001"
 
 
 class RuntimeSchemaError(RuntimeError):
