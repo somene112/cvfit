@@ -15,16 +15,18 @@
 
 ## Summary
 
-- **Overall status:** `PASS_WITH_MANUAL_GA4_PENDING`
+- **Overall status:** `PASS`
 - **Route smoke:** Passed — all 8 frontend routes and backend `/health` return 200.
 - **API-level E2E:** Passed — the full authenticated, data-mutating flow ran end-to-end against
   the deployed backend with synthetic data (login → attach analysis → interview Q&A → cover
   letter generate/save → package generate → report download → logout).
-- **Browser GA4 verification:** Pending — this run exercised the HTTP API directly and did **not**
-  fire the browser-side `dataLayer` events, so GA4 Realtime confirmation still requires a manual
-  browser walkthrough.
-- **Sign-off:** Pending — Phúc / Quân / Đạt have not yet signed off.
-- **Phase 5 completion:** **Not declared complete** — browser GA4 verification and sign-off remain.
+- **Browser GA4 verification:** Done — a manual browser walkthrough on the production frontend
+  using the demo account and synthetic data was completed, and all 17 happy-path custom events
+  were observed in GA4 Realtime. `cv_analysis_error` is a negative-path event and is **not
+  required** for happy-path Phase 5 closeout.
+- **Sign-off:** Done — Phúc / Quân / Đạt have all signed off.
+- **Phase 5 completion:** Ready for closeout — route smoke, authenticated API-level E2E, and
+  browser GA4 Realtime happy-path verification are all complete.
 
 ---
 
@@ -87,32 +89,31 @@ DOCX report download — executed and **passed**.
 
 ## GA4 event verification
 
-> **Important:** This run was an **API-level** E2E (direct HTTP calls). The custom analytics
-> events fire only in the **browser** via `window.dataLayer.push(...)`. This run therefore did
-> **not** produce GA4 events and does **not** assert GA4 verification for them. The backend
-> capability behind each event is confirmed working; GA4 Realtime confirmation requires a manual
-> browser walkthrough.
+> **Note:** The custom analytics events fire only in the **browser** via
+> `window.dataLayer.push(...)`. The API-level E2E confirmed the backend capability behind each
+> event; the events below were then confirmed in **GA4 Realtime** during a manual browser
+> walkthrough on the production frontend using the demo account and synthetic data.
 
 | Event | Status | Evidence/notes |
 |---|---|---|
-| landing_cta_click | VERIFIED_MANUALLY_BEFORE | Confirmed in GA4 Realtime previously |
-| login_success | VERIFIED_MANUALLY_BEFORE | Confirmed previously |
-| language_switch | VERIFIED_MANUALLY_BEFORE | Confirmed previously |
-| cv_analysis_submit | PENDING_MANUAL_GA4_UI_CHECK | Backend path validated; browser event needs UI run |
-| cv_analysis_success | PENDING_MANUAL_GA4_UI_CHECK | Completed analyses exist; browser event needs UI run |
-| cv_analysis_error | PENDING_MANUAL_GA4_UI_CHECK | Negative path; needs UI |
-| result_view | PENDING_MANUAL_GA4_UI_CHECK | Needs browser result view |
-| download_report_click | PENDING_MANUAL_GA4_UI_CHECK | API download passed; browser click event needs UI |
-| application_create_success | VERIFIED_MANUALLY_BEFORE | Confirmed previously |
-| application_detail_view | VERIFIED_MANUALLY_BEFORE | Confirmed previously |
-| attach_analysis_success | PENDING_MANUAL_GA4_UI_CHECK | API attach passed; browser event needs UI |
-| profile_item_create_success | PENDING_MANUAL_GA4_UI_CHECK | API create passed; browser event needs UI |
-| interview_start | PENDING_MANUAL_GA4_UI_CHECK | API questions loaded; browser event needs UI |
-| interview_answer_submit_success | PENDING_MANUAL_GA4_UI_CHECK | API submit passed; browser event needs UI |
-| package_generate_success | PENDING_MANUAL_GA4_UI_CHECK | API generate passed; browser event needs UI |
-| cover_letter_generate_success | PENDING_MANUAL_GA4_UI_CHECK | API generate passed; browser event needs UI |
-| cover_letter_save_success | PENDING_MANUAL_GA4_UI_CHECK | API save passed; browser event needs UI |
-| logout_click | PENDING_MANUAL_GA4_UI_CHECK | API logout passed; browser event needs UI |
+| landing_cta_click | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| login_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| language_switch | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| cv_analysis_submit | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| cv_analysis_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| cv_analysis_error | NOT_REQUIRED_FOR_HAPPY_PATH_CLOSEOUT | Negative-path event; not required for happy-path closeout. |
+| result_view | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| download_report_click | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| application_create_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| application_detail_view | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| attach_analysis_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| profile_item_create_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| interview_start | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| interview_answer_submit_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| package_generate_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| cover_letter_generate_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| cover_letter_save_success | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
+| logout_click | VERIFIED_IN_GA4_REALTIME | Observed in GA4 Realtime during manual browser walkthrough. |
 
 ---
 
@@ -120,25 +121,27 @@ DOCX report download — executed and **passed**.
 
 | Owner | Area | Status | Notes |
 |---|---|---|---|
-| Phúc | Backend/deploy/docs | Pending | API E2E green; review report |
-| Quân | Frontend/UI + browser GA4 walkthrough | Pending | Run browser walkthrough to confirm GA4 Realtime events |
-| Đạt | QA/evaluation/guardrails | Pending | Confirm GA4 events + guardrail/disclaimer presence in UI |
+| Phúc | Backend/deploy/docs | Done | API E2E passed; report finalized. |
+| Quân | Frontend/UI + browser GA4 walkthrough | Done | Browser walkthrough completed; GA4 Realtime happy-path events verified. |
+| Đạt | QA/evaluation/guardrails | Done | Synthetic E2E and analytics evidence reviewed. |
 
 ---
 
 ## Final verdict
 
-**Phase 5 is not complete yet.**
+**Phase 5 is ready for closeout.**
 
-Outstanding before closeout:
+All closeout criteria are met:
 
-1. Browser GA4 Realtime verification is pending (the `PENDING_MANUAL_GA4_UI_CHECK` events must be
-   confirmed via one manual browser walkthrough on the demo account with synthetic data).
-2. Owner sign-off (Phúc / Quân / Đạt) is pending.
+1. Route smoke passed and all routes are healthy.
+2. The authenticated, data-mutating API-level E2E passed end-to-end on the deployed backend.
+3. Browser GA4 Realtime verification is complete — all 17 happy-path custom events were observed
+   during a manual browser walkthrough on the demo account with synthetic data.
+   (`cv_analysis_error` is a negative-path event and is not required for happy-path closeout.)
+4. Owner sign-off (Phúc / Quân / Đạt) is Done.
 
-**Backend/API E2E is complete and passed**, and all routes are healthy. Current status:
-`PASS_WITH_MANUAL_GA4_PENDING`. Phase 5 may be declared complete only once the browser GA4
-verification and the sign-off table are both done.
+Current status: `PASS`. **Phase 5 can be declared complete after PR #65 is reviewed and merged.**
+Phase 6 planning can start after the PR #65 merge.
 
 > Note: the synthetic application (`e95011...`), evidence item (`0c69a1...`), generated cover
 > letter, and package created by this run were **left in place** on the demo account — they
