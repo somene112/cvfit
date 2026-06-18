@@ -17,8 +17,10 @@ and the Learning Roadmap bundle (logical PR 68) shifts forward.
 |-------------------|--------|------------------|--------|
 | PR 66 | Phase 6 kickoff docs | **#66** | Merged |
 | PR 67 | Target Jobs backend | **#68** (auto-closed #67 superseded) | Merged |
-| PR 68 | Learning Roadmap + Interview v2 backend | this PR | Open |
-| PR 69+ | Help Assistant, Share Links, Usage, closeout | TBD | Pending |
+| PR 68 | Learning Roadmap + Interview v2 backend | **#69** | Merged |
+| PR 69 | Help Assistant + Share Links backend | this PR | Open |
+| PR 70+ | Usage shell, analytics/E2E closeout | TBD | Pending |
 
-> **Note:** This Week 2 bundle combines logical "Learning Roadmap" and "Interview v2" backends into
-> one PR. Subsequent modules (Help Assistant, Share Links, Usage) remain out of scope here.
+> **Note:** Backend bundles combine multiple logical modules per PR. Week 2 = Learning + Interview v2
+> (#69). Week 3 = Help Assistant + Share Links (this PR). Usage shell and closeout remain out of scope
+> here. Share Links ship behind `ENABLE_PHASE6_SHARE_LINKS=false` until privacy review passes.

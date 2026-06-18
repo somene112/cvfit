@@ -12,8 +12,10 @@
 > **Implementation status:** Target Jobs (§1) shipped — see
 > [phase6_target_jobs_backend_notes.md](phase6_target_jobs_backend_notes.md). Learning Roadmap (§2)
 > and Interview Practice v2 (§3) shipped in the Week 2 bundle — see
-> [phase6_learning_interview_backend_notes.md](phase6_learning_interview_backend_notes.md) for
-> the as-built models, status/rubric vocabularies, and feature flags. See
+> [phase6_learning_interview_backend_notes.md](phase6_learning_interview_backend_notes.md).
+> Help Assistant (§4) and Share Links (§5, flag-off by default) shipped in the Week 3 bundle — see
+> [phase6_help_share_backend_notes.md](phase6_help_share_backend_notes.md) for as-built intents,
+> token-hash/redaction rules, and feature flags. See
 > [phase6_pr_tracking.md](phase6_pr_tracking.md) for logical-vs-actual PR numbers.
 
 ---

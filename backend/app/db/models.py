@@ -321,3 +321,32 @@ class InterviewSessionAnswer(Base):
 
     session = relationship("InterviewSession", foreign_keys=[session_id])
     question = relationship("InterviewSessionQuestion", foreign_keys=[question_id])
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 — Shareable Readiness (recruiter-lite share links)
+#
+# Only the SHA-256 hash of the share token is stored — never the raw token.
+# target_type/target_id reference an Application (target job or application).
+# Constrained fields stored as strings, validated at the Pydantic layer.
+# ---------------------------------------------------------------------------
+
+SHARE_LINK_TARGET_TYPE = ("target_job", "application")
+
+
+class ShareLink(Base):
+    __tablename__ = "share_links"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    target_type: Mapped[str] = mapped_column(String(30), nullable=False)
+    target_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), nullable=False)
+    # SHA-256 hex of the raw token. The raw token is never stored or logged.
+    token_hash: Mapped[str] = mapped_column(String(64), nullable=False, unique=True, index=True)
+    visibility_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, onupdate=datetime.utcnow)
+
+    user = relationship("User", foreign_keys=[user_id])

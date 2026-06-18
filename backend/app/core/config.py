@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     ENABLE_PHASE6_TARGET_JOBS: bool = True
     ENABLE_PHASE6_LEARNING: bool = True
     ENABLE_PHASE6_INTERVIEW_V2: bool = True
+    ENABLE_PHASE6_HELP_ASSISTANT: bool = True
+    # Share links stay OFF until the privacy review passes.
+    ENABLE_PHASE6_SHARE_LINKS: bool = False
 
     class Config:
         env_file = ("../.env", ".env")

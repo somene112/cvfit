@@ -15,6 +15,8 @@ from app.api.routes.profile import router as profile_router
 from app.api.routes.target_jobs import router as target_jobs_router
 from app.api.routes.learning import router as learning_router, target_job_router as learning_target_job_router
 from app.api.routes.interview_sessions import router as interview_sessions_router
+from app.api.routes.help_assistant import router as help_assistant_router
+from app.api.routes.share_links import router as share_links_router, public_router as share_public_router
 
 log = configure_logging()
 validate_runtime_config()
@@ -35,3 +37,6 @@ app.include_router(target_jobs_router)
 app.include_router(learning_router)
 app.include_router(learning_target_job_router)
 app.include_router(interview_sessions_router)
+app.include_router(help_assistant_router)
+app.include_router(share_links_router)
+app.include_router(share_public_router)
