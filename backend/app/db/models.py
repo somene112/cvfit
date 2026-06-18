@@ -223,3 +223,101 @@ class TextEmbedding(Base):
     meta_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 — Learning Roadmap
+#
+# Constrained fields (priority / task_type / status) are stored as plain
+# strings and validated at the Pydantic schema layer. This keeps the migration
+# additive (plain CREATE TABLE) and avoids native enum-type churn. Allowed
+# values are documented here for reference.
+# ---------------------------------------------------------------------------
+
+LEARNING_TASK_PRIORITY = ("high", "medium", "low")
+LEARNING_TASK_TYPE = ("article", "project", "practice", "interview_prep", "profile_evidence")
+LEARNING_TASK_STATUS = ("todo", "in_progress", "done")
+
+
+class LearningTask(Base):
+    __tablename__ = "learning_tasks"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    target_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=True, index=True)
+    application_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=True, index=True)
+    analysis_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("analysis_jobs.id"), nullable=True, index=True)
+    skill: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    priority: Mapped[str] = mapped_column(String(20), nullable=False, default="medium")
+    task_type: Mapped[str] = mapped_column(String(30), nullable=False, default="practice")
+    title: Mapped[str] = mapped_column(String(500), nullable=False)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    evidence_to_add: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="todo", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", foreign_keys=[user_id])
+
+
+# ---------------------------------------------------------------------------
+# Phase 6 — Interview Practice v2 (sessions / questions / answers)
+#
+# Additive tables — the Phase 5 `interview_answers` table is left untouched.
+# Constrained fields stored as strings, validated at the Pydantic layer.
+# ---------------------------------------------------------------------------
+
+INTERVIEW_QUESTION_TYPE = ("technical", "behavioral", "project", "HR", "gap_check")
+INTERVIEW_DIFFICULTY = ("easy", "medium", "hard")
+INTERVIEW_SESSION_TYPE = ("mixed", "technical", "behavioral", "project", "HR", "gap_check")
+INTERVIEW_SESSION_STATUS = ("active", "completed", "archived")
+INTERVIEW_RUBRIC_DIMENSIONS = ("relevance", "evidence", "clarity", "structure", "confidence", "risk")
+
+
+class InterviewSession(Base):
+    __tablename__ = "interview_sessions"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    target_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=True, index=True)
+    application_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("applications.id"), nullable=True, index=True)
+    analysis_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("analysis_jobs.id"), nullable=True, index=True)
+    session_type: Mapped[str] = mapped_column(String(30), nullable=False, default="mixed")
+    difficulty: Mapped[str] = mapped_column(String(20), nullable=False, default="medium")
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="active", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", foreign_keys=[user_id])
+
+
+class InterviewSessionQuestion(Base):
+    __tablename__ = "interview_session_questions"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    session_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("interview_sessions.id"), nullable=False, index=True)
+    question_type: Mapped[str] = mapped_column(String(30), nullable=False, default="behavioral")
+    difficulty: Mapped[str] = mapped_column(String(20), nullable=False, default="medium")
+    question_text: Mapped[str] = mapped_column(Text, nullable=False)
+    related_evidence_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    rubric_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    session = relationship("InterviewSession", foreign_keys=[session_id])
+
+
+class InterviewSessionAnswer(Base):
+    __tablename__ = "interview_session_answers"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    session_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("interview_sessions.id"), nullable=False, index=True)
+    question_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("interview_session_questions.id"), nullable=False, index=True)
+    answer_text: Mapped[str] = mapped_column(Text, nullable=False)
+    score_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    feedback_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    attempt_number: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    session = relationship("InterviewSession", foreign_keys=[session_id])
+    question = relationship("InterviewSessionQuestion", foreign_keys=[question_id])

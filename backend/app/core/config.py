@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     CORS_ALLOWED_HEADERS: str = "Authorization,Content-Type"
     # Phase 6 feature flags (default on; share links stay off until privacy review).
     ENABLE_PHASE6_TARGET_JOBS: bool = True
+    ENABLE_PHASE6_LEARNING: bool = True
+    ENABLE_PHASE6_INTERVIEW_V2: bool = True
 
     class Config:
         env_file = ("../.env", ".env")
