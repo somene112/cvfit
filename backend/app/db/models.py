@@ -94,6 +94,11 @@ APPLICATION_STATUS = (
     "interview_prep",
     "applied",
     "archived",
+    # Phase 6 Target Jobs statuses (additive; Phase 5 statuses preserved above).
+    "saved",
+    "interviewing",
+    "rejected",
+    "offer",
 )
 
 CAREER_PROFILE_ITEM_TYPE = (
@@ -130,6 +135,10 @@ class Application(Base):
         nullable=True,
         index=True,
     )
+    # Phase 6 Target Jobs additive fields (all nullable; Phase 5 rows leave them NULL).
+    source_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    last_readiness_score: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    archived_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
