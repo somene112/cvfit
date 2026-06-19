@@ -15,7 +15,9 @@
 > [phase6_learning_interview_backend_notes.md](phase6_learning_interview_backend_notes.md).
 > Help Assistant (§4) and Share Links (§5, flag-off by default) shipped in the Week 3 bundle — see
 > [phase6_help_share_backend_notes.md](phase6_help_share_backend_notes.md) for as-built intents,
-> token-hash/redaction rules, and feature flags. See
+> token-hash/redaction rules, and feature flags. Usage / Plan shell (§6) shipped in the Week 4 bundle
+> (read-only, computed, no payment) along with analytics/ops + closeout docs — see
+> [phase6_backend_closeout.md](phase6_backend_closeout.md). See
 > [phase6_pr_tracking.md](phase6_pr_tracking.md) for logical-vs-actual PR numbers.
 
 ---

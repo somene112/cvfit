@@ -34,6 +34,7 @@ class Settings(BaseSettings):
     ENABLE_PHASE6_HELP_ASSISTANT: bool = True
     # Share links stay OFF until the privacy review passes.
     ENABLE_PHASE6_SHARE_LINKS: bool = False
+    ENABLE_PHASE6_USAGE_SHELL: bool = True
 
     class Config:
         env_file = ("../.env", ".env")
