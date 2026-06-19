@@ -12,7 +12,12 @@
 | Interview Practice v2 | `/v1/interview/sessions/*` (7) | `ENABLE_PHASE6_INTERVIEW_V2` (on) | #69 |
 | Help Assistant | `/v1/help/*` (2) | `ENABLE_PHASE6_HELP_ASSISTANT` (on) | #70 |
 | Shareable Readiness | `/v1/share-links/*`, `/v1/public/share/{token}` (6) | `ENABLE_PHASE6_SHARE_LINKS` (**off**) | #70 |
-| Usage / Plan shell | `/v1/usage/me`, `/v1/plans` (2) | `ENABLE_PHASE6_USAGE_SHELL` (on) | this PR |
+| Usage / Plan shell | `/v1/usage/me`, `/v1/plans` (2) | `ENABLE_PHASE6_USAGE_SHELL` (on) | #71 |
+
+> **Status:** All six modules are **merged on `main`** (commit `a1aa4ca`). Backend is closeout-ready.
+> Frontend (Quân), privacy/analytics/QA sign-off (Đạt), and the deployed Render rollout remain.
+> See [phase6_deployed_e2e_execution_report.md](phase6_deployed_e2e_execution_report.md) for the
+> deployed smoke result.
 
 ## Migrations
 

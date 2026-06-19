@@ -66,7 +66,9 @@ def env_flag(name: str, *, default: bool = False) -> bool:
 
 
 def redact_token(token: str) -> str:
-    return (token[:8] + "...") if len(token) > 8 else "***"
+    # Never reveal any token bytes (not even the JWT header prefix). Report
+    # length only so the caller can confirm a token was received.
+    return f"<redacted, len={len(token)}>" if token else "<empty>"
 
 
 def verify_no_internal_fields(data: Any, path: str = "") -> None:
@@ -188,7 +190,7 @@ def run_smoke(base_url: str, mutating: bool, expect_share_enabled: bool) -> bool
         _pass(f"POST /v1/target-jobs -> {target_job_id}")
     else:
         _fail(f"POST /v1/target-jobs -> {code}: {body}")
-        return ok
+        return False
     code, body = request_json(base_url, "GET", "/v1/target-jobs", token=token)
     if code == 200 and body.get("total", 0) >= 1:
         _pass("GET /v1/target-jobs")
@@ -323,7 +325,7 @@ def main() -> None:
     if passed:
         print("phase6 backend e2e smoke passed")
         sys.exit(0)
-    print("phase6 backend e2e smoke FAILED — see FAIL lines above", file=sys.stderr)
+    print("phase6 backend e2e smoke FAILED - see FAIL lines above", file=sys.stderr)
     sys.exit(1)
 
 
