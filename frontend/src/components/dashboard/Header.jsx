@@ -69,11 +69,20 @@ export default function Header() {
           <Link href="/applications" className={`${styles.navLink} ${pathname?.startsWith('/applications') ? styles['navLink--active'] : ''}`}>
             {t('nav.applications')}
           </Link>
+          <Link href="/jobs" className={`${styles.navLink} ${pathname?.startsWith('/jobs') ? styles['navLink--active'] : ''}`}>
+            Jobs
+          </Link>
+          <Link href="/interview/sessions" className={`${styles.navLink} ${pathname?.startsWith('/interview') ? styles['navLink--active'] : ''}`}>
+            Interview
+          </Link>
           <Link href="/profile" className={`${styles.navLink} ${pathname?.startsWith('/profile') ? styles['navLink--active'] : ''}`}>
             {t('nav.profile')}
           </Link>
           <Link href="/learning" className={`${styles.navLink} ${pathname?.startsWith('/learning') ? styles['navLink--active'] : ''}`}>
             {t('nav.learning')}
+          </Link>
+          <Link href="/usage" className={`${styles.navLink} ${pathname === '/usage' ? styles['navLink--active'] : ''}`}>
+            Usage
           </Link>
           <Link href="/help" className={`${styles.navLink} ${pathname?.startsWith('/help') ? styles['navLink--active'] : ''}`}>
             {t('nav.help')}

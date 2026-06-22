@@ -37,6 +37,30 @@ export const ANALYTICS_EVENTS = {
 
   COVER_LETTER_GENERATE_SUCCESS: 'cover_letter_generate_success',
   COVER_LETTER_SAVE_SUCCESS: 'cover_letter_save_success',
+
+  // Phase 6 — Target Jobs
+  TARGET_JOB_CREATED: 'target_job_created',
+  TARGET_JOB_UPDATED: 'target_job_updated',
+  TARGET_JOB_STATUS_CHANGED: 'target_job_status_changed',
+
+  // Phase 6 — Learning Roadmap
+  LEARNING_TASK_STARTED: 'learning_task_started',
+  LEARNING_TASK_COMPLETED: 'learning_task_completed',
+
+  // Phase 6 — Interview Sessions V2
+  INTERVIEW_SESSION_CREATED: 'interview_session_created',
+  INTERVIEW_ANSWER_SUBMITTED: 'interview_answer_submitted',
+
+  // Phase 6 — Help Assistant
+  HELP_ASSISTANT_OPENED: 'help_assistant_opened',
+  HELP_ASSISTANT_PROMPT_CLICKED: 'help_assistant_prompt_clicked',
+
+  // Phase 6 — Share
+  SHARE_LINK_CREATED: 'share_link_created',
+  SHARE_LINK_OPENED: 'share_link_opened',
+
+  // Phase 6 — Usage
+  USAGE_PAGE_VIEWED: 'usage_page_viewed',
 };
 
 /**
@@ -92,6 +116,14 @@ function sanitizeAnalyticsParams(params) {
     'score_bucket',
     'language',
     'source',
+    // Phase 6 additions
+    'question_type',
+    'difficulty',
+    'task_type',
+    'prompt_chip',
+    'plan_name',
+    'visibility',
+    'job_status',
   ]);
 
   const output = {};
