@@ -206,6 +206,44 @@ def test_interview_v2_feedback_blocks_before_scoring(monkeypatch):
     assert db.rows == [user, session, question]
 
 
+def test_interview_v2_target_job_is_not_recorded_as_application(monkeypatch):
+    user = make_user()
+    target_job_id = uuid.uuid4()
+    session = InterviewSession(
+        id=uuid.uuid4(), user_id=user.id, status="active", session_type="mixed",
+        difficulty="medium", target_job_id=target_job_id, application_id=None,
+        created_at=datetime.utcnow(), updated_at=datetime.utcnow(),
+    )
+    question = InterviewSessionQuestion(
+        id=uuid.uuid4(), session_id=session.id, question_type="behavioral",
+        difficulty="medium", question_text="Tell me about a project", created_at=datetime.utcnow(),
+    )
+    captured = {}
+    monkeypatch.setattr(
+        interview_sessions,
+        "ensure_credit_available",
+        lambda *args, **kwargs: None,
+    )
+    monkeypatch.setattr(interview_sessions, "score_answer_v2", lambda *args: ({}, {}))
+
+    def capture_consume(*args, **kwargs):
+        del args
+        captured.update(kwargs)
+
+    monkeypatch.setattr(interview_sessions, "consume_credit", capture_consume)
+
+    with pytest.raises(CommitReached):
+        interview_sessions.submit_answer(
+            session.id,
+            AnswerCreateRequest(question_id=str(question.id), answer_text="A valid answer"),
+            user,
+            FakeDb(user, session, question),
+        )
+
+    assert captured["related_application_id"] is None
+    assert target_job_id not in captured.values()
+
+
 def test_all_expensive_action_families_stage_usage_before_commit(monkeypatch):
     user = make_user()
     job = make_job(user.id)

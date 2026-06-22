@@ -339,7 +339,7 @@ def submit_answer(
         current_user.id,
         "interview",
         related_job_id=analysis_job.id if analysis_job else None,
-        related_application_id=session.application_id or session.target_job_id,
+        related_application_id=session.application_id,
     )
     session.updated_at = now
     db.commit()
