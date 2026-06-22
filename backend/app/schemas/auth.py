@@ -42,6 +42,11 @@ class LoginRequest(BaseModel):
         return normalize_email(value)
 
 
+class GoogleLoginRequest(BaseModel):
+    # The Google Identity Services ``credential`` (a Google ID token / JWT).
+    credential: str = Field(min_length=1, max_length=4096)
+
+
 class UserPublic(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

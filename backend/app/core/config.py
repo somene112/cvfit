@@ -23,6 +23,10 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = "insecure-local-dev-secret-change-me"
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440
+    # Google Sign-In (ID-token flow). The endpoint stays unavailable until a
+    # client ID is configured, so leaving these empty cannot weaken existing auth.
+    GOOGLE_CLIENT_ID: str = ""
+    ENABLE_GOOGLE_AUTH: bool = True
     CORS_ALLOWED_ORIGINS: str = "http://localhost:3000,http://127.0.0.1:3000"
     CORS_ALLOW_CREDENTIALS: bool = False
     CORS_ALLOWED_METHODS: str = "GET,POST,OPTIONS"

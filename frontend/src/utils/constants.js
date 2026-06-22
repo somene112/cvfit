@@ -3,6 +3,10 @@ export const API_BASE_URL =
     ? process.env.NEXT_PUBLIC_API_BASE_URL
     : 'http://localhost:8000';
 
+// Google Sign-In web client ID. Empty when unconfigured — the UI then hides the
+// Google button and falls back to email/password only. Never a secret.
+export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
+
 export const COLORS = {
   primary: '#2563EB',
   secondary: '#60A5FA',

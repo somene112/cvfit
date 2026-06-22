@@ -17,6 +17,13 @@ export async function login({ email, password }) {
   return response.data;
 }
 
+export async function loginWithGoogle(credential) {
+  const response = await apiClient.post('/v1/auth/google', {
+    credential,
+  });
+  return response.data;
+}
+
 export async function me() {
   const response = await apiClient.get('/v1/auth/me');
   return response.data;
