@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Annotated, Any
 import uuid
 from zoneinfo import ZoneInfo
@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
 from app.core.config import settings
-from app.db.models import PaymentOrder, UsageEvent, User, UserEntitlement
+from app.db.models import PaymentOrder, User
 from app.db.session import get_db
 from app.schemas.billing import (
     BillingCredits,
@@ -27,6 +27,7 @@ from app.schemas.billing import (
     PaymentOrderSummary,
 )
 from app.services.billing.orders import create_checkout_order, get_owned_order, list_orders
+from app.services.billing.credit_gating import calculate_credit_balance
 from app.services.billing.payos_client import (
     BillingProviderConfigError,
     BillingProviderError,
@@ -36,7 +37,6 @@ from app.services.billing.plans import (
     BILLING_TIMEZONE,
     get_billing_plan,
     get_billing_plans,
-    get_free_allowance,
 )
 from app.services.billing.webhooks import (
     BillingWebhookPayloadError,
@@ -94,47 +94,15 @@ def billing_usage(
     db: Session = Depends(get_db),
 ) -> BillingUsageResponse:
     now_ict = datetime.now(ZoneInfo(BILLING_TIMEZONE))
-    month_start_ict = now_ict.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    month_start_utc = month_start_ict.astimezone(timezone.utc).replace(tzinfo=None)
-
-    events = (
-        db.query(UsageEvent)
-        .filter(
-            UsageEvent.user_id == current_user.id,
-            UsageEvent.created_at >= month_start_utc,
-        )
-        .all()
-    )
-    allowance = get_free_allowance()
-    used = {key: 0 for key in allowance}
-    for event in events:
-        if event.event_type in used:
-            used[event.event_type] += max(0, event.quantity)
-
-    free_remaining = {
-        key: max(0, allowance[key] - used[key])
-        for key in allowance
-    }
-
-    entitlements = (
-        db.query(UserEntitlement)
-        .filter(UserEntitlement.user_id == current_user.id)
-        .all()
-    )
-    remaining = {key: 0 for key in allowance}
-    for entitlement in entitlements:
-        remaining["analysis"] += max(0, entitlement.analysis_credits)
-        remaining["interview"] += max(0, entitlement.interview_credits)
-        remaining["cover_letter"] += max(0, entitlement.cover_letter_credits)
-        remaining["package"] += max(0, entitlement.package_credits)
+    balance = calculate_credit_balance(db, current_user.id, now_ict)
 
     return BillingUsageResponse(
         month=now_ict.strftime("%Y-%m"),
         timezone=BILLING_TIMEZONE,
-        free_allowance=_credits(allowance),
-        used_this_month=_credits(used),
-        free_remaining=_credits(free_remaining),
-        remaining_credits=_credits(remaining),
+        free_allowance=_credits(balance.free_allowance),
+        used_this_month=_credits(balance.used_this_month),
+        free_remaining=_credits(balance.free_remaining),
+        remaining_credits=_credits(balance.remaining_credits),
     )
 
 

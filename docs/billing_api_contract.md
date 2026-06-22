@@ -246,11 +246,15 @@ Fallback: **`403`** with the same body if `402` is undesirable for a client.
 ```json
 {
   "error": "insufficient_credits",
-  "message": "You have used your free analyses and have no analysis credits left.",
+  "message": "You do not have enough credits for this action.",
   "required_credit": "analysis",
   "pricing_url": "/pricing"
 }
 ```
+
+Credit gating is implemented behind `ENABLE_CREDIT_GATING` and remains disabled
+by default. Free allowance is consumed first and resets on the
+`Asia/Ho_Chi_Minh` calendar month; paid credit consumption does not reset.
 
 ---
 

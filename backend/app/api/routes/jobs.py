@@ -11,6 +11,7 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from app.api.deps import get_current_user, get_optional_current_user
+from app.core.config import settings
 from app.db.session import get_db
 from app.db.models import AnalysisJob, CVFile, JDDoc, User
 from app.schemas.requests import ScoreCreateRequest
@@ -24,6 +25,7 @@ from app.schemas.responses import (
     JobComparisonResponse,
 )
 from app.services.comparison import compare_results
+from app.services.billing.credit_gating import consume_credit, ensure_credit_available
 from app.services.storage import StorageNotFoundError, UploadValidationError, get_storage, save_upload
 from app.api.routes.utils import parse_uuid_or_400
 
@@ -152,10 +154,15 @@ def create_score_job(
     db: Session = Depends(get_db),
     current_user: Annotated[User | None, Depends(get_optional_current_user)] = None,
 ):
+    if settings.ENABLE_CREDIT_GATING and current_user is None:
+        raise HTTPException(status_code=401, detail="authentication required")
     cv_id = parse_uuid_or_400(payload.cv_file_id, "cv_file_id")
     cv = db.get(CVFile, cv_id)
     if not cv:
         raise HTTPException(status_code=404, detail="cv_file_id not found")
+
+    if current_user is not None:
+        ensure_credit_available(db, current_user.id, "analysis")
 
     jd = JDDoc(id=uuid.uuid4(), jd_text=payload.jd_text, role=payload.options.target_role)
     db.add(jd)
@@ -172,6 +179,9 @@ def create_score_job(
         user_id=current_user.id if current_user else None,
     )
     db.add(job)
+    if current_user is not None:
+        # Async MVP: consume when the job is durably accepted, before enqueue.
+        consume_credit(db, current_user.id, "analysis", related_job_id=job.id)
     db.commit()
 
     # enqueue
@@ -203,11 +213,15 @@ def reanalyze_job(
     db: Session = Depends(get_db),
     current_user: Annotated[User | None, Depends(get_optional_current_user)] = None,
 ):
+    if settings.ENABLE_CREDIT_GATING and current_user is None:
+        raise HTTPException(status_code=401, detail="authentication required")
     parent_id = parse_uuid_or_400(job_id, "job_id")
     parent = db.get(AnalysisJob, parent_id)
     if not parent:
         raise HTTPException(status_code=404, detail="job not found")
     _authorize_reanalysis_parent_or_403(parent, access_token, current_user)
+    if settings.ENABLE_CREDIT_GATING and parent.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="job ownership required")
 
     if not file.filename:
         raise HTTPException(status_code=400, detail="Missing filename")
@@ -219,6 +233,9 @@ def reanalyze_job(
     if not parent_jd:
         raise HTTPException(status_code=409, detail="parent job is missing JD data")
     child_jd_text = jd_text if jd_text and jd_text.strip() else parent_jd.jd_text
+
+    if current_user is not None:
+        ensure_credit_available(db, current_user.id, "analysis")
 
     try:
         path, digest, mime = save_upload(file)
@@ -252,6 +269,9 @@ def reanalyze_job(
     db.add(cv)
     db.add(jd)
     db.add(child)
+    if current_user is not None:
+        # Reanalysis follows the same accepted-job consumption rule.
+        consume_credit(db, current_user.id, "analysis", related_job_id=child.id)
     db.commit()
 
     from app.workers.tasks import run_job

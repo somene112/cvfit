@@ -28,6 +28,7 @@ from app.schemas.phase5 import (
     ReadinessResponse,
 )
 from app.services.application_package import build_package_payload
+from app.services.billing.credit_gating import consume_credit, ensure_credit_available
 from app.services.cover_letter import build_cover_letter_payload
 from app.services.interview_practice import (
     QUESTIONS_DISCLAIMER,
@@ -322,6 +323,8 @@ def generate_package(
     if job is None or job.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
 
+    ensure_credit_available(db, current_user.id, "package")
+
     profile_items = _get_profile_items(db, current_user.id)
     payload = build_package_payload(app, job, profile_items)
 
@@ -334,6 +337,13 @@ def generate_package(
         created_at=datetime.utcnow(),
     )
     db.add(artifact)
+    consume_credit(
+        db,
+        current_user.id,
+        "package",
+        related_job_id=job.id,
+        related_application_id=app.id,
+    )
     db.commit()
     db.refresh(artifact)
 
@@ -406,6 +416,8 @@ def generate_cover_letter(
     if job is None or job.user_id != current_user.id:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="analysis job not found")
 
+    ensure_credit_available(db, current_user.id, "cover_letter")
+
     profile_items = _get_profile_items(db, current_user.id)
     payload = build_cover_letter_payload(app, job, profile_items)
 
@@ -418,6 +430,13 @@ def generate_cover_letter(
         created_at=datetime.utcnow(),
     )
     db.add(artifact)
+    consume_credit(
+        db,
+        current_user.id,
+        "cover_letter",
+        related_job_id=job.id,
+        related_application_id=app.id,
+    )
     db.commit()
     db.refresh(artifact)
 
@@ -526,6 +545,8 @@ def submit_interview_answer(
         if job is not None and job.user_id != current_user.id:
             job = None
 
+    ensure_credit_available(db, current_user.id, "interview")
+
     profile_items = _get_profile_items(db, current_user.id)
     rubric, feedback = score_answer(body.question, body.answer_text, app, job, profile_items)
 
@@ -541,6 +562,13 @@ def submit_interview_answer(
         created_at=datetime.utcnow(),
     )
     db.add(answer)
+    consume_credit(
+        db,
+        current_user.id,
+        "interview",
+        related_job_id=job.id if job else None,
+        related_application_id=app.id,
+    )
     db.commit()
     db.refresh(answer)
 

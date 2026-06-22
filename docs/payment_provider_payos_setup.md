@@ -22,11 +22,11 @@ PAYMENT_CURRENCY=VND
 
 Notes:
 
-- PR 4 implements signed webhook verification and transactional credit grants.
-  PR 5 adds the frontend pricing, billing, and safe return/cancel pages. Keep
-  billing and credit gating disabled in production until real-payment QA is
-  complete; enable them only through the rollout checklist. Credit consumption
-  and gating remain a later PR.
+- PR 4 implements signed webhook verification and transactional credit grants;
+  PR 5 adds the frontend billing pages; PR 6 adds credit gating behind
+  `ENABLE_CREDIT_GATING`. Keep billing and gating disabled in production until
+  real-payment QA is complete and enable them only through the rollout checklist.
+  Share Links remain unchanged.
 - `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` are **secrets** — backend
   only, never on the frontend, never in logs, never in this repo as real values.
 - `PAYMENT_RETURN_URL` / `PAYMENT_CANCEL_URL` are public frontend routes. The return
