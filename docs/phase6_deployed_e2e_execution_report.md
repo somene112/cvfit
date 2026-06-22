@@ -1,18 +1,20 @@
 # Phase 6 Deployed E2E Execution Report
 
-> **Date:** 2026-06-19
+> **Date:** 2026-06-22 (updated by Đạt)
 > **Backend URL:** `https://cvfit.onrender.com`
 > **Main commit:** `060fb16` (PR #73 merged)
 > **Expected migration head:** `20260620_0001`
 > **Tool:** `scripts/smoke_phase6_e2e.py`
 
-## Summary verdict: **PASS**
+---
 
-After the manual Render redeploy of `main` and the manual DB migration to head `20260620_0001`
-(`20260610_0003 → 20260618_0001 → 20260619_0001 → 20260620_0001`, `check_db_schema.py` passing),
-the deployed Phase 6 backend was re-smoked. **Read-only and full mutating happy-path both pass.**
-All six Phase 6 modules respond correctly end-to-end; Share Links correctly returns 404 because
-`ENABLE_PHASE6_SHARE_LINKS=false`.
+## Summary verdict: **PASS** (backend smoke) | **PENDING** (frontend integration)
+
+**Backend:** All six Phase 6 modules respond correctly end-to-end; Share Links correctly returns 404 because
+`ENABLE_PHASE6_SHARE_LINKS=false`. Read-only and full mutating happy-path both **PASS** (2026-06-19).
+
+**Frontend integration:** PENDING. All frontend pages (jobs, learning, interview, help, usage) are not yet built.
+See §4 for the frontend smoke plan.
 
 ### Final run (2026-06-19, main @ `060fb16`, migrated DB head `20260620_0001`)
 
@@ -144,6 +146,55 @@ workflow available in CI, so this cannot be triggered from automation here.
 - **No share token / token_hash printed.**
 - **No raw CV / JD / interview answer text printed.**
 - Synthetic throwaway accounts and short demo-safe JD snippets only.
+
+---
+
+## §4 — Frontend Integration Smoke Plan (PENDING)
+
+> Status: ⏳ PENDING — requires Quân to complete frontend pages and GA4 wiring
+
+Frontend integration smoke is tracked in `docs/phase6_qa_checklist.md` (Track 4) and
+`docs/phase6_demo_health_check.md`. This section records the plan and final results.
+
+### Preconditions
+
+1. Quân has completed all Phase 6 frontend pages.
+2. Quân has wired GA4 events per `docs/phase6_analytics_event_plan.md`.
+3. Render has been redeployed with the frontend code.
+4. CORS is configured to allow the frontend origin.
+
+### Smoke steps
+
+| Step | Command / Action | Expected |
+|------|----------------|----------|
+| Frontend loads | `https://cvfit-frontend.onrender.com` | Page renders, no console errors |
+| Login | Register + login synthetic account | JWT stored, redirected to dashboard |
+| Create target job | POST `/v1/target-jobs` via UI | Job appears in `/jobs` list |
+| Learning generation | Click "Generate roadmap" in `/jobs/[id]` | Tasks appear in `/learning` |
+| Interview session | Create session in `/interview/sessions` | Session appears in history |
+| Submit answer | Answer a question | Rubric displayed below |
+| Help assistant | Click prompt chip in `/help/assistant` | Scoped answer displayed |
+| Usage page | Visit `/usage` | Plan + counts displayed |
+| Share links | Attempt `/share/[token]` | 404 (flag-off) |
+
+### Privacy smoke steps
+
+| Step | Action | Expected |
+|------|--------|----------|
+| Open Network tab | Filter `collect?v=2` | GA4 hits visible |
+| Create target job | Trigger `target_job_created` | No raw JD text in payload |
+| Submit interview answer | Trigger `interview_answer_submitted` | Only `attempt_number` in payload |
+| Help assistant | Trigger `help_assistant_response_generated` | Only `intent` + `fallback_used` |
+| Share link | Trigger `share_link_created` (if flag on) | No token/token_hash in payload |
+
+### Final result
+
+| Smoke run | Date | Backend | Frontend | Privacy | Overall |
+|-----------|------|---------|----------|---------|---------|
+| Backend only | 2026-06-19 | ✅ PASS | — | ✅ PASS | ✅ PASS |
+| Frontend integration | ⏳ PENDING | ⏳ PENDING | ⏳ PENDING | ⏳ PENDING | ⏳ PENDING |
+
+---
 
 ## Notes
 

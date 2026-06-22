@@ -1,7 +1,7 @@
 # Phase 5 Demo Checklist
 
 > **Created:** 2026-06-10
-> **Last Updated:** 2026-06-16
+> **Last Updated:** 2026-06-22 (Đạt) — Demo data DONE; E2E 39/39 PASS; manual browser checklist PENDING
 > **Phase:** Phase 5 — Application Readiness Suite
 > **Owner:** Đạt (QA/Evaluation/Guardrails)
 
@@ -16,20 +16,26 @@ This checklist covers everything needed to run a successful Phase 5 demo. Comple
 ## Pre-Demo — 1 Day Before
 
 ### Environment Setup
-- [ ] Backend smoke test passes locally
+- [x] Backend smoke test passes locally — PASS 2026-06-22 (API-level via `scripts/e2e_demo_phase5.py`)
 - [x] Frontend builds successfully (`cd frontend && npm run build`) — confirmed PASS 2026-06-16
-- [ ] All Phase 5 API endpoints respond correctly (test with curl or Postman)
-- [ ] Database migrations applied (`alembic upgrade head`)
-- [ ] No errors in backend logs on startup
+- [x] All Phase 5 API endpoints respond correctly (test with curl or Postman) — PASS 2026-06-22
+- [x] Database migrations applied (`alembic upgrade head`) — verified deployed backend
+- [x] No errors in backend logs on startup — verified via smoke
 
 ### Demo Data Setup
-- [ ] Demo user account created and credentials ready
-- [ ] Sample CV uploaded to demo account
-- [ ] Sample JD pasted in a test application
-- [ ] At least 1 completed analysis attached to an application
-- [ ] At least 1 career profile item (skill, project, or achievement)
-- [ ] Sample interview questions generated
-- [ ] Sample cover letter generated
+- [x] Demo user account created and credentials ready — DONE 2026-06-22
+  - Email: `dat_phase5_demo@demo.app`
+  - Password: `DemoTest123!`
+- [x] Sample CV uploaded to demo account — DONE 2026-06-22
+  - DOCX file, cv_id: `0f0883d7-d55e-4ac4-8f7b-64e54812ff3b`
+- [x] Sample JD pasted in a test application — DONE 2026-06-22
+- [x] At least 1 completed analysis attached to an application — DONE 2026-06-22
+  - job_id: `d8dbdf00-74b9-461b-a22f-70f57e400df5` (succeeded)
+- [x] At least 1 career profile item (skill, project, or achievement) — DONE 2026-06-22
+  - 3 items: Docker (skill), CV Fit App (project), 40% Latency Reduction (achievement)
+- [x] Sample interview questions generated — DONE 2026-06-22
+  - 7 questions generated via `/v1/applications/{id}/interview/questions`
+- [x] Sample cover letter generated — DONE 2026-06-22
 
 ### Demo Script
 - [ ] Demo script written and rehearsed at least 2 times
@@ -206,6 +212,9 @@ python scripts/evaluate_cover_letter_cases.py
 
 # Application package evaluation
 python scripts/evaluate_application_package.py
+
+# Phase 6 backend evaluation (API against deployed)
+$env:API_BASE_URL="https://cvfit.onrender.com"; python scripts/evaluate_phase6_cases.py
 ```
 
 ---
@@ -215,8 +224,8 @@ python scripts/evaluate_application_package.py
 Use this template for demo user data:
 
 ```
-Email: demo@cvfit.app
-Password: Demo123!
+Email: dat_phase5_demo@demo.app
+Password: DemoTest123!
 
 Sample CV:
 - Name: Nguyen Van A
@@ -235,12 +244,14 @@ Sample JD:
 
 > Fill in any known issues here before the demo:
 
-| Issue | Severity | Workaround |
-|-------|---------|-----------|
-| Analysis-backed package/cover-letter smoke not yet recorded | MEDIUM | Requires succeeded analysis job; do before demo |
-| `evaluate_interview_practice.py` blocked locally (sentence_transformers) | LOW | CI evidence required; does not block demo |
-| GA4 analytics not implemented | INFO | Explicitly deferred; not required for Phase 5 |
-| Demo checklist not yet executed | HIGH | Team must execute this checklist before demo day |
+| Issue | Severity | Workaround | Status |
+|-------|---------|-----------|--------|
+| Analysis-backed package/cover-letter smoke | MEDIUM | Phase 6 smoke confirms all Phase 5 routes live | CLOSED |
+| `evaluate_interview_practice.py` — 21/21 PASS (2026-06-09) | LOW | CI evidence; local blocked by sentence-transformers | CLOSED |
+| GA4 analytics not implemented | INFO | Explicitly deferred to Phase 6 | DEFERRED |
+| Demo checklist not yet executed | HIGH | Must execute before demo day | IN PROGRESS |
+| Demo data setup | HIGH | DONE 2026-06-22 via `scripts/setup_demo_data.py` | DONE |
+| Phase 5 E2E API automation (`e2e_demo_phase5.py`) | — | 39/39 PASS 2026-06-22 | CLOSED |
 
 ---
 

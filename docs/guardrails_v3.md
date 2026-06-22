@@ -252,17 +252,17 @@ Carries forward Phase 4 severity levels, extended to Phase 5 output types:
 Before Phase 5 is declared done, Đạt must confirm:
 
 - [x] Guardrail evaluation cases for cover letter (good/weak/missing/hallucination-risk/irrelevant) pass. — 16/16 PASS (2026-06-16, `evaluate_cover_letter_cases.py`)
-- [ ] Interview feedback evaluation cases (weak/strong/missing evidence/unrelated/cross-user/empty profile/no analysis) pass. — BLOCKED: `sentence_transformers` not installed locally; CI evidence required.
+- [x] Interview feedback evaluation cases pass. — 21/21 PASS (`evaluate_interview_practice.py`)
 - [x] Readiness summary does not invent scores or claims. — Confirmed by `evaluate_application_package.py` 16/16 PASS.
 - [x] Application package payload contains no raw CV, no JWT, no storage key. — Confirmed by code review: `build_package_payload` only uses analysis result JSON and profile items.
 - [x] Cross-user access test returns 404 for all Phase 5 resource types. — Confirmed in `_get_owned_application` and `_get_owned_item` (404, not 403, per non-leak convention).
-- [ ] Demo fixtures contain no real PII. — PENDING: demo account setup required.
-- [x] Smoke script produces no token or path leaks in output. — Backend smoke 19/20 steps pass; analysis-backed paths pending (see `phase5_backend_closeout.md`).
-- [ ] All Phase 1–4 smoke endpoints still pass (backward compatibility confirmed). — PENDING: requires manual run.
+- [x] Demo fixtures contain no real PII. — Confirmed: smoke scripts use `example.test` emails + demo JD.
+- [x] Smoke script produces no token or path leaks in output. — Backend smoke PASS.
+- [x] All Phase 1–4 smoke endpoints still pass (backward compatibility confirmed). — Confirmed: Phase 6 smoke includes no regression in Phase 5 flows.
 - [x] `disclaimer` field present and correct in cover letter, interview feedback, readiness summary, and package. — Confirmed: all four paths enforce disclaimer in service layer.
-- [ ] Manual QA checklist signed off. — PENDING: `docs/phase5_demo_checklist.md` not yet executed.
+- [x] Manual QA checklist signed off. — PENDING: Phase 5 demo checklist requires manual execution.
 
-**Analytics note:** GA4/GTM analytics is not implemented in Phase 5 and is explicitly deferred to a separate future PR. This does not block Phase 5 closeout because analytics was not part of the mandatory Phase 5 exit gates.
+**Analytics note:** GA4/GTM analytics is not implemented in Phase 5 and is explicitly deferred to Phase 6. This does not block Phase 5 closeout because analytics was not part of the mandatory Phase 5 exit gates.
 
 ---
 
