@@ -3,6 +3,13 @@
 Test matrix for the Payment MVP. Used by the implementation PRs and the closeout.
 Mock the provider where possible; only the final real-payment test uses live payOS.
 
+Production execution references:
+
+- [Production rollout checklist](payment_production_rollout_checklist.md)
+- [Real/sandbox payment QA](payment_real_payment_qa.md)
+- [Closeout report template](payment_closeout_report.md)
+- `scripts/smoke_payment_production_readiness.py` for safe deployed readiness checks
+
 ## Backend — billing API
 
 | # | Case | Expected |

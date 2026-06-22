@@ -3,6 +3,12 @@
 Operator guide for configuring payOS for the Payment MVP. **Placeholders only —
 never commit real values.** All secrets live in backend env exclusively.
 
+For controlled production execution, use the
+[production rollout checklist](payment_production_rollout_checklist.md), the
+[manual payment QA script](payment_real_payment_qa.md), and the
+[closeout report template](payment_closeout_report.md). The safe readiness smoke
+is `scripts/smoke_payment_production_readiness.py`.
+
 ## Render env vars
 
 Backend service (server-side only):
