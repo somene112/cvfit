@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Annotated
+from typing import Annotated, Any
 import uuid
 from zoneinfo import ZoneInfo
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -19,6 +19,7 @@ from app.schemas.billing import (
     BillingPlan,
     BillingPlansResponse,
     BillingUsageResponse,
+    BillingWebhookResponse,
     CheckoutRequest,
     CheckoutResponse,
     PaymentOrderDetail,
@@ -36,6 +37,11 @@ from app.services.billing.plans import (
     get_billing_plan,
     get_billing_plans,
     get_free_allowance,
+)
+from app.services.billing.webhooks import (
+    BillingWebhookPayloadError,
+    BillingWebhookSignatureError,
+    process_payos_webhook,
 )
 
 
@@ -214,3 +220,46 @@ def billing_checkout(
         checkout_url=result.checkout_url,
         expires_at=order.expired_at,
     )
+
+
+@router.post("/webhooks/payos", response_model=BillingWebhookResponse)
+def payos_webhook(
+    payload: Annotated[dict[str, Any], Body()],
+    db: Session = Depends(get_db),
+) -> BillingWebhookResponse:
+    """Apply a verified payOS payment notification without app authentication."""
+    if not settings.ENABLE_BILLING:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="billing is not available",
+        )
+    if not settings.PAYOS_CHECKSUM_KEY.strip():
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="billing webhook is not configured",
+        )
+
+    try:
+        process_payos_webhook(
+            db,
+            payload=payload,
+            checksum_key=settings.PAYOS_CHECKSUM_KEY,
+        )
+    except BillingWebhookSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="invalid webhook signature",
+        )
+    except BillingWebhookPayloadError:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="invalid webhook payload",
+        )
+    except Exception:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="webhook processing failed",
+        )
+
+    return BillingWebhookResponse()

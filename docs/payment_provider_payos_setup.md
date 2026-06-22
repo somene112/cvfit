@@ -8,8 +8,8 @@ never commit real values.** All secrets live in backend env exclusively.
 Backend service (server-side only):
 
 ```bash
-ENABLE_BILLING=true
-ENABLE_CREDIT_GATING=true
+ENABLE_BILLING=false
+ENABLE_CREDIT_GATING=false
 PAYMENT_PROVIDER=payos
 PAYOS_CLIENT_ID=<payos-client-id>
 PAYOS_API_KEY=<payos-api-key>
@@ -22,6 +22,9 @@ PAYMENT_CURRENCY=VND
 
 Notes:
 
+- PR 4 implements signed webhook verification and transactional credit grants.
+  Keep billing and credit gating disabled in production until the frontend and
+  real-payment QA are complete; enable them only through the rollout checklist.
 - `PAYOS_CLIENT_ID`, `PAYOS_API_KEY`, `PAYOS_CHECKSUM_KEY` are **secrets** — backend
   only, never on the frontend, never in logs, never in this repo as real values.
 - `PAYMENT_RETURN_URL` / `PAYMENT_CANCEL_URL` are public frontend routes. The return
@@ -44,8 +47,8 @@ Notes:
 
 ## Local / dev behavior
 
-- With `ENABLE_BILLING=false` (default), `/v1/billing/*` returns `503`; nothing else
-  is affected.
+- With `ENABLE_BILLING=false` (default), checkout and webhook processing return
+  `503`; read-only plan, usage, and order routes cannot create or apply payments.
 - For local development, use payOS **sandbox/test** credentials only — never
   production keys on a dev machine.
 - Webhooks cannot reach `localhost` directly; use a tunnel (e.g. an HTTPS forwarding

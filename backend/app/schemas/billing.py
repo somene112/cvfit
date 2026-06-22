@@ -97,6 +97,10 @@ class PaymentOrdersResponse(BaseModel):
     orders: List[PaymentOrderSummary]
 
 
+class BillingWebhookResponse(BaseModel):
+    ok: Literal[True] = True
+
+
 class InsufficientCreditsError(BaseModel):
     error: Literal["insufficient_credits"] = "insufficient_credits"
     message: str
