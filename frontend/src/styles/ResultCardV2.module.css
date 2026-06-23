@@ -16,7 +16,7 @@
   background: var(--color-card);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-card);
   border: 1px solid var(--color-border);
   transition: box-shadow var(--transition-base), transform var(--transition-base);
   animation: fadeInUp 0.5s ease-out both;
@@ -24,6 +24,7 @@
 
 .sectionCard:hover {
   box-shadow: var(--shadow-md);
+  border-color: var(--color-border-hover);
 }
 
 /* Staggered entrance */
@@ -75,7 +76,7 @@
 .scoreSummary {
   text-align: center;
   padding: var(--space-10) var(--space-8);
-  background: linear-gradient(180deg, var(--color-card) 0%, var(--color-bg) 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, var(--color-primary-50) 100%);
 }
 
 .scoreSummaryInner {
@@ -106,8 +107,8 @@
 
 .fitGood {
   background: #DBEAFE;
-  color: #1D4ED8;
-  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: #0284C7;
+  border: 1px solid rgba(14, 165, 233, 0.25);
 }
 
 .fitPartial {
@@ -180,7 +181,7 @@
 
 .metricCard:hover {
   border-color: var(--color-primary);
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.12);
   transform: translateY(-2px);
 }
 
@@ -327,7 +328,7 @@
 
 .evidenceCard:hover {
   border-color: var(--color-primary);
-  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.06);
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.1);
 }
 
 .evidenceCardHeader {
@@ -355,7 +356,7 @@
 
 .sourceCv {
   background: #DBEAFE;
-  color: #1D4ED8;
+  color: #0284C7;
 }
 
 .sourceJd {
@@ -377,7 +378,7 @@
   color: var(--color-text);
   line-height: 1.7;
   padding: var(--space-3) var(--space-4);
-  background: linear-gradient(135deg, var(--color-primary-50), rgba(219, 234, 254, 0.4));
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-accent-light));
   border-radius: var(--radius-sm);
   border-left: 3px solid var(--color-primary);
   margin-top: var(--space-2);
@@ -495,8 +496,8 @@
 
 .priorityLow {
   background: #DBEAFE;
-  color: #1D4ED8;
-  border: 1px solid rgba(37, 99, 235, 0.2);
+  color: #0284C7;
+  border: 1px solid rgba(14, 165, 233, 0.2);
 }
 
 .improvementTitle {
@@ -641,8 +642,8 @@
 
 /* ─── Phase 5 Bridge Banner ─── */
 .phase5Bridge {
-  background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 50%, #EFF6FF 100%);
-  border: 1px solid rgba(99, 102, 241, 0.2);
+  background: linear-gradient(135deg, var(--color-primary-50) 0%, var(--color-accent-light) 50%, var(--color-primary-50) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.2);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   animation: fadeInUp 0.5s 0.45s ease-out both;
@@ -657,7 +658,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), #8b5cf6, var(--color-secondary));
+  background: var(--gradient-primary);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
 }
 
@@ -680,13 +681,13 @@
   width: 44px;
   height: 44px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
 
 .phase5BridgeIconBox svg {
@@ -713,7 +714,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary), #8b5cf6);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
@@ -721,13 +722,13 @@
   text-decoration: none;
   white-space: nowrap;
   transition: all var(--transition-fast);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 2px 8px rgba(14, 165, 233, 0.25);
   flex-shrink: 0;
 }
 
 .phase5NewAppBtn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
 }
 
 .phase5NewAppBtn svg {
@@ -748,7 +749,7 @@
   gap: var(--space-3);
   padding: var(--space-5);
   background: white;
-  border: 1px solid rgba(99, 102, 241, 0.15);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: inherit;
@@ -757,6 +758,7 @@
   overflow: hidden;
   cursor: pointer;
   animation: fadeInUp 0.4s ease-out both;
+  box-shadow: var(--shadow-sm);
 }
 
 .phase5Card:nth-child(1) { animation-delay: 0.55s; }
@@ -766,8 +768,8 @@
 
 .phase5Card:hover {
   transform: translateY(-4px);
-  border-color: rgba(99, 102, 241, 0.4);
-  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
+  border-color: var(--color-primary);
+  box-shadow: 0 12px 32px rgba(14, 165, 233, 0.14);
 }
 
 .phase5Card::after {
@@ -801,8 +803,8 @@
 }
 
 .phase5CardIcon.create {
-  background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
-  color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent-light));
+  color: var(--color-primary-hover);
 }
 
 .phase5CardIcon.interview {
@@ -881,7 +883,7 @@
 .featureLinkCard:hover {
   border-color: var(--color-primary);
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.12);
 }
 
 .featureLinkCard::before {

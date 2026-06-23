@@ -30,14 +30,14 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary), #4F46E5);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
   white-space: nowrap;
 }
 
@@ -47,8 +47,8 @@
 }
 
 .newBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45);
 }
 
 /* Application Cards */
@@ -63,16 +63,18 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-6);
-  transition: box-shadow var(--transition-base), transform var(--transition-base);
+  transition: box-shadow var(--transition-base), transform var(--transition-base), border-color var(--transition-fast);
   animation: fadeInUp 0.4s ease-out both;
   text-decoration: none;
   color: inherit;
   display: block;
+  box-shadow: var(--shadow-card);
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-color: var(--color-border-hover);
 }
 
 .cardHeader {

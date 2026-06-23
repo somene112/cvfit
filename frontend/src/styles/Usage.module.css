@@ -23,7 +23,7 @@
 
 /* ─── Plan Card ─── */
 .planCard {
-  background: linear-gradient(135deg, var(--color-primary), #4F46E5, #7C3AED);
+  background: var(--gradient-primary);
   border-radius: var(--radius-xl);
   padding: var(--space-8);
   margin-bottom: var(--space-6);
@@ -31,6 +31,7 @@
   position: relative;
   overflow: hidden;
   animation: fadeInUp 0.4s ease-out;
+  box-shadow: 0 8px 32px rgba(14, 165, 233, 0.35);
 }
 
 .planCard::before {
@@ -111,11 +112,12 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   padding: var(--space-5) var(--space-6);
-  transition: box-shadow var(--transition-base);
+  transition: box-shadow var(--transition-base), border-color var(--transition-fast);
   animation: fadeInUp 0.4s ease-out both;
+  box-shadow: var(--shadow-card);
 }
 
-.metricCard:hover { box-shadow: var(--shadow-md); }
+.metricCard:hover { box-shadow: var(--shadow-md); border-color: var(--color-border-hover); }
 
 .metricHeader {
   display: flex;
@@ -313,7 +315,6 @@
 
 .upgradePrimary { color: white; background: var(--color-primary); }
 .upgradeSecondary { color: var(--color-primary); background: white; border: 1px solid var(--color-border); }
-
 /* ─── Responsive ─── */
 @media (max-width: 768px) {
   .usageGrid { grid-template-columns: 1fr; }
