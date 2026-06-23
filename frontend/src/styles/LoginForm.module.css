@@ -1,5 +1,6 @@
 /* ========================================
-   LoginForm — Glassmorphism Card
+   LoginForm — Premium Light Mode
+   Blue/Cyan · Glassmorphism Card
    ======================================== */
 
 .loginPage {
@@ -10,44 +11,51 @@
   padding: var(--space-4);
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0F172A 100%);
+  background: linear-gradient(160deg, #F0F9FF 0%, #E0F2FE 40%, #CFFAFE 70%, #F0F9FF 100%);
 }
 
-/* Animated Background Orbs */
-.loginPage::before,
-.loginPage::after {
+/* Dot grid */
+.loginPage::before {
   content: '';
   position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  animation: float 8s ease-in-out infinite;
+  inset: 0;
+  background-image: radial-gradient(rgba(14, 165, 233, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
 }
 
-.loginPage::before {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.3), transparent 70%);
-  top: -100px;
-  right: -100px;
-}
-
-.loginPage::after {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(96, 165, 250, 0.2), transparent 70%);
-  bottom: -80px;
-  left: -80px;
-  animation-delay: 4s;
-}
-
+/* Background orbs */
 .backgroundGrid {
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  background-size: 60px 60px;
   pointer-events: none;
+  z-index: 0;
+}
+
+.backgroundGrid::before {
+  content: '';
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.2) 0%, transparent 65%);
+  top: -120px;
+  right: -100px;
+  filter: blur(60px);
+  animation: orbFloat 14s ease-in-out infinite;
+}
+
+.backgroundGrid::after {
+  content: '';
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, transparent 65%);
+  bottom: -80px;
+  left: -80px;
+  filter: blur(60px);
+  animation: orbFloat 18s ease-in-out infinite reverse;
 }
 
 .card {
@@ -56,15 +64,16 @@
   width: 100%;
   max-width: 440px;
   padding: var(--space-10);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(186, 230, 253, 0.8);
   border-radius: var(--radius-xl);
   box-shadow:
-    0 25px 50px -12px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: fadeInUp 0.6s ease-out;
+    0 24px 56px rgba(14, 165, 233, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .logoContainer {
@@ -76,14 +85,14 @@
 }
 
 .logoIcon {
-  width: 44px;
-  height: 44px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  width: 46px;
+  height: 46px;
+  background: var(--gradient-primary);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
 }
 
 .logoIcon svg {
@@ -94,17 +103,18 @@
 
 .logoText {
   font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  color: white;
-  letter-spacing: -0.025em;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -0.04em;
 }
 
 .subtitle {
   text-align: center;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-sm);
   margin-bottom: var(--space-8);
-  font-weight: var(--font-weight-normal);
+  font-weight: 400;
+  line-height: 1.6;
 }
 
 .form {
@@ -120,8 +130,8 @@
 .inputLabel {
   display: block;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  color: var(--color-text-secondary);
   margin-bottom: var(--space-2);
 }
 
@@ -134,51 +144,48 @@
 .inputIcon {
   position: absolute;
   left: var(--space-4);
-  width: 18px;
-  height: 18px;
-  color: rgba(255, 255, 255, 0.35);
+  width: 17px;
+  height: 17px;
+  color: var(--color-text-muted);
   pointer-events: none;
   transition: color var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .input {
   width: 100%;
-  padding: var(--space-3) var(--space-4) var(--space-3) 48px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 11px var(--space-4) 11px 44px;
+  background: var(--color-primary-50);
+  border: 1.5px solid var(--color-border);
   border-radius: var(--radius-md);
-  color: white;
+  color: var(--color-text);
   font-size: var(--font-size-base);
   transition: all var(--transition-fast);
   outline: none;
+  font-weight: 400;
 }
 
 .input::placeholder {
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--color-text-muted);
 }
 
 .input:focus {
   border-color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-.input:focus ~ .inputIcon,
-.input:focus + .inputIcon {
-  color: var(--color-secondary);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
 }
 
 .inputWrapper:focus-within .inputIcon {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .submitButton {
   width: 100%;
-  padding: var(--space-3) var(--space-6);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  padding: 12px var(--space-6);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-weight: 700;
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -186,6 +193,8 @@
   position: relative;
   overflow: hidden;
   margin-top: var(--space-2);
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.35);
+  letter-spacing: -0.01em;
 }
 
 .submitButton::before {
@@ -202,8 +211,8 @@
 }
 
 .submitButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(14, 165, 233, 0.5);
 }
 
 .submitButton:active {
@@ -214,6 +223,7 @@
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 
 .buttonContent {
@@ -226,7 +236,7 @@
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.35);
   border-top-color: white;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
@@ -237,12 +247,13 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
-  background: rgba(239, 68, 68, 0.1);
+  background: var(--color-danger-light);
   border: 1px solid rgba(239, 68, 68, 0.2);
-  border-radius: var(--radius-sm);
-  color: #FCA5A5;
+  border-radius: var(--radius-md);
+  color: #991B1B;
   font-size: var(--font-size-sm);
   animation: fadeIn 0.3s ease-out;
+  font-weight: 500;
 }
 
 .errorIcon {
@@ -263,14 +274,15 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-border);
 }
 
 .dividerText {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.1em;
+  font-weight: 600;
 }
 
 .googleSection {
@@ -290,7 +302,7 @@
 
 .googleDisabled {
   font-size: var(--font-size-xs);
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-muted);
   text-align: center;
 }
 
@@ -298,24 +310,25 @@
   text-align: center;
   margin-top: var(--space-6);
   font-size: var(--font-size-sm);
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-text-secondary);
 }
 
 .footerLink {
-  color: var(--color-secondary);
-  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  font-weight: 700;
   cursor: pointer;
   transition: color var(--transition-fast);
 }
 
 .footerLink:hover {
-  color: white;
+  color: var(--color-primary-hover);
 }
 
 /* Responsive */
 @media (max-width: 480px) {
   .card {
     padding: var(--space-6);
+    border-radius: var(--radius-lg);
   }
 
   .logoText {

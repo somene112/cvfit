@@ -66,7 +66,7 @@
 }
 
 .skillGroupHeader:hover {
-  background: rgba(37, 99, 235, 0.02);
+  background: rgba(14, 165, 233, 0.02);
 }
 
 .skillGroupLeft {
@@ -174,7 +174,7 @@
 
 .sourceCv {
   background: #DBEAFE;
-  color: #1D4ED8;
+  color: #0284C7;
 }
 
 .sourceJd {

@@ -198,7 +198,7 @@
 
 .attachInput:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
 }
 
 /* Buttons */
@@ -207,7 +207,7 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary), #4F46E5);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
@@ -219,7 +219,7 @@
 
 .btnPrimary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
 }
 
 .btnPrimary:disabled { opacity: 0.5; cursor: not-allowed; }

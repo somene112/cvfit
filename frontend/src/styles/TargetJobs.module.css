@@ -51,7 +51,7 @@
 
 .searchInput:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
 
 .filterSelect {
@@ -77,14 +77,14 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary), #4F46E5);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: all var(--transition-fast);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
   white-space: nowrap;
   border: none;
   cursor: pointer;
@@ -93,8 +93,8 @@
 .newBtn svg { width: 16px; height: 16px; }
 
 .newBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45);
 }
 
 /* ─── Jobs List / Grid ─── */
@@ -117,6 +117,7 @@
   animation: fadeInUp 0.4s ease-out both;
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
 .card::before {
@@ -126,14 +127,14 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--color-primary), #8B5CF6);
+  background: var(--gradient-primary);
   opacity: 0;
   transition: opacity var(--transition-fast);
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--color-border-hover);
 }
 
@@ -204,7 +205,7 @@
   flex-shrink: 0;
 }
 
-.status--saved         { background: #EFF6FF; color: #1D4ED8; border: 1px solid #BFDBFE; }
+.status--saved         { background: #EFF6FF; color: #0284C7; border: 1px solid #BFDBFE; }
 .status--analyzing     { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
 .status--ready_to_apply{ background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
 .status--interviewing  { background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; }
@@ -281,7 +282,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), #8B5CF6, #EC4899);
+  background: var(--gradient-primary);
 }
 
 .heroTop {
@@ -296,7 +297,7 @@
   width: 60px;
   height: 60px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary), #8B5CF6);
+  background: var(--gradient-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -304,7 +305,7 @@
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
   flex-shrink: 0;
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.3);
 }
 
 .heroInfo { flex: 1; min-width: 0; }
@@ -383,21 +384,22 @@
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
-  background: linear-gradient(135deg, var(--color-primary), #4F46E5);
+  background: var(--gradient-primary);
   color: white;
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   border-radius: var(--radius-md);
   text-decoration: none;
   border: none;
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
 }
 
 .btnPrimary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.45);
 }
 
 .btnPrimary:disabled {
@@ -468,7 +470,7 @@
 
 .fieldInput:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
 
 .fieldInput:disabled {
