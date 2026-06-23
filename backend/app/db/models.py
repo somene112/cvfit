@@ -357,3 +357,118 @@ class ShareLink(Base):
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True, onupdate=datetime.utcnow)
 
     user = relationship("User", foreign_keys=[user_id])
+
+
+# ---------------------------------------------------------------------------
+# Phase 7A — Billing & Credits (payOS / VietQR)
+#
+# Additive tables for one-time credit packs. Constrained fields (status,
+# event_type, credit types) are stored as plain strings and validated at the
+# Pydantic schema / service layer, matching the Phase 6 convention. No provider
+# secrets, raw signatures, or raw webhook payloads are stored here — only
+# audit-safe identifiers and hashes. Amounts are integer VND.
+# ---------------------------------------------------------------------------
+
+# Order lifecycle vocabulary (validated at the schema/service layer).
+PAYMENT_ORDER_STATUS = (
+    "created",
+    "pending",
+    "paid",
+    "cancelled",
+    "expired",
+    "failed",
+    "manual_review",
+    "refunded",
+)
+
+# Credit-consuming action / usage event vocabulary.
+USAGE_EVENT_TYPE = ("analysis", "interview", "cover_letter", "package")
+
+# Webhook processing outcome vocabulary.
+PAYMENT_WEBHOOK_STATUS = ("received", "applied", "duplicate", "manual_review", "rejected")
+
+
+class PaymentOrder(Base):
+    __tablename__ = "payment_orders"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    provider: Mapped[str] = mapped_column(String(30), nullable=False, default="payos", server_default="payos")
+    # Provider/order reference; the idempotency + lookup anchor for webhooks.
+    provider_order_code: Mapped[str] = mapped_column(String(255), nullable=False, unique=True, index=True)
+    provider_payment_link_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    plan_code: Mapped[str] = mapped_column(String(50), nullable=False, index=True)
+    amount_vnd: Mapped[int] = mapped_column(Integer, nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False, default="VND", server_default="VND")
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="created", index=True)
+    # Sensitive: never logged. Stored so the success page can re-fetch if needed.
+    checkout_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    return_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    cancel_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # Sanitized provider payload (audit/debug). Never stores secrets/signatures.
+    raw_provider_payload_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    paid_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    cancelled_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    expired_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+    user = relationship("User", foreign_keys=[user_id])
+
+
+class UserEntitlement(Base):
+    __tablename__ = "user_entitlements"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    source_payment_order_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("payment_orders.id"), nullable=True, index=True
+    )
+    plan_code: Mapped[str] = mapped_column(String(50), nullable=False)
+    analysis_credits: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    interview_credits: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    cover_letter_credits: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    package_credits: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default="0")
+    starts_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", foreign_keys=[user_id])
+    source_payment_order = relationship("PaymentOrder", foreign_keys=[source_payment_order_id])
+
+
+class UsageEvent(Base):
+    __tablename__ = "usage_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, index=True)
+    event_type: Mapped[str] = mapped_column(String(30), nullable=False, index=True)
+    quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1, server_default="1")
+    # Which bucket was spent ("free_allowance" / "paid_credit").
+    source: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    related_job_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    related_application_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
+    related_order_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("payment_orders.id"), nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+
+    user = relationship("User", foreign_keys=[user_id])
+
+
+class PaymentWebhookEvent(Base):
+    __tablename__ = "payment_webhook_events"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    provider: Mapped[str] = mapped_column(String(30), nullable=False, index=True)
+    provider_event_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    provider_order_code: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    # Idempotency anchor — hash of the verified payload. Never the raw payload.
+    payload_hash: Mapped[str] = mapped_column(String(128), nullable=False, unique=True, index=True)
+    # Hash of the signature only — never the raw signature.
+    signature_hash: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, index=True)
+    received_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    processed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)

@@ -61,6 +61,14 @@ export const ANALYTICS_EVENTS = {
 
   // Phase 6 — Usage
   USAGE_PAGE_VIEWED: 'usage_page_viewed',
+
+  // Phase 7A — Billing
+  PRICING_VIEWED: 'pricing_viewed',
+  BILLING_VIEWED: 'billing_viewed',
+  CHECKOUT_STARTED: 'checkout_started',
+  CHECKOUT_REDIRECTED: 'checkout_redirected',
+  PAYMENT_RETURN_SUCCESS_VIEWED: 'payment_return_success_viewed',
+  PAYMENT_CANCEL_VIEWED: 'payment_cancel_viewed',
 };
 
 /**
@@ -124,6 +132,10 @@ function sanitizeAnalyticsParams(params) {
     'plan_name',
     'visibility',
     'job_status',
+    // Phase 7A billing: low-cardinality provider and backend plan metadata only.
+    'plan_code',
+    'amount_bucket',
+    'provider',
   ]);
 
   const output = {};

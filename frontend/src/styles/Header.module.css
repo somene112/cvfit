@@ -183,7 +183,9 @@
     padding: 6px 8px;
     font-size: 0.78rem;
   }
+}
 
+@media (max-width: 640px) {
   .header {
     padding: 0 var(--space-5);
   }

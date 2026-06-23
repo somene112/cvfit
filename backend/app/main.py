@@ -18,12 +18,16 @@ from app.api.routes.interview_sessions import router as interview_sessions_route
 from app.api.routes.help_assistant import router as help_assistant_router
 from app.api.routes.share_links import router as share_links_router, public_router as share_public_router
 from app.api.routes.usage import router as usage_router
+from app.api.routes.billing import router as billing_router
+from app.api.exception_handlers import insufficient_credits_handler
+from app.services.billing.credit_gating import InsufficientCreditsError
 
 log = configure_logging()
 validate_runtime_config()
 init_db()
 
 app = FastAPI(title="CVFit API", version="0.2.0")
+app.add_exception_handler(InsufficientCreditsError, insufficient_credits_handler)
 add_cors_middleware(app)
 app.mount("/static", StaticFiles(directory=resolve_path(settings.FRONTEND_STATIC_DIR)), name="static")
 
@@ -42,3 +46,4 @@ app.include_router(help_assistant_router)
 app.include_router(share_links_router)
 app.include_router(share_public_router)
 app.include_router(usage_router)
+app.include_router(billing_router)

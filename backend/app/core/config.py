@@ -39,6 +39,25 @@ class Settings(BaseSettings):
     # Share links stay OFF until the privacy review passes.
     ENABLE_PHASE6_SHARE_LINKS: bool = False
     ENABLE_PHASE6_USAGE_SHELL: bool = True
+    # ----------------------------------------------------------------------
+    # Phase 7A Billing & Credits (payOS / VietQR).
+    #
+    # Billing is OFF by default so this PR can ship safely without exposing any
+    # billing routes or credit gating in production. Provider secrets default to
+    # empty strings and live only in backend env — never committed, never sent
+    # to the frontend. No provider API calls are made in this PR.
+    # ----------------------------------------------------------------------
+    ENABLE_BILLING: bool = False
+    ENABLE_CREDIT_GATING: bool = False
+    PAYMENT_PROVIDER: str = "payos"
+    PAYMENT_CURRENCY: str = "VND"
+    PAYMENT_RETURN_URL: str = ""
+    PAYMENT_CANCEL_URL: str = ""
+    PAYOS_WEBHOOK_URL: str = ""
+    # Secrets — backend env only. Empty by default; never commit real values.
+    PAYOS_CLIENT_ID: str = ""
+    PAYOS_API_KEY: str = ""
+    PAYOS_CHECKSUM_KEY: str = ""
 
     class Config:
         env_file = ("../.env", ".env")

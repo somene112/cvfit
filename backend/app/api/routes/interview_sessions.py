@@ -47,6 +47,7 @@ from app.services.interview.sessions_v2 import (
     score_answer_v2,
     summarize_answers,
 )
+from app.services.billing.credit_gating import consume_credit, ensure_credit_available
 
 def require_interview_v2_enabled() -> None:
     if not settings.ENABLE_PHASE6_INTERVIEW_V2:
@@ -307,6 +308,8 @@ def submit_answer(
         if candidate is not None and candidate.user_id == current_user.id:
             analysis_job = candidate
 
+    ensure_credit_available(db, current_user.id, "interview")
+
     score_json, feedback_json = score_answer_v2(question.question_text, body.answer_text, analysis_job)
 
     prior = (
@@ -331,6 +334,13 @@ def submit_answer(
         created_at=now,
     )
     db.add(answer)
+    consume_credit(
+        db,
+        current_user.id,
+        "interview",
+        related_job_id=analysis_job.id if analysis_job else None,
+        related_application_id=session.application_id,
+    )
     session.updated_at = now
     db.commit()
     db.refresh(answer)

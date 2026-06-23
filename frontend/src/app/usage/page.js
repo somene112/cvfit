@@ -11,12 +11,10 @@ import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics';
 import styles from '@/styles/Usage.module.css';
 
 const UPGRADE_FEATURES = [
-  'Unlimited CV analyses per month',
-  'Unlimited interview sessions',
-  'Unlimited cover letters & packages',
-  'Up to 25 active share links',
-  'Priority AI response speed',
-  'Advanced rubric feedback',
+  'CV analysis credits',
+  'Interview feedback credits',
+  'Cover letter credits',
+  'Application package credits',
 ];
 
 const METRIC_META = {
@@ -195,15 +193,15 @@ export default function UsagePage() {
             ))}
       </div>
 
-      {/* Upgrade Teaser — UI only, no payment flow */}
+      {/* Phase 7A entry points; checkout starts only from the Pricing page. */}
       {!isLoading && plan?.tier !== 'premium' && (
         <div className={styles.upgradeCard}>
           <div className={styles.upgradeHeader}>
             <div className={styles.upgradeIcon}>🚀</div>
             <div style={{ flex: 1 }}>
-              <div className={styles.upgradeTitle}>Unlock Unlimited Access</div>
+              <div className={styles.upgradeTitle}>Need more credits?</div>
               <p className={styles.upgradeDesc}>
-                Remove all monthly limits and get faster AI responses, richer rubric feedback, and more share links — all with a Pro plan.
+                View one-time credit packs for analyses, interview feedback, cover letters, and application packages. No subscription is required.
               </p>
             </div>
           </div>
@@ -219,9 +217,11 @@ export default function UsagePage() {
             ))}
           </div>
 
-          <p className={styles.upgradeNote}>
-            Interested in upgrading? Contact the team or check your account settings. Payment is handled securely outside this app.
-          </p>
+          <div className={styles.upgradeActions}>
+            <Link href="/pricing" className={styles.upgradePrimary}>View Pricing</Link>
+            <Link href="/billing" className={styles.upgradeSecondary}>Billing &amp; Credits</Link>
+          </div>
+          <p className={styles.upgradeNote}>Credits are added only after server-verified payment confirmation.</p>
         </div>
       )}
 
