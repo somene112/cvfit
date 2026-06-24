@@ -145,3 +145,45 @@ existing tests (`test_phase5_package_cover_letter.py`,
 `test_phase6_interview_sessions.py`, `test_phase6_help_assistant.py`) plus the
 new `test_vietnamese_generation.py`, which asserts both the Vietnamese output and
 the unchanged English default.
+
+---
+
+## Admin Analytics v2 — demo script
+
+The `/admin` dashboard (admins only) now shows database-derived product-usage
+metrics, not just raw counts. All numbers come from aggregate PostgreSQL queries
+— no private content, no GA4.
+
+**Why internal DB metrics (not GA4):**
+
+> "GA4 mới được gắn nên chưa phản ánh toàn bộ lịch sử truy cập. Vì vậy dashboard
+> quản trị dùng dữ liệu nội bộ từ PostgreSQL để đo mức sử dụng thực tế của sản
+> phẩm: người dùng, lượt phân tích CV, hồ sơ ứng tuyển, phiên phỏng vấn và
+> trạng thái vận hành."
+
+**Demo steps:**
+
+1. **Open `/admin`** (set `ADMIN_EMAILS` to your account email in backend env first).
+2. **Tổng quan sử dụng sản phẩm** — total users, users who ran a CV analysis,
+   total analyses, analysis success rate, applications, interview sessions, and
+   latest activity time.
+3. **Phễu sử dụng** — Người dùng → Đã phân tích CV → Tạo hồ sơ ứng tuyển →
+   Luyện phỏng vấn, with conversion percentages between steps.
+4. **Hoạt động 7 ngày / 30 ngày** — new users / analyses / applications /
+   interview sessions created in each window.
+5. **Độ sâu sử dụng** — averages per user (analyses, applications, interview
+   sessions) and answers per session.
+6. **Thanh toán** — when `ENABLE_BILLING=false`, a neutral **"Chưa bật"** badge +
+   "Thanh toán chưa được mở cho người dùng thật." Orders/revenue are shown only
+   as secondary operational metrics (0đ is **not** a top-line KPI). When billing
+   is enabled, revenue/orders are shown as normal cards.
+7. **Trạng thái tính năng** — Billing / Credit gating / Share links bật/tắt.
+
+**Privacy/safety:** the overview is aggregate-only (counts, percentages, status
+breakdowns, timestamps). No emails, raw CV/JD/answers, cover letters, package
+content, checkout URLs, signatures, webhook payloads, or secrets. Read-only — no
+admin mutation endpoints. Percentages/averages return `—` (not a fake 0) when the
+denominator is zero.
+
+**Out of scope:** GA4 historical reconstruction, payment rollout, real payments,
+admin mutations, and full enterprise analytics (charts/cohorts/retention curves).
