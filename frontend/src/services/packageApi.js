@@ -8,11 +8,17 @@ import apiClient from './apiClient';
 /**
  * Generate an application package for the given application.
  * Requires an analysis to be attached first (otherwise returns 422).
+ * The product is Vietnamese-first, so generated prose defaults to Vietnamese.
  * @param {string} appId
+ * @param {string} [language='vi'] - "vi" | "en"
  * @returns {Promise<Object>}
  */
-export async function generatePackage(appId) {
-  const response = await apiClient.post(`/v1/applications/${appId}/package/generate`);
+export async function generatePackage(appId, language = 'vi') {
+  const response = await apiClient.post(
+    `/v1/applications/${appId}/package/generate`,
+    null,
+    { params: { language } }
+  );
   return response.data;
 }
 

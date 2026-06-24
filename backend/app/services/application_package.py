@@ -1,13 +1,24 @@
-"""Deterministic application package builder — no LLM, evidence-only."""
+"""Deterministic application package builder — no LLM, evidence-only.
+
+Localized: when ``language="vi"`` the app-generated summary, next actions, and
+checklist notes are Vietnamese. Skills, scores, and analysis-derived content
+flow through unchanged.
+"""
 
 from __future__ import annotations
 
 from typing import Any, Optional
 
+from app.services.i18n import resolve_language
+
 
 PACKAGE_DISCLAIMER = (
     "This package is generated from your uploaded CV, JD and extracted evidence. "
     "Do not include skills or experience that are not true."
+)
+PACKAGE_DISCLAIMER_VI = (
+    "Bộ hồ sơ này được tạo từ CV, mô tả công việc và bằng chứng đã trích xuất của bạn. "
+    "Không đưa vào các kỹ năng hoặc kinh nghiệm không có thật."
 )
 
 
@@ -15,20 +26,29 @@ def build_package_payload(
     application: Any,
     job: Optional[Any],
     profile_items: list,
+    *,
+    language: str = "en",
 ) -> dict:
+    lang = resolve_language(language)
     result: dict = job.result_json if (job and job.result_json) else {}
 
     fit_score = _extract_fit_score(result)
     readiness_level = _compute_readiness_level(fit_score)
-    next_actions = _compute_next_actions(readiness_level)
+    next_actions = _compute_next_actions(readiness_level, lang)
     matched_skills = _extract_skill_list(result.get("matched_skills"))
     missing_skills = _extract_skill_list(result.get("missing_skills"))
+
+    summary = (
+        "Mức độ sẵn sàng được đánh giá dựa trên kết quả phân tích đã đính kèm."
+        if lang == "vi"
+        else "Application readiness is based on the attached analysis result."
+    )
 
     return {
         "readiness_summary": {
             "readiness_level": readiness_level,
             "fit_score": fit_score,
-            "summary": "Application readiness is based on the attached analysis result.",
+            "summary": summary,
             "next_actions": next_actions,
         },
         "best_cv_analysis": {
@@ -44,8 +64,8 @@ def build_package_payload(
             "questions": _extract_interview_questions(result),
         },
         "learning_roadmap": _safe_list(result.get("learning_roadmap"))[:8],
-        "evidence_checklist": _build_evidence_checklist(profile_items, matched_skills),
-        "disclaimer": PACKAGE_DISCLAIMER,
+        "evidence_checklist": _build_evidence_checklist(profile_items, matched_skills, lang),
+        "disclaimer": PACKAGE_DISCLAIMER_VI if lang == "vi" else PACKAGE_DISCLAIMER,
     }
 
 
@@ -74,7 +94,25 @@ def _compute_readiness_level(fit_score: Optional[float]) -> str:
     return "needs_work"
 
 
-def _compute_next_actions(readiness_level: str) -> list[str]:
+def _compute_next_actions(readiness_level: str, lang: str = "en") -> list[str]:
+    if lang == "vi":
+        if readiness_level == "not_started":
+            return ["Đính kèm một phân tích đã hoàn thành vào hồ sơ ứng tuyển này."]
+        if readiness_level == "ready":
+            return [
+                "Xem lại các kỹ năng còn thiếu và bổ sung bằng chứng vào hồ sơ năng lực.",
+                "Hoàn thiện thư xin việc và nộp hồ sơ.",
+            ]
+        if readiness_level == "almost_ready":
+            return [
+                "Xử lý các kỹ năng còn thiếu quan trọng nhất từ kết quả phân tích.",
+                "Bổ sung bằng chứng dự án cho các kỹ năng đã đáp ứng vào hồ sơ năng lực.",
+            ]
+        return [
+            "Xem lại các kỹ năng còn thiếu từ phân tích mới nhất.",
+            "Bổ sung bằng chứng dự án vào hồ sơ năng lực.",
+            "Cân nhắc chỉnh sửa CV để đáp ứng các yêu cầu ưu tiên cao của mô tả công việc.",
+        ]
     if readiness_level == "not_started":
         return ["Attach a completed analysis job to this application."]
     if readiness_level == "ready":
@@ -144,7 +182,7 @@ def _extract_interview_questions(result: dict) -> list[str]:
     return out
 
 
-def _build_evidence_checklist(profile_items: list, matched_skills: list[str]) -> list[dict]:
+def _build_evidence_checklist(profile_items: list, matched_skills: list[str], lang: str = "en") -> list[dict]:
     checklist = []
     for skill in matched_skills[:8]:
         skill_lower = skill.lower()
@@ -159,14 +197,22 @@ def _build_evidence_checklist(profile_items: list, matched_skills: list[str]) ->
             if skill_lower in title or skill_lower in desc:
                 has_evidence = True
                 break
-        checklist.append({
-            "skill": skill,
-            "has_profile_evidence": has_evidence,
-            "note": (
+        if lang == "vi":
+            note = (
+                "Đã tìm thấy trong hồ sơ năng lực."
+                if has_evidence
+                else "Không tìm thấy bằng chứng trong hồ sơ — hãy thêm một mục dự án hoặc kỹ năng."
+            )
+        else:
+            note = (
                 "Found in career profile."
                 if has_evidence
                 else "No profile evidence found — add a project or skill item."
-            ),
+            )
+        checklist.append({
+            "skill": skill,
+            "has_profile_evidence": has_evidence,
+            "note": note,
         })
     return checklist
 

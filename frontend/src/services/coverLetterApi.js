@@ -8,11 +8,17 @@ import apiClient from './apiClient';
 /**
  * Generate a cover letter for the given application.
  * Requires an analysis to be attached first (otherwise returns 422).
+ * The product is Vietnamese-first, so generated prose defaults to Vietnamese.
  * @param {string} appId
+ * @param {string} [language='vi'] - "vi" | "en"
  * @returns {Promise<Object>}
  */
-export async function generateCoverLetter(appId) {
-  const response = await apiClient.post(`/v1/applications/${appId}/cover-letter/generate`);
+export async function generateCoverLetter(appId, language = 'vi') {
+  const response = await apiClient.post(
+    `/v1/applications/${appId}/cover-letter/generate`,
+    null,
+    { params: { language } }
+  );
   return response.data;
 }
 

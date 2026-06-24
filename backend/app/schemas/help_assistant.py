@@ -41,6 +41,9 @@ class AssistantRequest(BaseModel):
     analysis_job_id: Optional[str] = None
     task_id: Optional[str] = None
     session_id: Optional[str] = None
+    # Optional UI language ("vi" / "en"). Defaults to English so existing
+    # clients are unaffected; the Vietnamese-first frontend sends "vi".
+    language: Optional[str] = None
 
 
 class AssistantResponse(BaseModel):

@@ -10,7 +10,7 @@ from __future__ import annotations
 import uuid
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
@@ -31,6 +31,7 @@ from app.schemas.help_assistant import (
     SuggestionsResponse,
 )
 from app.services.help import HelpContext, build_assistant_response, build_suggestions
+from app.services.i18n import resolve_language
 from app.services.target_jobs import compute_readiness
 
 
@@ -139,7 +140,7 @@ def assistant(
     db: Session = Depends(get_db),
 ) -> AssistantResponse:
     ctx = _build_context(body, current_user, db)
-    result = build_assistant_response(body.intent, ctx)
+    result = build_assistant_response(body.intent, ctx, language=body.language)
     return AssistantResponse(**result)
 
 
@@ -147,15 +148,20 @@ def assistant(
 def suggestions(
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
+    language: Optional[str] = Query(default=None),
 ) -> SuggestionsResponse:
+    lang = resolve_language(language)
     learning_tasks = db.query(LearningTask).filter(LearningTask.user_id == current_user.id).all()
     interview_sessions = db.query(InterviewSession).filter(InterviewSession.user_id == current_user.id).all()
     ctx = HelpContext(learning_tasks=learning_tasks, interview_sessions=interview_sessions)
-    items = [SuggestionItem(**s) for s in build_suggestions(ctx)]
+    items = [SuggestionItem(**s) for s in build_suggestions(ctx, language=lang)]
     return SuggestionsResponse(
         suggestions=items,
         limitations=(
-            "Suggestions are scoped to supported in-product intents only. The assistant does not "
+            "Các gợi ý chỉ giới hạn trong những ý định được hỗ trợ trong sản phẩm. Trợ lý không trả lời "
+            "các câu hỏi về thị trường lao động bên ngoài hay đảm bảo kết quả."
+            if lang == "vi"
+            else "Suggestions are scoped to supported in-product intents only. The assistant does not "
             "answer external job-market questions or guarantee outcomes."
         ),
     )

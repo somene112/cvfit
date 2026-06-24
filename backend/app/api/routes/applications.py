@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -310,6 +310,7 @@ def generate_package(
     application_id: uuid.UUID,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
+    language: Optional[str] = Query(default=None),
 ) -> ArtifactGeneratedResponse:
     app = _get_owned_application(application_id, current_user, db)
 
@@ -326,7 +327,7 @@ def generate_package(
     ensure_credit_available(db, current_user.id, "package")
 
     profile_items = _get_profile_items(db, current_user.id)
-    payload = build_package_payload(app, job, profile_items)
+    payload = build_package_payload(app, job, profile_items, language=language)
 
     artifact = ApplicationArtifact(
         id=uuid.uuid4(),
@@ -403,6 +404,7 @@ def generate_cover_letter(
     application_id: uuid.UUID,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
+    language: Optional[str] = Query(default=None),
 ) -> ArtifactGeneratedResponse:
     app = _get_owned_application(application_id, current_user, db)
 
@@ -419,7 +421,7 @@ def generate_cover_letter(
     ensure_credit_available(db, current_user.id, "cover_letter")
 
     profile_items = _get_profile_items(db, current_user.id)
-    payload = build_cover_letter_payload(app, job, profile_items)
+    payload = build_cover_letter_payload(app, job, profile_items, language=language)
 
     artifact = ApplicationArtifact(
         id=uuid.uuid4(),

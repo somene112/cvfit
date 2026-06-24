@@ -42,6 +42,7 @@ from app.schemas.interview_sessions import (
     SessionSummaryResponse,
     SessionType,
 )
+from app.services.i18n import resolve_language
 from app.services.interview.sessions_v2 import (
     generate_questions,
     score_answer_v2,
@@ -253,6 +254,7 @@ def generate_session_questions(
         requested_type=body.question_type,
         difficulty=body.difficulty or session.difficulty,
         count=body.count,
+        language=body.language,
     )
 
     now = datetime.utcnow()
@@ -310,7 +312,9 @@ def submit_answer(
 
     ensure_credit_available(db, current_user.id, "interview")
 
-    score_json, feedback_json = score_answer_v2(question.question_text, body.answer_text, analysis_job)
+    score_json, feedback_json = score_answer_v2(
+        question.question_text, body.answer_text, analysis_job, language=body.language
+    )
 
     prior = (
         db.query(InterviewSessionAnswer)
@@ -363,13 +367,25 @@ def list_answers(
     return AnswerListResponse(items=items, total=len(items))
 
 
+# Vietnamese labels for rubric dimensions used in localized recommendations.
+_VI_DIMENSION_LABELS = {
+    "relevance": "mức độ liên quan",
+    "evidence": "bằng chứng",
+    "clarity": "độ rõ ràng",
+    "structure": "cấu trúc",
+    "confidence": "sự tự tin",
+}
+
+
 @router.get("/{session_id}/summary", response_model=SessionSummaryResponse)
 def get_summary(
     session_id: uuid.UUID,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Session = Depends(get_db),
+    language: Optional[str] = Query(default=None),
 ) -> SessionSummaryResponse:
     session = _get_owned_session(session_id, current_user, db)
+    lang = resolve_language(language)
 
     total_questions = (
         db.query(InterviewSessionQuestion)
@@ -382,22 +398,34 @@ def get_summary(
         .all()
     )
     scores = [a.score_json for a in answers if isinstance(a.score_json, dict)]
-    agg = summarize_answers(scores)
+    agg = summarize_answers(scores, language=lang)
 
     recommended: list[str] = []
-    if agg["weakest_dimension"]:
-        recommended.append(f"Focus your next answers on improving '{agg['weakest_dimension']}'.")
-    if not answers:
-        recommended.append("Generate questions and submit answers to receive feedback.")
+    if lang == "vi":
+        if agg["weakest_dimension"]:
+            weakest = _VI_DIMENSION_LABELS.get(agg["weakest_dimension"], agg["weakest_dimension"])
+            recommended.append(f"Hãy tập trung cải thiện '{weakest}' trong các câu trả lời tiếp theo.")
+        if not answers:
+            recommended.append("Hãy tạo câu hỏi và nộp câu trả lời để nhận phản hồi.")
+        else:
+            recommended.append("Hãy thử lại các câu trả lời yếu nhất với một ví dụ STAR cụ thể.")
+        limitations = (
+            "Tóm tắt chỉ dựa trên các câu trả lời đã nộp trong phiên này và phân tích đã đính kèm (nếu có). "
+            "Dựa trên phân tích hiện tại."
+        )
     else:
-        recommended.append("Retry your weakest answers with a concrete STAR example.")
+        if agg["weakest_dimension"]:
+            recommended.append(f"Focus your next answers on improving '{agg['weakest_dimension']}'.")
+        if not answers:
+            recommended.append("Generate questions and submit answers to receive feedback.")
+        else:
+            recommended.append("Retry your weakest answers with a concrete STAR example.")
+        limitations = (
+            "Summary is based only on answers submitted in this session and the attached "
+            "analysis, if any. Based on current analysis only."
+        )
 
-    limitations = (
-        "Summary is based only on answers submitted in this session and the attached "
-        "analysis, if any. Based on current analysis only."
-    )
-
-    return SessionSummaryResponse(
+    response_kwargs = dict(
         session_id=str(session.id),
         total_questions=len(total_questions),
         total_answers=len(answers),
@@ -408,3 +436,9 @@ def get_summary(
         recommended_next_steps=recommended,
         limitations=limitations,
     )
+    if lang == "vi":
+        response_kwargs["disclaimer"] = (
+            "Phản hồi luyện tập là tín hiệu chuẩn bị dựa trên câu trả lời và bằng chứng CV/JD/hồ sơ hiện có. "
+            "Nó không đảm bảo kết quả phỏng vấn hay tuyển dụng."
+        )
+    return SessionSummaryResponse(**response_kwargs)

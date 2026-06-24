@@ -7,6 +7,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.security import TokenValidationError, validate_access_token
 from app.db.models import User
 from app.db.session import get_db
@@ -63,3 +64,30 @@ def _load_user_from_credentials(
             detail="inactive user",
         )
     return user
+
+
+def admin_emails() -> set[str]:
+    """Normalized (lower-cased) admin allow-list from ADMIN_EMAILS env."""
+    return {
+        item.strip().lower()
+        for item in (settings.ADMIN_EMAILS or "").split(",")
+        if item.strip()
+    }
+
+
+def require_admin_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> User:
+    """Admin authorization for read-only monitoring routes.
+
+    Reuses ``get_current_user`` so unauthenticated/inactive requests already
+    fail with 401/403 before this check. Authenticated non-admin users get a
+    403. Admin membership is decided solely by email presence in ADMIN_EMAILS;
+    no admin flag is persisted and no migration is required.
+    """
+    if (current_user.email or "").strip().lower() not in admin_emails():
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="admin access required",
+        )
+    return current_user

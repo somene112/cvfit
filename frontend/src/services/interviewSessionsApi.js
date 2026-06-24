@@ -42,14 +42,16 @@ export async function getSession(id) {
 
 /**
  * Submit an answer for a question in a session.
+ * The product is Vietnamese-first, so feedback prose defaults to Vietnamese.
  * @param {string} sessionId
  * @param {{ question_id: string, answer_text: string }} payload
+ * @param {string} [language='vi'] - "vi" | "en"
  * @returns {Promise<Object>} feedback object with rubric breakdown
  */
-export async function submitSessionAnswer(sessionId, payload) {
+export async function submitSessionAnswer(sessionId, payload, language = 'vi') {
   const response = await apiClient.post(
     `/v1/interview/sessions/${sessionId}/answers`,
-    payload
+    { ...payload, language }
   );
   return response.data;
 }

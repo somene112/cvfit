@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     CORS_ALLOW_CREDENTIALS: bool = False
     CORS_ALLOWED_METHODS: str = "GET,POST,OPTIONS"
     CORS_ALLOWED_HEADERS: str = "Authorization,Content-Type"
+    # Admin Monitoring MVP — comma-separated allow-list of admin emails. Empty by
+    # default, so no account is an admin until an operator sets it in backend env.
+    # Read-only monitoring only; never grants destructive or mutating powers.
+    ADMIN_EMAILS: str = ""
     # Phase 6 feature flags (default on; share links stay off until privacy review).
     ENABLE_PHASE6_TARGET_JOBS: bool = True
     ENABLE_PHASE6_LEARNING: bool = True

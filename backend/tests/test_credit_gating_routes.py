@@ -224,7 +224,7 @@ def test_interview_v2_target_job_is_not_recorded_as_application(monkeypatch):
         "ensure_credit_available",
         lambda *args, **kwargs: None,
     )
-    monkeypatch.setattr(interview_sessions, "score_answer_v2", lambda *args: ({}, {}))
+    monkeypatch.setattr(interview_sessions, "score_answer_v2", lambda *args, **kwargs: ({}, {}))
 
     def capture_consume(*args, **kwargs):
         del args
@@ -261,10 +261,10 @@ def test_all_expensive_action_families_stage_usage_before_commit(monkeypatch):
     for module in (jobs, applications, interview_sessions):
         monkeypatch.setattr(module, "ensure_credit_available", allow)
         monkeypatch.setattr(module, "consume_credit", consume)
-    monkeypatch.setattr(applications, "build_package_payload", lambda *args: {})
-    monkeypatch.setattr(applications, "build_cover_letter_payload", lambda *args: {})
-    monkeypatch.setattr(applications, "score_answer", lambda *args: ({}, {}))
-    monkeypatch.setattr(interview_sessions, "score_answer_v2", lambda *args: ({}, {}))
+    monkeypatch.setattr(applications, "build_package_payload", lambda *args, **kwargs: {})
+    monkeypatch.setattr(applications, "build_cover_letter_payload", lambda *args, **kwargs: {})
+    monkeypatch.setattr(applications, "score_answer", lambda *args, **kwargs: ({}, {}))
+    monkeypatch.setattr(interview_sessions, "score_answer_v2", lambda *args, **kwargs: ({}, {}))
 
     cv = CVFile(
         id=uuid.uuid4(), original_filename="cv.pdf", mime_type="application/pdf",

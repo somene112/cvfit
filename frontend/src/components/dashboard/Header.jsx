@@ -6,9 +6,12 @@ import { useEffect, useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 
 import { logout } from '@/services/authApi';
+import { getAdminMe } from '@/services/adminApi';
 import { clearAuthSession, getStoredAuthToken, getStoredUser } from '@/services/authStorage';
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics';
 import styles from '@/styles/Header.module.css';
+
+const ADMIN_FLAG_KEY = 'cvfit_is_admin';
 
 export default function Header() {
   const router = useRouter();
@@ -16,6 +19,7 @@ export default function Header() {
   const { t } = useLanguage();
   const [userName, setUserName] = useState('');
   const [userInitial, setUserInitial] = useState('U');
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const user = getStoredUser();
@@ -29,8 +33,34 @@ export default function Header() {
     setUserInitial('U');
   }, []);
 
+  // Show the admin link only to admins. Cached per session so we ask the
+  // backend once; non-admins simply get a (silently handled) 403.
+  useEffect(() => {
+    let active = true;
+    const cached = typeof window !== 'undefined' ? sessionStorage.getItem(ADMIN_FLAG_KEY) : null;
+    if (cached !== null) {
+      setIsAdmin(cached === '1');
+      return;
+    }
+    getAdminMe()
+      .then(() => {
+        if (!active) return;
+        setIsAdmin(true);
+        sessionStorage.setItem(ADMIN_FLAG_KEY, '1');
+      })
+      .catch(() => {
+        if (!active) return;
+        setIsAdmin(false);
+        sessionStorage.setItem(ADMIN_FLAG_KEY, '0');
+      });
+    return () => { active = false; };
+  }, []);
+
   const handleLogout = async () => {
     trackEvent(ANALYTICS_EVENTS.LOGOUT_CLICK, { feature_name: 'auth' });
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(ADMIN_FLAG_KEY);
+    }
     const token = getStoredAuthToken();
     if (token) {
       try {
@@ -87,6 +117,11 @@ export default function Header() {
           <Link href="/help" className={`${styles.navLink} ${pathname?.startsWith('/help') ? styles['navLink--active'] : ''}`}>
             {t('nav.help')}
           </Link>
+          {isAdmin && (
+            <Link href="/admin" className={`${styles.navLink} ${pathname?.startsWith('/admin') ? styles['navLink--active'] : ''}`}>
+              Quản trị
+            </Link>
+          )}
         </nav>
 
         <div className={styles.userInfo}>

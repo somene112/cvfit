@@ -19,6 +19,7 @@ from app.api.routes.help_assistant import router as help_assistant_router
 from app.api.routes.share_links import router as share_links_router, public_router as share_public_router
 from app.api.routes.usage import router as usage_router
 from app.api.routes.billing import router as billing_router
+from app.api.routes.admin import router as admin_router
 from app.api.exception_handlers import insufficient_credits_handler
 from app.services.billing.credit_gating import InsufficientCreditsError
 
@@ -47,3 +48,4 @@ app.include_router(share_links_router)
 app.include_router(share_public_router)
 app.include_router(usage_router)
 app.include_router(billing_router)
+app.include_router(admin_router)
