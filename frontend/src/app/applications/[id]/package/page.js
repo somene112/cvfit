@@ -78,11 +78,12 @@ export default function PackagePage() {
   const skills = deduplicateStrings(Array.isArray(bestCv.matched_skills) ? bestCv.matched_skills : []);
   const gaps = deduplicateStrings(Array.isArray(bestCv.missing_skills) ? bestCv.missing_skills : []);
   const rubric = [];
-  // Backend sends readiness fields directly in payload_json (not nested under readiness_summary)
-  const fitScore = payload.fit_score ?? null;
-  const readinessLevel = payload.readiness_level ?? null;
-  const packageSummary = payload.summary ?? null;
-  const nextActions = Array.isArray(payload.next_actions) ? payload.next_actions : [];
+  // Backend nests readiness fields under readiness_summary.
+  const readinessSummary = payload.readiness_summary ?? {};
+  const fitScore = readinessSummary.fit_score ?? null;
+  const readinessLevel = readinessSummary.readiness_level ?? null;
+  const packageSummary = readinessSummary.summary ?? null;
+  const nextActions = Array.isArray(readinessSummary.next_actions) ? readinessSummary.next_actions : [];
   const hasReadiness = fitScore !== null || readinessLevel !== null;
 
   return (
@@ -148,7 +149,7 @@ export default function PackagePage() {
               <div className={styles.readinessGrid}>
                 {fitScore != null && (
                   <div className={styles.readinessStat}>
-                    <div className={styles.readinessStatValue}>{Math.round(fitScore * 100)}%</div>
+                    <div className={styles.readinessStatValue}>{Math.round(fitScore <= 1 ? fitScore * 100 : fitScore)}%</div>
                     <div className={styles.readinessStatLabel}>Điểm phù hợp</div>
                   </div>
                 )}

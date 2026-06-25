@@ -6,9 +6,27 @@ content (job title, company name, skill/tech names) is never translated.
 
 from __future__ import annotations
 
+import unicodedata
 from typing import Any, Optional
 
 from app.services.i18n import resolve_language
+
+
+def normalize_text_payload(value: Any) -> Any:
+    """Recursively NFC-normalize every string in a payload.
+
+    Vietnamese diacritics can arrive decomposed (NFD: base letter + combining
+    mark), which some fonts render as broken/overlapping glyphs. Normalizing to
+    NFC (single composed code points) makes the text render correctly. NFC is
+    idempotent, so re-normalizing already-correct text is a no-op.
+    """
+    if isinstance(value, str):
+        return unicodedata.normalize("NFC", value)
+    if isinstance(value, list):
+        return [normalize_text_payload(item) for item in value]
+    if isinstance(value, dict):
+        return {key: normalize_text_payload(item) for key, item in value.items()}
+    return value
 
 
 COVER_LETTER_DISCLAIMER = (
@@ -118,7 +136,7 @@ def build_cover_letter_payload(
             "Verify all claims match your actual experience."
         )
 
-    return {
+    return normalize_text_payload({
         "opening": opening,
         "why_role_company": why_role_company,
         "relevant_evidence": relevant_evidence,
@@ -127,7 +145,7 @@ def build_cover_letter_payload(
         "review_notes": review_notes,
         "missing_evidence": missing_evidence,
         "disclaimer": COVER_LETTER_DISCLAIMER_VI if lang == "vi" else COVER_LETTER_DISCLAIMER,
-    }
+    })
 
 
 # ---------------------------------------------------------------------------

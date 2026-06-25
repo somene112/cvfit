@@ -123,6 +123,28 @@ export function getBillingCopy(lang) {
   return BILLING_COPY[lang] || BILLING_COPY.en;
 }
 
+// Vietnamese display copy for plans by plan_code. The backend remains the
+// authoritative source of plan_code/price/credits; only the display name and
+// description are localized here (no price or payment-authority change).
+const PLAN_COPY = {
+  starter_pack: {
+    name: 'Gói khởi đầu',
+    description: 'Gói lượt dùng cơ bản để bắt đầu trải nghiệm các tính năng trả phí.',
+  },
+  pro_demo_pack: {
+    name: 'Gói demo Pro',
+    description: 'Gói lượt dùng lớn hơn cho một buổi demo đầy đủ.',
+  },
+};
+
+export function getPlanName(planCode, fallback) {
+  return PLAN_COPY[planCode]?.name || fallback || planCode || '—';
+}
+
+export function getPlanDescription(planCode, fallback) {
+  return PLAN_COPY[planCode]?.description || fallback || '';
+}
+
 export function formatVnd(amount, lang = 'en') {
   const value = Number(amount);
   if (!Number.isFinite(value)) return '—';

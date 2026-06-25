@@ -106,8 +106,14 @@ export default function LearningPage() {
         setTasks(Array.isArray(data?.items) ? data.items : []);
       } catch (err) {
         if (!active) return;
-        const { message } = extractApiError(err, 'Không thể tải lộ trình học tập.');
-        setError(message);
+        // No roadmap yet / feature disabled → show the friendly empty state, not
+        // a raw "Not Found" error.
+        if (err?.response?.status === 404) {
+          setTasks([]);
+        } else {
+          const { message } = extractApiError(err, 'Không thể tải lộ trình học tập.');
+          setError(message);
+        }
       } finally {
         if (active) setIsLoading(false);
       }

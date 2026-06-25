@@ -10,7 +10,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { createBillingCheckout, getBillingPlans } from '@/services/billingApi';
 import { storePendingBillingOrderId } from '@/services/billingStorage';
 import { ANALYTICS_EVENTS, trackEvent } from '@/lib/analytics';
-import { amountBucket, formatVnd, getBillingCopy, getSafeCheckoutUrl } from '@/utils/billingUi';
+import { amountBucket, formatVnd, getBillingCopy, getPlanDescription, getPlanName, getSafeCheckoutUrl } from '@/utils/billingUi';
 import { BILLING_CREDIT_KEYS } from '@/types/billing';
 import styles from '@/styles/Billing.module.css';
 
@@ -93,10 +93,12 @@ export default function PricingPage() {
               key={plan.plan_code}
             >
               {index === 1 && <span className={styles.featuredBadge}>{copy.demoValue}</span>}
-              <h2 className={styles.planName}>{plan.name}</h2>
+              <h2 className={styles.planName}>{getPlanName(plan.plan_code, plan.name)}</h2>
               <div className={styles.planPrice}>{formatVnd(plan.amount, lang)}</div>
               <div className={styles.oneTimeLabel}>{copy.oneTimePurchase}</div>
-              {plan.description && <p className={styles.planDescription}>{plan.description}</p>}
+              {getPlanDescription(plan.plan_code, plan.description) && (
+                <p className={styles.planDescription}>{getPlanDescription(plan.plan_code, plan.description)}</p>
+              )}
 
               <ul className={styles.creditList}>
                 {BILLING_CREDIT_KEYS.map((key) => (

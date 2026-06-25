@@ -7,6 +7,7 @@ from typing import Annotated, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
+from sqlalchemy.orm.attributes import flag_modified
 
 from app.api.deps import get_current_user
 from app.db.models import AnalysisJob, Application, ApplicationArtifact, CareerProfileItem, InterviewAnswer, User
@@ -29,7 +30,7 @@ from app.schemas.phase5 import (
 )
 from app.services.application_package import build_package_payload
 from app.services.billing.credit_gating import consume_credit, ensure_credit_available
-from app.services.cover_letter import build_cover_letter_payload
+from app.services.cover_letter import build_cover_letter_payload, normalize_text_payload
 from app.services.interview_practice import (
     QUESTIONS_DISCLAIMER,
     generate_interview_questions,
@@ -491,7 +492,16 @@ def patch_cover_letter(
     # Always preserve disclaimer — not patchable.
     payload["disclaimer"] = artifact.payload_json.get("disclaimer", "")
 
+    # NFC-normalize edited Vietnamese text so diacritics render correctly.
+    payload = normalize_text_payload(payload)
+
+    # Reassign + flag_modified is the canonical way to persist a JSONB edit:
+    # SQLAlchemy does not track in-place dict mutation, and flag_modified
+    # guarantees the UPDATE is emitted even if the new payload compares equal.
+    # This is a free, ungated edit of the user's own existing draft — no credit
+    # is consumed and credit gating is never invoked.
     artifact.payload_json = payload
+    flag_modified(artifact, "payload_json")
     db.commit()
     db.refresh(artifact)
 

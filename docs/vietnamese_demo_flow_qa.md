@@ -118,20 +118,9 @@ These are intentionally left as-is (proper nouns / technical terms / user data):
 - **Full app-wide translation** of every secondary page is not part of this PR.
 - **Historical generated artifacts** created in English are left unchanged; only
   newly generated content honors `language=vi`.
-- **Pre-existing frontend/backend contract mismatches** (not introduced here):
-  - The interview-session detail page reads `q.text` / `feedback.overall_score`,
-    while the backend returns `question_text` / `score` / `feedback`. The backend
-    Vietnamese feedback is correct and tested, but may not fully render until the
-    page is aligned. Follow-up: *fix: align interview-session detail to backend contract*.
-  - The application package page reads `payload.summary` while the backend nests
-    it under `payload.readiness_summary.summary`; the Vietnamese disclaimer and
-    skill chips still render.
-  - The help assistant page calls `POST /v1/help/ask` with a free-form `prompt`,
-    while the backend exposes `POST /v1/help/assistant` with a fixed `intent`.
-    The backend Vietnamese answers are correct and tested, but the page needs
-    re-wiring. Follow-up: *fix: wire help assistant page to /v1/help/assistant*.
-- **Cover letter "Save Changes" persistence** issue (if confirmed) is not fixed
-  here. Follow-up: *fix: persist cover letter edits*.
+- The interview/package/help contract mismatches and the cover-letter save issue
+  noted in earlier revisions are **now fixed** — see "Priority 2 Demo Hardening"
+  below.
 - **Legacy Phase 5 interview practice** and **learning roadmap** generated text
   are not yet localized (the demo uses the Phase 6 interview sessions flow).
 
@@ -187,3 +176,38 @@ denominator is zero.
 
 **Out of scope:** GA4 historical reconstruction, payment rollout, real payments,
 admin mutations, and full enterprise analytics (charts/cohorts/retention curves).
+
+---
+
+## Priority 2 Demo Hardening
+
+Demo-blocking frontend/backend contract bugs fixed in `fix/demo-flow-priority-2`
+(backend response contracts unchanged — the frontend adapts via normalizers):
+
+- **Interview session detail** now renders correctly. The page consumed `q.text`
+  / `feedback.overall_score`, but the backend returns `question_text` and a
+  `score` (0-5) + `feedback` object. A normalizer in `interviewSessionsApi.js`
+  maps `question_text → text`, flattens `score`/`feedback` (strengths → summary,
+  improvements → suggestions), and scales the rubric 0-5 → 0-10. New sessions
+  also auto-generate questions in Vietnamese on first open, since `create` did
+  not previously generate any.
+- **Application package** now renders the readiness summary. The page read
+  `payload.summary`; the backend nests it under `payload.readiness_summary.*`.
+  The page now reads `readiness_summary.{summary,fit_score,readiness_level,
+  next_actions}` and formats the fit score safely (handles 0-1 and 0-100).
+- **Help page** now calls the real endpoints. `helpApi` previously POSTed to a
+  non-existent `/v1/help/ask`. It now uses `GET /v1/help/suggestions?language=vi`
+  and `POST /v1/help/assistant` with a supported `intent`. The assistant page is
+  suggestion/intent-based: Vietnamese suggestion chips, safe owned-object context
+  only (never raw CV/JD/answer text), and renders answer + "Dựa trên" +
+  limitations + fallback badge + recommended-action links. No LLM/external call.
+- **Cover letter "Save Changes"** persists. The save handler + PATCH endpoint were
+  already wired, free, and ungated; the backend now uses the canonical
+  `flag_modified(artifact, "payload_json")` JSONB pattern to guarantee the edit is
+  flushed. Editing the existing draft is owner-scoped, consumes **no** credits, is
+  never blocked by credit gating, and creates no new artifact. Covered by
+  `test_cover_letter_save_edits.py`.
+
+**Still out of scope:** legacy Phase 5 interview practice + learning roadmap
+localization; persisting prior interview answers across reloads (answers show
+live in-session).

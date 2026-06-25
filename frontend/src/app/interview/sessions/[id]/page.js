@@ -7,7 +7,7 @@ import { useRequireAuth } from '@/hooks/useRequireAuth';
 import PageShell from '@/components/common/PageShell';
 import ErrorBanner from '@/components/common/ErrorBanner';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { getSession, submitSessionAnswer } from '@/services/interviewSessionsApi';
+import { getSession, generateSessionQuestions, submitSessionAnswer } from '@/services/interviewSessionsApi';
 import { extractApiError } from '@/utils/errorHelpers';
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics';
 import styles from '@/styles/InterviewSessions.module.css';
@@ -60,7 +60,21 @@ export default function SessionDetailPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await getSession(id);
+      let data = await getSession(id);
+      // A new session has no questions yet — generate them (Vietnamese) on first
+      // open so the practice page always has content.
+      if (!data.questions || data.questions.length === 0) {
+        try {
+          await generateSessionQuestions(id, {
+            question_type: data.question_type,
+            difficulty: data.difficulty,
+            count: 5,
+          });
+          data = await getSession(id);
+        } catch {
+          // If generation fails, fall through and show the empty state below.
+        }
+      }
       setSession(data);
       // Pre-populate answers map if session has existing answers
       if (data.answers?.length) {

@@ -13,6 +13,10 @@ import { extractApiError, isAnalysisRequiredError } from '@/utils/errorHelpers';
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics';
 import styles from '@/styles/CoverLetter.module.css';
 
+// System fonts with full Vietnamese coverage, so diacritics never render broken
+// regardless of the app's display font.
+const VN_FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif";
+
 function extractSections(letter) {
   const p = letter?.payload_json ?? {};
   return {
@@ -195,8 +199,9 @@ export default function CoverLetterPage() {
                   value={sections[key]}
                   onChange={(e) => { setSections((prev) => ({ ...prev, [key]: e.target.value })); setSaved(false); }}
                   disabled={isSaving}
-                  style={{ minHeight: '100px' }}
+                  style={{ minHeight: '100px', fontFamily: VN_FONT }}
                   aria-label={label}
+                  lang="vi"
                 />
               </div>
             ))}

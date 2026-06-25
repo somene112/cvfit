@@ -10,7 +10,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { getBillingOrders, getBillingUsage } from '@/services/billingApi';
 import { ANALYTICS_EVENTS, trackEvent } from '@/lib/analytics';
 import { BILLING_CREDIT_KEYS } from '@/types/billing';
-import { formatBillingDate, formatVnd, getBillingCopy } from '@/utils/billingUi';
+import { formatBillingDate, formatVnd, getBillingCopy, getPlanName } from '@/utils/billingUi';
 import styles from '@/styles/Billing.module.css';
 
 function statusClass(status) {
@@ -118,7 +118,7 @@ export default function BillingPage() {
                 <tbody>
                   {orders.map((order) => (
                     <tr key={order.payment_order_id}>
-                      <td className={styles.planCode}>{order.plan_code}</td>
+                      <td className={styles.planCode}>{getPlanName(order.plan_code, order.plan_code)}</td>
                       <td>{formatVnd(order.amount, lang)} <span className={styles.currency}>{order.currency}</span></td>
                       <td><span className={`${styles.statusBadge} ${statusClass(order.status)}`}>{copy.statusLabels[order.status] || order.status.replaceAll('_', ' ')}</span></td>
                       <td>{formatBillingDate(order.created_at, lang)}</td>
