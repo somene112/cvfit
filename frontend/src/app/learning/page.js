@@ -162,18 +162,29 @@ export default function LearningPage() {
     return [...list].sort((a, b) => (PRIORITY_ORDER[a.priority] ?? 99) - (PRIORITY_ORDER[b.priority] ?? 99));
   }, [tasks, categoryFilter]);
 
+  // Optimistic status update with rollback (Phase 7A hardening).
+  // Mirrors the detail-page handler so the list never shows a misleading
+  // "Không thể cập nhật trạng thái." banner for a change that the server
+  // actually rejected, nor for a stale error from a previous load.
   const handleStatusChange = async (taskId, newStatus) => {
+    const previous = tasks.find((t) => t.id === taskId);
+    if (!previous || previous.status === newStatus) return;
+
     setUpdatingId(taskId);
+    setError(null);
+    setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)));
+
     try {
       const updated = await updateLearningTask(taskId, { status: newStatus });
       setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, ...updated } : t)));
       if (newStatus === 'in_progress') {
-        trackEvent(ANALYTICS_EVENTS.LEARNING_TASK_STARTED, { feature_name: 'learning', task_type: tasks.find((t) => t.id === taskId)?.type });
+        trackEvent(ANALYTICS_EVENTS.LEARNING_TASK_STARTED, { feature_name: 'learning', task_type: previous.type });
       } else if (newStatus === 'done') {
-        trackEvent(ANALYTICS_EVENTS.LEARNING_TASK_COMPLETED, { feature_name: 'learning', task_type: tasks.find((t) => t.id === taskId)?.type });
+        trackEvent(ANALYTICS_EVENTS.LEARNING_TASK_COMPLETED, { feature_name: 'learning', task_type: previous.type });
       }
     } catch (err) {
-      const { message } = extractApiError(err, 'Không thể cập nhật trạng thái nhiệm vụ.');
+      setTasks((prev) => prev.map((t) => (t.id === taskId ? { ...t, status: previous.status } : t)));
+      const { message } = extractApiError(err, 'Không thể cập nhật trạng thái nhiệm vụ. Vui lòng thử lại.');
       setError(message);
     } finally {
       setUpdatingId(null);

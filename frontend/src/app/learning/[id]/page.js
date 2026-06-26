@@ -66,9 +66,25 @@ export default function LearningTaskPage() {
     return () => { active = false; };
   }, [isAuthChecking, id]);
 
+  // Optimistic status update with rollback.
+  //
+  // Phase 7A fix: previously the page rendered any prior error (e.g. a stale
+  // 401 from the initial GET) and never cleared it on a successful PATCH, so a
+  // user retrying after an auth race would see "Không thể cập nhật trạng thái."
+  // even when the update had landed. We now:
+  //   - gate the request on auth readiness (no firing before the token is set),
+  //   - clear any visible error before the attempt,
+  //   - apply the change locally first and roll it back if the API rejects it,
+  //   - only show an error banner when the request actually failed.
   const handleStatusChange = async (newStatus) => {
     if (!task || newStatus === task.status) return;
+    if (isAuthChecking) return;
+
+    const previousStatus = task.status;
+    setError(null);
     setIsUpdating(true);
+    setTask((prev) => (prev ? { ...prev, status: newStatus } : prev));
+
     try {
       const updated = await updateLearningTask(id, { status: newStatus });
       setTask((prev) => ({ ...prev, ...updated }));
@@ -84,7 +100,10 @@ export default function LearningTaskPage() {
         });
       }
     } catch (err) {
-      const { message } = extractApiError(err, 'Không thể cập nhật trạng thái.');
+      // Roll back the optimistic change so the UI never claims a state the
+      // server did not persist.
+      setTask((prev) => (prev ? { ...prev, status: previousStatus } : prev));
+      const { message } = extractApiError(err, 'Không thể cập nhật trạng thái. Vui lòng thử lại.');
       setError(message);
     } finally {
       setIsUpdating(false);

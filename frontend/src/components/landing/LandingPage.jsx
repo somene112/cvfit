@@ -147,27 +147,28 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Stats Bar */}
+      {/*
+        Value strip — honest product positioning only.
+        Intentionally non-numeric: no fake scale, accuracy, speed, or rating
+        claims. Each label describes a real product capability surfaced in
+        Sections 2–7 of the demo flow.
+      */}
       <div className={styles.statsBar}>
         <div className={styles.statsInner}>
           <div className={styles.statItem}>
-            <div className={styles.statNum}>10,000+</div>
-            <div className={styles.statLabel}>CV đã phân tích</div>
+            <div className={styles.statLabel}>Phân tích CV theo JD</div>
           </div>
           <div className={styles.statDivider}></div>
           <div className={styles.statItem}>
-            <div className={styles.statNum}>98%</div>
-            <div className={styles.statLabel}>Độ chính xác AI</div>
+            <div className={styles.statLabel}>Gợi ý cải thiện có kiểm soát</div>
           </div>
           <div className={styles.statDivider}></div>
           <div className={styles.statItem}>
-            <div className={styles.statNum}>30s</div>
-            <div className={styles.statLabel}>Thời gian phân tích</div>
+            <div className={styles.statLabel}>Lộ trình học tập cá nhân hoá</div>
           </div>
           <div className={styles.statDivider}></div>
           <div className={styles.statItem}>
-            <div className={styles.statNum}>4.9★</div>
-            <div className={styles.statLabel}>Đánh giá người dùng</div>
+            <div className={styles.statLabel}>Thanh toán đang thử nghiệm</div>
           </div>
         </div>
       </div>

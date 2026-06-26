@@ -287,6 +287,35 @@ class TestTaskCRUD:
             assert resp.status_code == 200
             assert resp.json()["status"] == s
 
+    def test_patch_status_persists_for_subsequent_get(self):
+        # Phase 7A regression: the detail-page optimistic update must round-trip
+        # through the API. If PATCH returned success but GET still showed the
+        # old status, the UI would flash the new value and revert on refresh.
+        user = make_user()
+        db = FakeDb()
+        t = make_task(user.id, status="todo")
+        db.add(t)
+        c = client_for(db, user)
+
+        patch_resp = c.patch(f"/v1/learning/tasks/{t.id}", json={"status": "in_progress"})
+        assert patch_resp.status_code == 200
+        assert patch_resp.json()["status"] == "in_progress"
+
+        get_resp = c.get(f"/v1/learning/tasks/{t.id}")
+        assert get_resp.status_code == 200
+        assert get_resp.json()["status"] == "in_progress"
+        assert get_resp.json()["id"] == str(t.id)
+
+    def test_patch_status_unknown_task_returns_404(self):
+        # The frontend treats 404 the same as any other failure (rolls back the
+        # optimistic update). Confirm we never leak existence to other users.
+        user = make_user()
+        db = FakeDb()
+        c = client_for(db, user)
+        missing_id = uuid.uuid4()
+        resp = c.patch(f"/v1/learning/tasks/{missing_id}", json={"status": "done"})
+        assert resp.status_code == 404
+
     def test_patch_invalid_status_returns_422(self):
         user = make_user()
         db = FakeDb()
