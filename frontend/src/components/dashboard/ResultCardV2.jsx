@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/context/LanguageContext';
 import { getResultData, getFitLevel } from '@/utils/resultHelpers';
+import { localizeBreakdownLabel, localizeBreakdownExplanation, localizeLimitation } from '@/utils/resultI18n';
 import ScoreCircle from './ScoreCircle';
 import DownloadReport from './DownloadReport';
 import EmptyState from './EmptyState';
@@ -241,7 +242,7 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
           <div className={styles.breakdownGrid}>
             {scoreBreakdown.map((item) => (
               <div key={item.key} className={styles.metricCard}>
-                <div className={styles.metricLabel}>{item.label}</div>
+                <div className={styles.metricLabel}>{localizeBreakdownLabel(item.key, item.label)}</div>
                 <div className={styles.metricScoreRow}>
                   <span className={styles.metricScore}>
                     {Math.round(item.score)}
@@ -260,7 +261,7 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
                   />
                 </div>
                 {item.explanation && (
-                  <div className={styles.metricExplanation}>{item.explanation}</div>
+                  <div className={styles.metricExplanation}>{localizeBreakdownExplanation(item.key, item.explanation)}</div>
                 )}
               </div>
             ))}
@@ -527,7 +528,7 @@ export default function ResultCardV2({ result, jobId, accessToken, onNewAnalysis
                   <line x1="12" y1="9" x2="12" y2="13" />
                   <line x1="12" y1="17" x2="12.01" y2="17" />
                 </svg>
-                <span>{msg}</span>
+                <span>{localizeLimitation(msg)}</span>
               </div>
             ))}
           </div>

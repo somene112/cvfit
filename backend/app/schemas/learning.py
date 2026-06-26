@@ -23,6 +23,9 @@ class RoadmapGenerateRequest(BaseModel):
     application_id: Optional[str] = None
     analysis_job_id: Optional[str] = None
     max_tasks: int = Field(default=8, ge=1, le=30)
+    # Optional UI language ("vi"/"en"). Defaults to English generation so existing
+    # clients are unaffected; the Vietnamese-first frontend sends "vi".
+    language: Optional[str] = None
 
 
 class LearningTaskResponse(BaseModel):

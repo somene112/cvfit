@@ -48,3 +48,30 @@ export async function updateLearningTask(id, payload) {
   const response = await apiClient.patch(`/v1/learning/tasks/${id}`, payload);
   return normalizeTask(response.data);
 }
+
+/**
+ * Return the job_id of the user's most recent SUCCEEDED analysis, or null.
+ * Uses the existing /v1/jobs/history (safe metadata only — no raw CV/JD).
+ */
+export async function getLatestSuccessfulAnalysisId() {
+  const response = await apiClient.get('/v1/jobs/history');
+  const items = Array.isArray(response.data?.items) ? response.data.items : [];
+  const latest = items.find((j) => j.status === 'succeeded');
+  return latest?.job_id ?? null;
+}
+
+/**
+ * Generate (and persist) a learning roadmap from an analysis/application/target
+ * job. Vietnamese by default for the VI-first product.
+ * @param {{ analysis_job_id?: string, application_id?: string, target_job_id?: string, language?: string }} params
+ * @returns {Promise<{ tasks: Array, total: number, limitations: string }>}
+ */
+export async function generateRoadmap(params = {}) {
+  const { analysis_job_id, application_id, target_job_id, language = 'vi' } = params;
+  const body = { language };
+  if (analysis_job_id) body.analysis_job_id = analysis_job_id;
+  if (application_id) body.application_id = application_id;
+  if (target_job_id) body.target_job_id = target_job_id;
+  const response = await apiClient.post('/v1/learning/roadmaps/generate', body);
+  return response.data;
+}

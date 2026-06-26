@@ -197,7 +197,7 @@ def test_create_score_returns_job_id_and_access_token(monkeypatch):
             return None
 
     fake_task_module = SimpleNamespace(
-        run_job=SimpleNamespace(delay=lambda job_id: enqueued_jobs.append(job_id))
+        run_job=SimpleNamespace(delay=lambda job_id, language="en": enqueued_jobs.append(job_id))
     )
     monkeypatch.setitem(sys.modules, "app.workers.tasks", fake_task_module)
 
@@ -239,7 +239,7 @@ def test_create_score_accepts_documented_request_aliases(monkeypatch):
             return None
 
     fake_task_module = SimpleNamespace(
-        run_job=SimpleNamespace(delay=lambda job_id: enqueued_jobs.append(job_id))
+        run_job=SimpleNamespace(delay=lambda job_id, language="en": enqueued_jobs.append(job_id))
     )
     monkeypatch.setitem(sys.modules, "app.workers.tasks", fake_task_module)
 

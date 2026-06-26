@@ -184,9 +184,9 @@ def create_score_job(
         consume_credit(db, current_user.id, "analysis", related_job_id=job.id)
     db.commit()
 
-    # enqueue
+    # enqueue (pass the requested generation language; options.language defaults to "vi")
     from app.workers.tasks import run_job
-    run_job.delay(str(job.id))
+    run_job.delay(str(job.id), payload.options.language)
     return JobCreateResponse(job_id=str(job.id), access_token=access_token)
 
 
@@ -210,6 +210,7 @@ def reanalyze_job(
     file: UploadFile = File(...),
     jd_text: str | None = Form(default=None),
     access_token: str | None = Form(default=None),
+    language: str = Form(default="vi"),
     db: Session = Depends(get_db),
     current_user: Annotated[User | None, Depends(get_optional_current_user)] = None,
 ):
@@ -275,7 +276,7 @@ def reanalyze_job(
     db.commit()
 
     from app.workers.tasks import run_job
-    run_job.delay(str(child.id))
+    run_job.delay(str(child.id), language)
 
     return JobReanalysisResponse(
         job_id=str(child.id),

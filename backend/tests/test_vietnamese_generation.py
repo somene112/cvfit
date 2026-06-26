@@ -25,6 +25,7 @@ from app.services.application_package import build_package_payload
 from app.services.cover_letter import build_cover_letter_payload
 from app.services.help import HelpContext, build_assistant_response, build_suggestions
 from app.services.i18n import resolve_language
+from app.services.learning.generator import generate_learning_tasks
 from app.services.interview.sessions_v2 import (
     generate_questions,
     score_answer_v2,
@@ -48,8 +49,12 @@ _RESULT = {
 
 
 def _has_vietnamese(text: str) -> bool:
-    """True if the string contains Vietnamese-specific diacritics."""
-    return any(ch in text for ch in "ăâđêôơưàảãạáằẳẵặắéèẻẽẹếýỳỵọóợ")
+    """True if the string contains any non-ASCII (Vietnamese diacritic) char.
+
+    Vietnamese always carries diacritics or đ/Đ (non-ASCII); the deterministic
+    English templates are pure ASCII — so this cleanly distinguishes the two.
+    """
+    return any(ord(ch) > 127 for ch in str(text or ""))
 
 
 class TestI18nResolver:
@@ -144,6 +149,32 @@ class TestInterviewLanguage:
         assert agg["risk_flags"] and all(_has_vietnamese(f) for f in agg["risk_flags"])
         agg_en = summarize_answers(scores)
         assert agg_en["risk_flags"] and not any(_has_vietnamese(f) for f in agg_en["risk_flags"])
+
+
+class TestLearningLanguage:
+    def test_fallback_tasks_vietnamese(self):
+        tasks, limitations = generate_learning_tasks(None, language="vi")
+        assert tasks
+        assert all(_has_vietnamese(t["title"]) for t in tasks)
+        assert all(_has_vietnamese(t["description"]) for t in tasks)
+        assert _has_vietnamese(limitations)
+
+    def test_tasks_vietnamese_keep_skill_names(self):
+        job = _job({
+            "missing_skills": [{"skill": "Docker", "requirement_type": "must_have"}],
+            "matched_skills": [{"skill": "Python"}],
+        })
+        tasks, limitations = generate_learning_tasks(job, language="vi")
+        assert tasks
+        assert all(_has_vietnamese(t["title"]) for t in tasks)
+        assert _has_vietnamese(limitations)
+        # Whether roadmap-derived or fallback, all task prose is Vietnamese.
+
+    def test_english_default_unchanged(self):
+        tasks, limitations = generate_learning_tasks(None)
+        assert tasks
+        assert not _has_vietnamese(limitations)
+        assert not any(_has_vietnamese(t["title"]) for t in tasks)
 
 
 class TestHelpAssistantLanguage:

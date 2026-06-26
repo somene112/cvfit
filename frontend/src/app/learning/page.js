@@ -1,12 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRequireAuth } from '@/hooks/useRequireAuth';
 import PageShell from '@/components/common/PageShell';
 import ErrorBanner from '@/components/common/ErrorBanner';
 import EmptyStatePage from '@/components/common/EmptyStatePage';
-import { getLearningRoadmap, updateLearningTask } from '@/services/learningApi';
+import {
+  getLearningRoadmap,
+  updateLearningTask,
+  getLatestSuccessfulAnalysisId,
+  generateRoadmap,
+} from '@/services/learningApi';
 import { extractApiError } from '@/utils/errorHelpers';
 import { trackEvent, ANALYTICS_EVENTS } from '@/lib/analytics';
 import styles from '@/styles/LearningRoadmap.module.css';
@@ -92,35 +97,58 @@ export default function LearningPage() {
   const [error, setError] = useState(null);
   const [updatingId, setUpdatingId] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState('');
+  const [latestAnalysisId, setLatestAnalysisId] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const loadTasks = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await getLearningRoadmap();
+      const items = Array.isArray(data?.items) ? data.items : [];
+      setTasks(items);
+      // Empty list: look up the latest successful analysis so we can offer a
+      // "generate from latest analysis" CTA — never tell a user who just
+      // analyzed their CV to analyze again.
+      if (items.length === 0) {
+        try { setLatestAnalysisId(await getLatestSuccessfulAnalysisId()); }
+        catch { setLatestAnalysisId(null); }
+      }
+    } catch (err) {
+      // No roadmap yet / feature disabled → show the friendly empty state, not
+      // a raw "Not Found" error.
+      if (err?.response?.status === 404) {
+        setTasks([]);
+        try { setLatestAnalysisId(await getLatestSuccessfulAnalysisId()); }
+        catch { setLatestAnalysisId(null); }
+      } else {
+        const { message } = extractApiError(err, 'Không thể tải lộ trình học tập.');
+        setError(message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (isAuthChecking) return;
-    let active = true;
-    setIsLoading(true);
+    loadTasks();
+  }, [isAuthChecking, loadTasks]);
+
+  const handleGenerateRoadmap = async () => {
+    if (!latestAnalysisId) return;
+    setIsGenerating(true);
     setError(null);
-
-    (async () => {
-      try {
-        const data = await getLearningRoadmap();
-        if (!active) return;
-        setTasks(Array.isArray(data?.items) ? data.items : []);
-      } catch (err) {
-        if (!active) return;
-        // No roadmap yet / feature disabled → show the friendly empty state, not
-        // a raw "Not Found" error.
-        if (err?.response?.status === 404) {
-          setTasks([]);
-        } else {
-          const { message } = extractApiError(err, 'Không thể tải lộ trình học tập.');
-          setError(message);
-        }
-      } finally {
-        if (active) setIsLoading(false);
-      }
-    })();
-
-    return () => { active = false; };
-  }, [isAuthChecking]);
+    try {
+      await generateRoadmap({ analysis_job_id: latestAnalysisId, language: 'vi' });
+      await loadTasks();
+    } catch (err) {
+      const { message } = extractApiError(err, 'Không thể tạo lộ trình học tập. Vui lòng thử lại.');
+      setError(message);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const categories = useMemo(() => {
     const cats = [...new Set(tasks.map((t) => t.category).filter(Boolean))];
@@ -248,16 +276,40 @@ export default function LearningPage() {
       )}
 
       {!isLoading && tasks.length === 0 && !error && (
-        <EmptyStatePage
-          icon={bookIcon}
-          title="Chưa có nhiệm vụ học tập"
-          description="Chạy phân tích CV so với JD để nhận lộ trình cá nhân về kỹ năng cần học và bằng chứng cần xây dựng."
-          action={
-            <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.625rem 1.25rem', background: 'linear-gradient(135deg, var(--color-primary), #4F46E5)', color: 'white', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 'var(--font-size-sm)', textDecoration: 'none' }}>
-              Chạy phân tích CV →
-            </Link>
-          }
-        />
+        latestAnalysisId ? (
+          <EmptyStatePage
+            icon={bookIcon}
+            title="Tạo lộ trình học tập từ phân tích gần nhất"
+            description="Bạn đã có một phân tích CV hoàn chỉnh. Tạo lộ trình học tập cá nhân hoá từ các kỹ năng còn thiếu và bằng chứng cần bổ sung trong phân tích gần nhất của bạn."
+            action={
+              <button
+                type="button"
+                onClick={handleGenerateRoadmap}
+                disabled={isGenerating}
+                id="generate-roadmap-btn"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.625rem 1.25rem', background: 'linear-gradient(135deg, var(--color-primary), #4F46E5)', color: 'white', border: 'none', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 'var(--font-size-sm)', cursor: isGenerating ? 'default' : 'pointer', opacity: isGenerating ? 0.7 : 1, fontFamily: 'var(--font-family)' }}
+              >
+                {isGenerating ? (
+                  <>
+                    <span style={{ width: 14, height: 14, border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.7s linear infinite', display: 'inline-block' }} />
+                    Đang tạo lộ trình…
+                  </>
+                ) : 'Tạo lộ trình học tập từ phân tích gần nhất'}
+              </button>
+            }
+          />
+        ) : (
+          <EmptyStatePage
+            icon={bookIcon}
+            title="Chưa có nhiệm vụ học tập"
+            description="Chạy phân tích CV so với JD để nhận lộ trình cá nhân về kỹ năng cần học và bằng chứng cần xây dựng."
+            action={
+              <Link href="/dashboard" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', padding: '0.625rem 1.25rem', background: 'linear-gradient(135deg, var(--color-primary), #4F46E5)', color: 'white', borderRadius: 'var(--radius-md)', fontWeight: 600, fontSize: 'var(--font-size-sm)', textDecoration: 'none' }}>
+                Chạy phân tích CV →
+              </Link>
+            }
+          />
+        )
       )}
 
       {!isLoading && filtered.length > 0 && (

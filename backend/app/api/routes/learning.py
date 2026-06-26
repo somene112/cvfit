@@ -130,8 +130,9 @@ def _generate_and_store(
     analysis_job: Optional[AnalysisJob],
     analysis_job_id: Optional[uuid.UUID],
     max_tasks: int,
+    language: Optional[str] = None,
 ) -> RoadmapGenerateResponse:
-    raw_tasks, limitations = generate_learning_tasks(analysis_job, max_tasks=max_tasks)
+    raw_tasks, limitations = generate_learning_tasks(analysis_job, max_tasks=max_tasks, language=language)
     created = _persist_tasks(
         db, user, raw_tasks,
         target_job_id=target_job_id,
@@ -178,6 +179,7 @@ def generate_roadmap(
         analysis_job=analysis_job,
         analysis_job_id=resolved_analysis_id,
         max_tasks=body.max_tasks,
+        language=body.language,
     )
 
 

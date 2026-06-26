@@ -32,7 +32,7 @@ def _safe_error_message(exc: Exception) -> str:
 
 
 @celery_app.task(bind=True, autoretry_for=(Exception,), retry_backoff=True, retry_kwargs={"max_retries": 2})
-def run_job(self, job_id: str):
+def run_job(self, job_id: str, language: str = "en"):
     try:
         init_db()
         _update_job(job_id, status="running", progress=5, error_message=None)
@@ -67,8 +67,9 @@ def run_job(self, job_id: str):
             cv_parsed=cv_parsed,
             jd_struct=jd_struct,
             job_id=job_id,
+            language=language,
         )
-        result_full = build_result_v3(result_full)
+        result_full = build_result_v3(result_full, language=language)
 
         with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as tmp:
             out_docx = tmp.name

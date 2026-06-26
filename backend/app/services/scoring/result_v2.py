@@ -4,12 +4,39 @@ from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any
 
+from app.services.i18n import resolve_language
+
 
 SCHEMA_VERSION = "2.0"
 GUARDRAIL_NOTICE = (
     "This analysis estimates CV-to-JD fit only and does not guarantee any hiring outcome."
 )
+GUARDRAIL_NOTICE_VI = (
+    "Phân tích này chỉ ước lượng mức độ phù hợp giữa CV và JD và không đảm bảo bất kỳ kết quả tuyển dụng nào."
+)
 MISSING_EVIDENCE_WORDING = "not found in the parsed CV"
+MISSING_EVIDENCE_WORDING_VI = "không tìm thấy trong CV đã phân tích"
+
+_SCORE_LABELS_VI = {
+    "skill_match": "Mức độ khớp kỹ năng",
+    "responsibility_match": "Mức độ khớp trách nhiệm",
+    "experience_level": "Mức kinh nghiệm",
+    "project_relevance": "Mức độ liên quan dự án",
+    "cv_quality": "Chất lượng CV",
+}
+_SCORE_EXPLANATIONS_VI = {
+    "skill_match": "Mức độ bao phủ các nhóm kỹ năng bắt buộc và ưu tiên của JD được tìm thấy trong CV đã phân tích.",
+    "responsibility_match": "Mức độ tương đồng giữa các gạch đầu dòng trong CV và phần trách nhiệm trong JD.",
+    "experience_level": "Ước lượng mức độ phù hợp về thâm niên từ các tín hiệu thời gian trong CV đã phân tích.",
+    "project_relevance": "Mức độ liên quan và mật độ của các gạch đầu dòng về dự án hoặc kinh nghiệm.",
+    "cv_quality": "Chất lượng phân tích, thông tin liên hệ, số liệu và các gạch đầu dòng theo hướng hành động.",
+}
+_FIT_LEVEL_VI = {
+    "excellent": "Phù hợp xuất sắc",
+    "good": "Phù hợp tốt",
+    "partial": "Phù hợp một phần",
+    "weak": "Phù hợp yếu",
+}
 
 SENSITIVE_KEYS = {
     "access_token",
@@ -41,7 +68,9 @@ def build_result_v2(
     cv_parsed: dict | None = None,
     jd_struct: dict | None = None,
     job_id: str | None = None,
+    language: str = "en",
 ) -> dict:
+    lang = resolve_language(language)
     result = _scrub_sensitive(deepcopy(legacy_result or {}))
     scores = _ensure_scores(result)
     fit_score = _coerce_score(_first_present_score(scores, result))
@@ -56,21 +85,21 @@ def build_result_v2(
     jd_context = _build_jd_context(jd_struct or result.get("jd", {}))
     evidence = _build_evidence(result, jd_context)
     matched_skills = _build_matched_skills(result, evidence, jd_context)
-    missing_skills = _build_missing_skills(result, jd_context)
+    missing_skills = _build_missing_skills(result, jd_context, lang)
     improvement_actions = _build_improvement_actions(result, missing_skills)
 
     result["evidence"] = evidence
     result["matched_skills"] = matched_skills
     result["missing_skills"] = missing_skills
     result["improvement_actions"] = improvement_actions
-    result["limitations"] = _build_limitations(cv_parsed)
-    result["score_breakdown"] = _build_score_breakdown(scores)
+    result["limitations"] = _build_limitations(cv_parsed, lang)
+    result["score_breakdown"] = _build_score_breakdown(scores, lang)
     result["overall"] = {
         "fit_score": fit_score,
         "fit_level": fit_level(fit_score),
-        "summary": _build_summary(fit_score, matched_skills, missing_skills),
+        "summary": _build_summary(fit_score, matched_skills, missing_skills, lang),
         "confidence": _analysis_confidence(result, cv_parsed),
-        "guardrail_notice": GUARDRAIL_NOTICE,
+        "guardrail_notice": GUARDRAIL_NOTICE_VI if lang == "vi" else GUARDRAIL_NOTICE,
     }
     result["metadata"] = _build_metadata(result, cv_parsed, jd_struct, job_id)
 
@@ -128,7 +157,7 @@ def _scrub_sensitive(value: Any) -> Any:
     return value
 
 
-def _build_score_breakdown(scores: dict) -> list[dict]:
+def _build_score_breakdown(scores: dict, lang: str = "en") -> list[dict]:
     explanations = {
         "skill_match": "Coverage of required and preferred JD skill groups found in the parsed CV.",
         "responsibility_match": "Similarity between parsed CV bullets and JD responsibilities.",
@@ -143,10 +172,10 @@ def _build_score_breakdown(scores: dict) -> list[dict]:
         breakdown.append(
             {
                 "key": key,
-                "label": label,
+                "label": _SCORE_LABELS_VI.get(key, label) if lang == "vi" else label,
                 "score": _coerce_score(scores.get(key)),
                 "weight": weight,
-                "explanation": explanations[key],
+                "explanation": _SCORE_EXPLANATIONS_VI.get(key, explanations[key]) if lang == "vi" else explanations[key],
             }
         )
     return breakdown
@@ -276,7 +305,7 @@ def _build_matched_skills(result: dict, evidence: list[dict], jd_context: dict) 
     return matched
 
 
-def _build_missing_skills(result: dict, jd_context: dict) -> list[dict]:
+def _build_missing_skills(result: dict, jd_context: dict, lang: str = "en") -> list[dict]:
     skill_gap = result.get("skill_gap", {}) if isinstance(result.get("skill_gap"), dict) else {}
     missing = []
     for requirement_type, key, severity in (
@@ -285,19 +314,29 @@ def _build_missing_skills(result: dict, jd_context: dict) -> list[dict]:
     ):
         for skill in skill_gap.get(key, []) or []:
             jd_requirement, jd_evidence_ids = _jd_requirement_for_skill(jd_context, skill)
-            requirement_label = "requires" if requirement_type == "must_have" else "lists"
+            if lang == "vi":
+                requirement_label = "yêu cầu" if requirement_type == "must_have" else "liệt kê"
+                reason = f"Mô tả công việc {requirement_label} {skill}, nhưng bằng chứng về {skill} {MISSING_EVIDENCE_WORDING_VI}."
+                suggestion = (
+                    f"Nếu bạn thực sự đã sử dụng {skill}, hãy thêm một gạch đầu dòng CV trung thực với bối cảnh "
+                    "dự án, công cụ đã dùng và kết quả đo lường được. Chỉ thêm nếu điều đó là sự thật."
+                )
+            else:
+                requirement_label = "requires" if requirement_type == "must_have" else "lists"
+                reason = f"JD {requirement_label} {skill}, but {skill} evidence was {MISSING_EVIDENCE_WORDING}."
+                suggestion = (
+                    f"If you have actually used {skill}, add a truthful CV bullet with project context, "
+                    "tools used, and measurable outcome. Only add this if it is true."
+                )
             missing.append(
                 {
                     "skill": skill,
                     "requirement_type": requirement_type,
                     "jd_requirement": jd_requirement or skill,
                     "severity": severity,
-                    "reason": f"JD {requirement_label} {skill}, but {skill} evidence was {MISSING_EVIDENCE_WORDING}.",
+                    "reason": reason,
                     "jd_evidence_ids": jd_evidence_ids,
-                    "suggestion": (
-                        f"If you have actually used {skill}, add a truthful CV bullet with project context, "
-                        "tools used, and measurable outcome. Only add this if it is true."
-                    ),
+                    "suggestion": suggestion,
                 }
             )
     return missing
@@ -417,7 +456,18 @@ def _build_improvement_actions(result: dict, missing_skills: list[dict]) -> list
     return actions
 
 
-def _build_limitations(cv_parsed: dict | None) -> list[str]:
+def _build_limitations(cv_parsed: dict | None, lang: str = "en") -> list[str]:
+    if lang == "vi":
+        limitations = [
+            "Phân tích này chỉ ước lượng mức độ phù hợp giữa CV và JD và không đảm bảo bất kỳ kết quả tuyển dụng nào.",
+            "Thiếu bằng chứng nghĩa là không tìm thấy hỗ trợ trong CV đã phân tích, chứ không phải ứng viên chắc chắn thiếu kỹ năng đó.",
+            "Không bịa đặt kỹ năng, kinh nghiệm, dự án, nhà tuyển dụng, ngày tháng, chứng chỉ hay số liệu dựa trên các gợi ý này.",
+        ]
+        if cv_parsed and cv_parsed.get("confidence") is not None:
+            limitations.append(
+                "Độ tin cậy của bộ phân tích dựa trên chất lượng văn bản trích xuất và có thể bỏ sót nội dung từ file scan hoặc nhiều hình ảnh."
+            )
+        return limitations
     limitations = [
         "This analysis estimates CV-to-JD fit only and does not guarantee any hiring outcome.",
         "Missing evidence means support was not found in the parsed CV, not that the candidate definitely lacks the skill.",
@@ -430,10 +480,18 @@ def _build_limitations(cv_parsed: dict | None) -> list[str]:
     return limitations
 
 
-def _build_summary(fit_score: float, matched_skills: list[dict], missing_skills: list[dict]) -> str:
+def _build_summary(fit_score: float, matched_skills: list[dict], missing_skills: list[dict], lang: str = "en") -> str:
     level = fit_level(fit_score)
     matched_count = len(matched_skills)
     missing_count = len(missing_skills)
+    if lang == "vi":
+        level_vi = _FIT_LEVEL_VI.get(level, level)
+        if missing_count:
+            return (
+                f"{level_vi} với {matched_count} nhóm kỹ năng đáp ứng và {missing_count} yêu cầu JD "
+                f"chưa có bằng chứng ({MISSING_EVIDENCE_WORDING_VI})."
+            )
+        return f"{level_vi} với {matched_count} nhóm kỹ năng đáp ứng và không có thiếu sót bằng chứng kỹ năng đáng kể."
     if missing_count:
         return (
             f"{level.title()} fit with {matched_count} matched skill groups and "
