@@ -88,7 +88,7 @@ def user_b():
 
 @pytest.fixture
 def jobs_app(monkeypatch):
-    fake_task_module = SimpleNamespace(run_job=SimpleNamespace(delay=lambda job_id: None))
+    fake_task_module = SimpleNamespace(run_job=SimpleNamespace(delay=lambda job_id, language="en": None))
     monkeypatch.setitem(sys.modules, "app.workers.tasks", fake_task_module)
     monkeypatch.setattr(
         jobs_route,

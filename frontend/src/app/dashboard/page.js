@@ -54,7 +54,8 @@ function DashboardContent() {
   /* ──── State ──── */
   const [jdText, setJdText] = useState('');
   const [targetRole, setTargetRole] = useState('');
-  const [language, setLanguage] = useState('en');
+  // Vietnamese-first product: new analyses generate Vietnamese guidance by default.
+  const [language, setLanguage] = useState('vi');
   const [strictness, setStrictness] = useState('balanced');
 
   const [workflowStep, setWorkflowStep] = useState(WORKFLOW_STEPS.IDLE);

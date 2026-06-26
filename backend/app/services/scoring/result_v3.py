@@ -4,6 +4,7 @@ import re
 from copy import deepcopy
 from typing import Any
 
+from app.services.i18n import resolve_language
 from app.services.improvement import build_improvement_actions, build_safe_rewrite_suggestions
 from app.services.interview import build_interview_prep
 from app.services.roadmap import build_learning_roadmap
@@ -15,6 +16,19 @@ SCORER_VERSION = "phase4.result_json_v3"
 NO_HIRING_GUARANTEE = (
     "This analysis estimates CV-to-JD fit only and does not guarantee any hiring outcome."
 )
+NO_HIRING_GUARANTEE_VI = (
+    "Phân tích này chỉ ước lượng mức độ phù hợp giữa CV và JD và không đảm bảo bất kỳ kết quả tuyển dụng nào."
+)
+_REQUIRED_LIMITATIONS_EN = [
+    NO_HIRING_GUARANTEE,
+    "Missing evidence means support was not found in the parsed CV, not that the candidate definitely lacks the skill.",
+    "Do not invent skills, experience, projects, employers, dates, certifications, or metrics based on these suggestions.",
+]
+_REQUIRED_LIMITATIONS_VI = [
+    NO_HIRING_GUARANTEE_VI,
+    "Thiếu bằng chứng nghĩa là không tìm thấy hỗ trợ trong CV đã phân tích, chứ không phải ứng viên chắc chắn thiếu kỹ năng đó.",
+    "Không bịa đặt kỹ năng, kinh nghiệm, dự án, nhà tuyển dụng, ngày tháng, chứng chỉ hay số liệu dựa trên các gợi ý này.",
+]
 
 SENSITIVE_KEYS = {
     "access_token",
@@ -44,16 +58,17 @@ SENSITIVE_PATTERNS = [
 ]
 
 
-def build_result_v3(v2_result: dict) -> dict:
+def build_result_v3(v2_result: dict, *, language: str = "en") -> dict:
+    lang = resolve_language(language)
     result = _scrub_sensitive(deepcopy(v2_result or {}))
     _preserve_score_aliases(result)
 
     result["schema_version"] = SCHEMA_VERSION
-    result["improvement_actions"] = build_improvement_actions(result)
-    result["safe_rewrite_suggestions"] = build_safe_rewrite_suggestions(result)
-    result["interview_prep"] = build_interview_prep(result)
-    result["learning_roadmap"] = build_learning_roadmap(result)
-    result["limitations"] = _build_limitations(result.get("limitations"))
+    result["improvement_actions"] = build_improvement_actions(result, language=lang)
+    result["safe_rewrite_suggestions"] = build_safe_rewrite_suggestions(result, language=lang)
+    result["interview_prep"] = build_interview_prep(result, language=lang)
+    result["learning_roadmap"] = build_learning_roadmap(result, language=lang)
+    result["limitations"] = _build_limitations(result.get("limitations"), lang)
     result["metadata"] = _build_metadata(result.get("metadata"))
 
     return _scrub_sensitive(result)
@@ -84,13 +99,9 @@ def _overall_score(result: dict) -> Any:
     return overall.get("fit_score")
 
 
-def _build_limitations(existing: Any) -> list[str]:
+def _build_limitations(existing: Any, lang: str = "en") -> list[str]:
     limitations = [str(item) for item in existing if item] if isinstance(existing, list) else []
-    required = [
-        NO_HIRING_GUARANTEE,
-        "Missing evidence means support was not found in the parsed CV, not that the candidate definitely lacks the skill.",
-        "Do not invent skills, experience, projects, employers, dates, certifications, or metrics based on these suggestions.",
-    ]
+    required = _REQUIRED_LIMITATIONS_VI if lang == "vi" else _REQUIRED_LIMITATIONS_EN
     for item in required:
         if not any(item.lower() == existing_item.lower() for existing_item in limitations):
             limitations.append(item)

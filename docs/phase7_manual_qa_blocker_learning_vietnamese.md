@@ -47,22 +47,37 @@ blocker plus the most-visible Vietnamese result-page copy. Payment remains pause
   quan dự án / Chất lượng CV), their **explanations**, and the **limitation
   disclaimers**, applied in `ResultCardV2.jsx`. Backend response contract unchanged.
 
+**Backend language threading (follow-up applied in-place on this PR):**
+- `run_job.delay` and the worker now accept a `language` parameter (default `en`).
+- `result_v2` and `result_v3` thread `language` through to the deterministic
+  result prose: **summary**, **score labels/explanations**, **limitations**,
+  **missing-skill reasons/suggestions**, **improvement actions**, **safe-rewrite
+  suggestions**, **interview-prep questions/hints**, and **learning-roadmap task
+  titles/descriptions/evidence**.
+- Vietnamese variants live in a per-service i18n helper; skill/tech/JD tokens
+  stay untranslated.
+- New `backend/tests/test_vietnamese_analysis_pipeline.py` pins the language
+  threading end-to-end (job → worker → result_v2/v3 → service prose).
+- Existing phase-3 result tests were updated to pass `language="en"` to
+  `run_job.delay` (signature change, no behavior change for EN).
+- Dashboard default language was switched to `vi` so new users see Vietnamese
+  on first load.
+
 ## Out of scope (documented)
 
-- **Interpolated** result prose — the summary, missing-skill reasons/suggestions,
-  improvement actions, interview-prep questions, and roadmap detail — is generated
-  by the backend analysis pipeline with skill/JD values inlined. Localizing it
-  requires threading a `language` through that pipeline (and risks many phase-3
-  result tests). It is a **follow-up**; new analyses are now "much more Vietnamese"
-  via the localized labels, and **historical analyses may remain partly English**.
+- **Historical analyses** stored before this deploy remain partly English
+  unless regenerated, because the localized prose is only written by the
+  updated pipeline. Fresh analyses after deploy are fully Vietnamese (VI mode).
 - No payment rollout, credit-gating live, fake data, or admin mutations.
 
 ## Retest required after deploy
 
 Redeploy latest `main` (backend + frontend), keep flags false, then:
-1. Run a fresh CV analysis (so a succeeded analysis exists).
+1. Run a **fresh** CV analysis (so the new pipeline writes localized prose).
 2. Open `/learning` → confirm the **"Tạo lộ trình học tập từ phân tích gần nhất"**
    CTA (not "analyze again"); click it → Vietnamese tasks appear.
-3. Open the analysis result → confirm score-breakdown labels/explanations and the
-   limitations are Vietnamese.
+3. Open the analysis result → confirm **summary**, **score labels/explanations**,
+   **limitations**, **missing-skill reasons/suggestions**, **improvement
+   actions**, **safe-rewrite suggestions**, **interview-prep questions**, and
+   **learning-roadmap text** are Vietnamese (skill/tech names preserved).
 4. Resume manual QA Sections 4–8 (Help, Interview, Cover letter, Package, Flags).
